@@ -2,6 +2,7 @@ import json, subprocess, tempfile, unittest
 from pathlib import Path
 
 SCRIPT = Path(__file__).parents[1] / "scripts/super_speckit.py"
+CLOUD_SCRIPT = Path(__file__).parents[1] / "scripts/cloud_handoff.py"
 class SuperSpecKitTests(unittest.TestCase):
     def invoke(self, *args):
         return subprocess.run(["python3", str(SCRIPT), *args], text=True, capture_output=True)
@@ -41,4 +42,14 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertTrue((root/"templates/durable-handoff.md").exists())
         self.assertTrue((root/"commands/super-speckit.phase-check.md").exists())
         self.assertTrue((root/"skills/upstream/mattpocock/tdd/SKILL.md").exists())
+    def test_cloud_pack_is_bounded_and_rejects_obvious_secrets(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); handoff=root/"handoff.md"; pack=root/"pack.md"
+            handoff.write_text("# Durable handoff\nVerified SHA: abcdef1\n")
+            result=subprocess.run(["python3",str(CLOUD_SCRIPT),"--handoff",str(handoff),"--output",str(pack),"--role","maker","--base-sha","abcdef1","--branch","ss/feature/F-1","--objective","Add the scoped validation"],text=True,capture_output=True)
+            self.assertEqual(result.returncode,0)
+            self.assertIn("Do not merge",pack.read_text())
+            handoff.write_text("Authorization: Bearer secret")
+            denied=subprocess.run(["python3",str(CLOUD_SCRIPT),"--handoff",str(handoff),"--output",str(pack),"--role","maker","--base-sha","abcdef1","--branch","main","--objective","x"],text=True,capture_output=True)
+            self.assertNotEqual(denied.returncode,0)
 if __name__ == "__main__": unittest.main()

@@ -9,6 +9,8 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `super-speckit.parallelize` | Produce risk/dependency-aware lane and gate plan before creating worktrees. |
 | `super-speckit.phase-check` | Create a GSD-inspired, Spec-Kit-linked phase contract and plan-quality gate. |
 | `super-speckit.handoff` | Persist a factual, resumable handoff when any lane pauses, fails, or completes. |
+| `super-speckit.delegate-cloud` | Send a bounded, redacted handoff pack to Codex Cloud or optional Centillex Desk transport. |
+| `super-speckit.collect-cloud` | Inspect and safely collect a cloud result before independent local QA. |
 | `super-speckit.environment-ready` | Prove a clean test environment is ready before runtime QA. |
 | `super-speckit.final-manual-review` | Human-led, AI-recorded final review with bug-fix/retest and wait branches. |
 | `super-speckit.start` | Create a feature maker worktree and state record from native Spec Kit artifacts. |

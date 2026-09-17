@@ -22,6 +22,16 @@ orchestration:
   milestone_audit_required: true
   research_before_high_risk: true
   tdd_when_feasible: true
+delegation:
+  enabled: false # explicit opt-in; never silently send repository context to a cloud service
+  default_transport: codex-cloud
+  codex_cloud_environment_id: "" # required for `codex cloud exec --env ...`
+  allowed_roles: [research, maker, bug-fix]
+  forbidden_roles: [release-approver]
+  require_committed_base: true
+  require_redacted_handoff: true
+  require_independent_retest_after_apply: true
+  centillex_desk_command: "" # optional, e.g. `desk`; configured separately after local verification
 design:
   required_when_paths: ["**/*.tsx", "**/*.jsx", "**/*.vue", "**/*.svelte", "**/*.html", "**/*.css"]
   output_root: .super-speckit/design

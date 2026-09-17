@@ -16,6 +16,7 @@ Static review is evidence about code. A passing runtime verification is evidence
 - policy-selected gates, environment-readiness receipts, immutable proof packs, and bounded repair loops;
 - a human follow-along final review that reports each observed result to `ask-super-speckit`, waits truthfully on blockers, and routes confirmed failures to isolated repair/retest loops.
 - GSD-style phase contracts, plan-quality checks, durable handoffs, and milestone audits—without replacing Spec Kit’s core artifacts or independent QA.
+- optional Codex Cloud delegation for bounded research, maker, and bug-fix work; cloud output returns through a fresh local independent QA lane.
 - a durable bug artifact, regression test obligation, independent retest, project QA summary, and explicit unverified items.
 
 It is intentionally an extension, not a competing fork of the Spec Kit CLI. The upstream project changes quickly; install normal Spec Kit first and keep its commands current.
@@ -72,6 +73,10 @@ See [commands](commands/README.md), [design-first skill](skills/design-first/SKI
 The shipped upstream design skills and their pinned source revisions are listed in [sources.lock.json](sources.lock.json). The locally authored final review procedure is [final-manual-review](skills/final-manual-review/SKILL.md); it is intentionally limited to human/AI handoff, evidence, waiting, and bug-routing mechanics.
 
 See [compatibility map](docs/compatibility-map.md) for what was selectively adopted from GSD, Matt Pocock’s engineering skills, MAQA, AWO/Orka, and the design workflow suite—and what was intentionally kept out to avoid conflicts.
+
+## Codex Cloud delegation
+
+Enable `delegation.enabled` and set a Codex Cloud environment ID in the project configuration. `super-speckit.delegate-cloud` creates a redacted, bounded pack from a durable handoff, submits it with `codex cloud exec`, and records the cloud task ID. `collect-cloud` reviews the diff before any application. Cloud work is a maker lane only: its result always enters a fresh independent QA worktree, so a cloud agent never grades its own implementation. Centillex Desk can use the same pack as an optional local cross-vendor transport.
 
 ## Verify the kit itself
 
