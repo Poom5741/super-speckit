@@ -1,0 +1,23 @@
+{
+  "skill_name": "design-evaluation-foundation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请根据现有 PRODUCT、DOMAIN、DESIGN、CRAFT、COMPONENTS、PATTERNS、TEMPLATES 和 AGENTIC-INTERFACE 文档，为一个包含控制台、数据看板和 Agent 对话的产品创建统一 EVAL.md。",
+      "expected_output": "Creates a shared evidence-first evaluation contract with task-specific weights or checks, blockers, review modes, deterministic scoring policy, return plans and calibration requirements.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我们希望所有页面达到 8 分就通过，请给每页打一个视觉总分并写进 EVAL.md。",
+      "expected_output": "Challenges single-score approval, introduces dimensions, evidence and blockers, and requires governance decisions before setting thresholds.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "这是一个早期新产品，只有设计方向和两张原型图。请建立第一版评估规则。",
+      "expected_output": "Creates a clearly provisional exploration/prototype rubric, records missing outcome evidence, and does not claim calibration or release readiness.",
+      "files": []
+    }
+  ]
+}

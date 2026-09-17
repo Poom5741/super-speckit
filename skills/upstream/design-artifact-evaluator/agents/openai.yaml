@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Artifact Evaluator"
+  short_description: "Evaluate rendered UI evidence with deterministic design gates"
+  default_prompt: "Use $design-artifact-evaluator to evaluate this rendered design artifact against its approved evidence and gates."

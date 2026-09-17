@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/nick3/vibe-design-skills/main/skills/design-artifact-evaluator/assets/evaluation-output.schema.json",
+  "title": "Design artifact evaluation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact",
+    "review_mode",
+    "evidence_sufficiency",
+    "dimensions",
+    "blockers",
+    "verdict",
+    "return_plan",
+    "stop_state"
+  ],
+  "properties": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string"},
+        "location": {"type": "string"}
+      }
+    },
+    "review_mode": {
+      "type": "string"
+    },
+    "policy_version": {
+      "type": "string"
+    },
+    "page_task_shape": {
+      "type": "string"
+    },
+    "evidence_sufficiency": {
+      "type": "string",
+      "enum": ["sufficient", "partial", "insufficient", "conflicting"]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "location"],
+        "properties": {
+          "id": {"type": "string"},
+          "type": {"type": "string"},
+          "location": {"type": "string"},
+          "scope": {"type": "string"},
+          "limitation": {"type": "string"}
+        }
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "subchecks"],
+        "properties": {
+          "id": {"type": "string"},
+          "label": {"type": "string"},
+          "weight": {"type": "number", "minimum": 0},
+          "score": {"type": "number", "minimum": 0},
+          "why_not_higher": {"type": "string"},
+          "subchecks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "label",
+                "verdict",
+                "evidence_ids",
+                "deduction_reason",
+                "recommendation",
+                "return_destination"
+              ],
+              "properties": {
+                "id": {"type": "string"},
+                "label": {"type": "string"},
+                "verdict": {"type": "string"},
+                "score": {"type": "number", "minimum": 0},
+                "max_score": {"type": "number", "exclusiveMinimum": 0},
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {"type": "string"}
+                },
+                "deduction_reason": {"type": "string"},
+                "recommendation": {"type": "string"},
+                "return_destination": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "overall_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "active", "evidence_ids", "impact", "required_action"],
+        "properties": {
+          "id": {"type": "string"},
+          "active": {"type": "boolean"},
+          "evidence_ids": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "impact": {"type": "string"},
+          "required_action": {"type": "string"}
+        }
+      }
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "PASS_WITH_FOLLOW_UP", "REVISE", "BLOCKED"]
+    },
+    "return_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["priority", "finding", "evidence_ids", "action", "return_destination"],
+        "properties": {
+          "priority": {"type": "integer", "minimum": 1},
+          "finding": {"type": "string"},
+          "evidence_ids": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "action": {"type": "string"},
+          "return_destination": {"type": "string"},
+          "owner_or_decision": {"type": "string"},
+          "next_round_evidence": {"type": "string"}
+        }
+      }
+    },
+    "stop_state": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "continue",
+        "maximum_rounds",
+        "plateau",
+        "regression",
+        "missing_evidence",
+        "human_decision_required"
+      ]
+    },
+    "best_valid_version": {
+      "type": "string"
+    },
+    "learning_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_pattern", "candidate_destination"],
+        "properties": {
+          "finding_pattern": {"type": "string"},
+          "candidate_destination": {"type": "string"},
+          "governance_owner": {"type": "string"}
+        }
+      }
+    }
+  }
+}

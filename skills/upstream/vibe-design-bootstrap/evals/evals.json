@@ -1,0 +1,23 @@
+{
+  "skill_name": "vibe-design-bootstrap",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我们有一个已经上线三年的 B2B 数据产品，Figma 和线上页面存在不少不一致，也没有正式设计规范。请为后续 Agent 设计工作建立完整的文档基础。",
+      "expected_output": "Selects reconstruct mode, inventories evidence, coordinates product/domain, visual, craft, component/pattern/template and evaluation workflows in dependency order, introduces human gates, and does not treat every existing style as canonical.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我们准备从零设计一个面向独立餐饮店主的移动端经营助手，目前只有产品 Brief，没有任何 UI。请建立 Vibe Design 的项目基础文档。",
+      "expected_output": "Selects create mode, establishes product/domain truth before visual and craft direction, creates the smallest supported component/pattern/template foundation, proposes alternatives before finalizing standards, and produces the complete documented output contract.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "这个页面看起来有点挤，帮我把表格行高加大一点。项目已经有完整并通过审核的设计文档。",
+      "expected_output": "Does not trigger a full bootstrap for a routine local design change and redirects the task to the appropriate design or implementation workflow.",
+      "files": []
+    }
+  ]
+}

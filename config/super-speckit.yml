@@ -1,0 +1,61 @@
+version: 1
+worktrees:
+  root: ../.super-speckit-worktrees
+  feature_prefix: ss/feature/
+  bug_prefix: ss/bug/
+  qa_prefix: ss/qa/
+  retain_failed_qa_worktrees: false
+roles:
+  require_distinct_maker_and_checker: true
+  merge_requires_human: true
+orchestration:
+  entry_command: ask-super-speckit
+  max_parallel_lanes: 3
+  max_heavy_processes: 2
+  max_repair_cycles: 3
+  max_retries_without_new_evidence: 1
+  protected_paths: ["auth/**", "payments/**", "migrations/**", "infra/**", ".github/workflows/**", "**/.env*", "**/*secret*", "**/*credential*"]
+  human_approval_for_risk: [high, critical]
+design:
+  required_when_paths: ["**/*.tsx", "**/*.jsx", "**/*.vue", "**/*.svelte", "**/*.html", "**/*.css"]
+  output_root: .super-speckit/design
+  design_system_sources: [] # local DESIGN.md, Figma export, or token file; never invent a brand system
+  optional_adapters: [html, v0, stitch, claude-design]
+  require_decision_before_implementation: true
+  accessibility_baseline: "WCAG 2.2 AA"
+risk:
+  default: medium
+  critical_paths: ["auth/**", "payments/**", "migrations/**", "data-deletion/**"]
+  high_requires: ["independent-runtime-qa", "security-review", "human-approval"]
+gates:
+  format: ""
+  lint: ""
+  unit: ""
+  integration: ""
+  build: ""
+  app_start: ""
+  app_url: "http://127.0.0.1:3000"
+  playwright: "npx playwright test"
+  api_assertions: ""
+  db_assertions: ""
+  ocr_review: "" # adapter command; writes an OCR findings artifact, never a pass verdict
+qa:
+  clean_environment: true
+  fixture_reset_command: ""
+  isolated_test_namespace: "ss-{{run_id}}"
+  reproduction_attempts: 2
+  exploration_timebox_minutes: 20
+  redact_patterns: ["(?i)authorization:.*", "(?i)password=[^&\\s]+", "(?i)api[_-]?key[=:][^\\s]+"]
+  readiness_checks: [] # health endpoint, migration status, fixture reset, namespace allocation
+  correlation_header: "X-Super-Speckit-Run"
+evidence:
+  root: .super-speckit/qa
+  retain_on_pass_days: 14
+  retain_on_failure_days: 90
+  proof_pack_manifest: proof-pack.json
+  require_candidate_sha: true
+  require_environment_receipt: true
+merge:
+  required_gate_status: pass
+  require_ocr_triage_complete: true
+  require_no_open_confirmed_bugs: true

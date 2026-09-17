@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Design Specification"
+  short_description: "Turn ambiguous feature requests into testable design specs"
+  default_prompt: "Use $feature-design-spec to turn this feature request into an evidence-backed, testable design specification."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Templates & Variants"
+  short_description: "Define reusable templates and explore structural variants"
+  default_prompt: "Use $design-template-and-variants to define reusable templates or explore comparable structural directions."

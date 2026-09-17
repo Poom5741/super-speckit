@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/nick3/vibe-design-skills/main/skills/agentic-interface-foundation/assets/a2ui-envelope.schema.json",
+  "title": "Project-adaptable Agent-to-UI message envelope",
+  "description": "Neutral starting envelope. Replace the identifier, restrict fields and values, and obtain product, engineering, security and accessibility approval before production use.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "message_id",
+    "task_id",
+    "intent",
+    "status",
+    "content",
+    "actions",
+    "behavior"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "message_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Map to approved project/domain states."
+    },
+    "content": {
+      "type": "object",
+      "description": "Structured, non-executable content validated by the client.",
+      "additionalProperties": true
+    },
+    "provenance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id"],
+        "properties": {
+          "source_id": {"type": "string"},
+          "label": {"type": "string"},
+          "freshness": {"type": "string"},
+          "confidence": {"type": "string"}
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "effect"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "label": {"type": "string", "minLength": 1},
+          "effect": {"type": "string", "minLength": 1},
+          "requires_authorization": {"type": "boolean"},
+          "idempotency_key": {"type": "string"},
+          "expires_at": {"type": "string", "format": "date-time"}
+        }
+      }
+    },
+    "behavior": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requires_user_decision", "blocks_agent_execution"],
+      "properties": {
+        "requires_user_decision": {"type": "boolean"},
+        "blocks_agent_execution": {"type": "boolean"},
+        "dismissible": {"type": "boolean"},
+        "cancellable": {"type": "boolean"},
+        "fallback": {"type": "string"}
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

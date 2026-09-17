@@ -1,0 +1,23 @@
+{
+  "skill_name": "design-template-and-variants",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "基于已批准的告警处置 SPEC，为桌面端运维产品提出三种真正不同的信息架构：总览优先、待办优先、风险优先。使用同一组内容比较，不要只换颜色或卡片样式，并给出选择建议和需要人工确认的取舍。",
+      "expected_output": "Creates three structurally distinct, comparable IA variants with attention order, region maps, paths, state posture, responsive rules, risks and an evidence-based decision matrix.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我们有 40 多个历史后台页面，但没有模板规范。请从代表性页面、代码和任务类型中重建一个小而可信的 TEMPLATES.md，区分高频模式、例外和遗留事故。",
+      "expected_output": "Uses reconstruct mode to produce a semantic template library with slots, constraints, states, responsive transformations, evidence and approval status without canonizing every legacy layout.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "给同一个登录页做三套视觉风格：蓝色、绿色、紫色。",
+      "expected_output": "Does not treat color changes as IA variants and routes the request to visual-direction exploration or DESIGN.md work.",
+      "files": []
+    }
+  ]
+}

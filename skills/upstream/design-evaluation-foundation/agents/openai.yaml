@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Evaluation Foundation"
+  short_description: "Define evidence, scoring, blockers, and design review gates"
+  default_prompt: "Use $design-evaluation-foundation to define a reusable evidence-based design evaluation contract."

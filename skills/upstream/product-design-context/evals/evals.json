@@ -1,0 +1,23 @@
+{
+  "skill_name": "product-design-context",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请根据现有告警控制台、权限说明和客服 FAQ，为这个云安全产品整理 PRODUCT.md 和 DOMAIN.md。不同材料对‘高危’的定义不一致。",
+      "expected_output": "Creates product and domain drafts, records conflicting severity definitions instead of choosing by frequency, and identifies an owner decision before approval.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我们只有一份新产品 Brief：帮助第一次创业的人理解现金流。请为设计团队建立产品与领域上下文，缺失的信息不要猜。",
+      "expected_output": "Uses create mode, separates known product intent from open domain questions, and does not invent financial permissions, compliance rules or user evidence.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "把这个产品的按钮颜色、字体和圆角整理成 PRODUCT.md。",
+      "expected_output": "Explains that visual tokens belong to DESIGN.md and limits PRODUCT.md to product context rather than accepting the requested category error.",
+      "files": []
+    }
+  ]
+}

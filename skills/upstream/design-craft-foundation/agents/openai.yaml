@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Craft Foundation"
+  short_description: "Turn product-specific craft judgment into executable rules"
+  default_prompt: "Use $design-craft-foundation to create an executable craft standard grounded in this product."

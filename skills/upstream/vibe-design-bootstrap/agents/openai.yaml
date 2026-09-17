@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vibe Design Bootstrap"
+  short_description: "Build a reusable Vibe Design foundation for a product"
+  default_prompt: "Use $vibe-design-bootstrap to build or reconstruct a reusable Vibe Design foundation for this product."

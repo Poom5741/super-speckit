@@ -1,0 +1,23 @@
+{
+  "skill_name": "feature-design-spec",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我们要给企业费用产品增加批量报销审批。管理员一句话要求‘做个批量审批页’，但现有材料只有角色权限、单笔审批流程和几条客服投诉。请先把需求整理成可供后续设计和验收的规格，不要直接画页面。",
+      "expected_output": "Creates a six-layer feature SPEC draft grounded in evidence, with batch-specific permissions, partial success, conflict, destructive action, recovery, acceptance evidence, decisions and gaps.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "请从现有的订单异常处理页面和代码中重建一份 SPEC。页面目前只有成功路径，请特别识别没有证据支撑的行为以及遗漏的失败、权限和恢复状态。",
+      "expected_output": "Uses reconstruct mode, separates observed behavior from approved requirements, covers non-ideal states, and does not canonize legacy behavior without approval.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "把已经批准的个人资料页头像圆角从 50% 改成 16px，其余交互和验收标准都不变。",
+      "expected_output": "Recognizes a purely visual scoped update and does not trigger a full feature-spec workflow; routes the request to the visual-system update process.",
+      "files": []
+    }
+  ]
+}

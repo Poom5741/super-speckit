@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product & Domain Context"
+  short_description: "Ground design work in product intent and domain truth"
+  default_prompt: "Use $product-design-context to establish the product and domain context needed for later design work."

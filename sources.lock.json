@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "installed_at": "2026-09-18",
+  "sources": [
+    {
+      "name": "frontend-design",
+      "repository": "https://github.com/anthropics/claude-code",
+      "commit": "68ac8bbf0245b615b41517bf8f2b2f35af1ae31d",
+      "path": "plugins/frontend-design/skills/frontend-design",
+      "installed_to": "skills/upstream/frontend-design",
+      "role": "maker visual craft",
+      "license_note": "Consult upstream LICENSE.txt before redistribution."
+    },
+    {
+      "name": "vibe-design-skills",
+      "repository": "https://github.com/nick3/vibe-design-skills",
+      "commit": "79000e161fdfeb3a35674045a7bcb8d33bf555e1",
+      "paths": ["skills/vibe-design-bootstrap", "skills/vibe-design-execute", "skills/feature-design-spec", "skills/design-artifact-evaluator", "skills/design-system-foundation", "skills/design-system-review", "skills/design-craft-foundation", "skills/design-evaluation-foundation", "skills/product-design-context", "skills/component-pattern-foundation", "skills/design-template-and-variants", "skills/agentic-interface-foundation"],
+      "installed_to": "skills/upstream",
+      "role": "design foundation, execution, and independent evaluation",
+      "license_note": "MIT; retain upstream notices."
+    },
+    {
+      "name": "frontend-design",
+      "repository": "https://github.com/PaulRBerg/agent-skills",
+      "commit": "720475ad0068ee1a0a7168a8f3a3cdf4de81c47d",
+      "path": "skills/frontend-design",
+      "installed_to": "skills/upstream/paulrberg/frontend-design",
+      "role": "independent rendered-UI checker",
+      "license_note": "Verify upstream repository MIT license before redistribution."
+    }
+  ]
+}

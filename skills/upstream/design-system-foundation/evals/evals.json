@@ -1,0 +1,29 @@
+{
+  "skill_name": "design-system-foundation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我们有 60 多个现有页面、Figma 组件库和生产代码，但颜色、圆角和间距都有冲突。请从这些设计中重建符合 Google DESIGN.md 格式的设计系统。",
+      "expected_output": "Uses extract mode, creates an evidence-based audit, classifies canonical patterns versus legacy or unresolved values, requests approval for normalization, and produces a Google-compatible draft rather than copying all values.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "这是一个全新的移动端学习产品，已有 PRODUCT.md 和 DOMAIN.md，没有任何 UI。请从零建立 DESIGN.md。",
+      "expected_output": "Uses create mode, proposes materially different coherent directions and representative previews before final tokens, then creates a Google-compatible draft after human selection.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "我们已有批准的 DESIGN.md。现在希望增加暗色模式，并将品牌主色调整为新的值。请更新规范并说明影响。",
+      "expected_output": "Uses update mode, preserves the approved file, traces affected roles and artifacts, runs or requests lint/diff, reports migration and accessibility impact, and waits for approval before replacement.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "参考这张单独的首页截图，直接生成最终 DESIGN.md，不需要问我问题。",
+      "expected_output": "Refuses to claim a final system from insufficient evidence, offers a provisional draft or evidence-gap report, and requires context and approval before finalization.",
+      "files": []
+    }
+  ]
+}

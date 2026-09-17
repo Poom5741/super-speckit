@@ -1,0 +1,23 @@
+{
+  "skill_name": "design-craft-foundation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我们企业监控产品的页面经常被评价为‘像 AI 生成的卡片墙、没有主次’，但团队说不清具体标准。请基于产品任务、现有好坏案例和设计评审记录建立一份可执行的 CRAFT.md，不要直接规定一套你喜欢的风格。",
+      "expected_output": "Creates a product-grounded craft draft that translates vague critique into observable hierarchy, density, composition and anti-default rules with evidence and evaluation links.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "为一个新建的儿童阅读产品建立设计工艺规范。已有产品定位、品牌方向和可访问性要求，但还没有界面。请说明哪些判断需要设计师批准，并避免把行业惯例当成事实。",
+      "expected_output": "Uses create mode, derives a craft thesis from context, defines relevant dimensions and approval gates, and avoids unsupported universal style rules.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "请给这个登录页做一次视觉评审并告诉我哪里不好看。",
+      "expected_output": "Does not confuse foundation authoring with reviewing one artifact; routes to an artifact review/evaluator while using an existing CRAFT.md if available.",
+      "files": []
+    }
+  ]
+}

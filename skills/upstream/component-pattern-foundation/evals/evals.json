@@ -1,0 +1,23 @@
+{
+  "skill_name": "component-pattern-foundation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请从现有组件库和产品页面中整理 COMPONENTS.md。当前 Badge、Tag、RiskBadge 外观接近但使用混乱，Modal 和 Drawer 也经常互换。",
+      "expected_output": "Builds semantic contracts and collision rules from evidence, distinguishes business risk from generic status/category, and proposes deprecations without copying visual tokens.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "这是一个全新 B2B 工作台，已经有 PRODUCT.md、DOMAIN.md 和 DESIGN.md。请创建最小可用的组件与页面模式文档。",
+      "expected_output": "Creates a deliberately small catalog tied to real tasks, defines required states and pattern selection criteria, and avoids speculative component sprawl.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "请把 Figma 组件列表里的组件名称和截图原样复制成 COMPONENTS.md。",
+      "expected_output": "Rejects inventory-only documentation as insufficient and adds semantic, behavioral, accessibility, evidence and usage boundaries.",
+      "files": []
+    }
+  ]
+}

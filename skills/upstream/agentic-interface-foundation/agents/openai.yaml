@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agentic Interface Foundation"
+  short_description: "Define safe AX, GenUI, and A2UI interaction contracts"
+  default_prompt: "Use $agentic-interface-foundation to define a safe Agentic Interface contract for this product."

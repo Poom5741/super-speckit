@@ -1,0 +1,4 @@
+interface:
+  display_name: "Component & Pattern Foundation"
+  short_description: "Document reusable component semantics and product patterns"
+  default_prompt: "Use $component-pattern-foundation to define reusable component semantics and product patterns."

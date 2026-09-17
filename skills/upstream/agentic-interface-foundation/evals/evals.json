@@ -1,0 +1,23 @@
+{
+  "skill_name": "agentic-interface-foundation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我们在企业财务产品中加入一个可以自动生成付款批次并提交的 Agent。请定义 AX、授权时机、进度与失败状态、证据来源，以及 Agent 与客户端受控组件之间的 A2UI 契约。不要让模型直接生成任意 HTML。",
+      "expected_output": "Defines delegation/evaluation controls, generation freedom, declaration-renderer split, sensitive-action authorization, lifecycle, provenance, fallback and a constrained A2UI envelope.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "为数据分析 Agent 设计从自然语言输入、过程澄清到生成可分享报告的动态体验规范。报告结构会随数据变化，但图表、证据和动作必须受控。",
+      "expected_output": "Defines intent, intermediate decision and result-artifact roles, controlled composition, provenance, uncertainty, follow-up actions and validation scenarios.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "我们的设置页字段和流程两年没有变化，但我希望把它改成 GenUI，看起来更 AI-native。",
+      "expected_output": "Rejects novelty-only dynamic generation, recommends stable UI unless contextual variation is demonstrated, and explains the control trade-off.",
+      "files": []
+    }
+  ]
+}

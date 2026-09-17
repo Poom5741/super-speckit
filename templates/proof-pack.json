@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "candidate_sha": "<immutable git SHA>",
+  "run_id": "<QA run ID>",
+  "environment_receipt": "environment-receipt.json",
+  "gates": [
+    {"name": "lint", "status": "pass", "command": "<configured command>", "exit_code": 0, "log": "logs/lint.log"},
+    {"name": "playwright", "status": "pass", "evidence": ["trace.zip", "screenshots/"]}
+  ],
+  "matrix": "specs/<feature>/verification-matrix.md",
+  "evidence": [],
+  "ocr": {"status": "triaged", "findings": "ocr-findings.json"},
+  "bugs": [],
+  "unverified": [],
+  "redaction_completed": true
+}

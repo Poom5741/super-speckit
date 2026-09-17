@@ -1,0 +1,23 @@
+{
+  "skill_name": "design-system-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请独立审核这套新生成的 Vibe Design 基础文档。Google lint 已通过，但 DESIGN.md 的品牌色和组件文档里的按钮角色不一致，CRAFT.md 只有‘高级、克制’等形容词，TEMPLATES.md 也没有代表性页面验证。",
+      "expected_output": "Does not pass based on lint, reports token/component contradiction, non-executable craft rules and missing template/visual validation, and returns prioritized actions without editing source documents.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "这是从旧产品重建的设计系统。请检查是否可供团队使用，特别关注历史样式是否被错误地全部保留。",
+      "expected_output": "Reviews provenance and classification of legacy values, checks normalization approvals and migration treatment, and uses a reconstruction-appropriate verdict.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "请审核一个带 Agent 自动执行能力的全新产品文档集。文件结构完整，但 DOMAIN.md 中权限规则仍是推断，AGENTIC-INTERFACE.md 却允许 Agent 直接提交动作，EVAL.md 已把错误权限设为 release blocker。",
+      "expected_output": "Identifies insufficient domain authority and unsafe Agent action boundaries as blockers or review blocks, and avoids validating a gate built on unconfirmed permission semantics.",
+      "files": []
+    }
+  ]
+}

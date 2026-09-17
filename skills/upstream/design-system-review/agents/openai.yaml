@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Foundation Reviewer"
+  short_description: "Audit design foundation documents for governed team adoption"
+  default_prompt: "Use $design-system-review to independently assess whether this design foundation is ready for team adoption."

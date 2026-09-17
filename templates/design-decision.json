@@ -1,0 +1,11 @@
+{
+  "feature": "<FEATURE-ID>",
+  "status": "draft | approved | revise | not-required",
+  "prototype": "prototype.html",
+  "brief": "design-brief.md",
+  "design_system_sources": [],
+  "external_sources": [],
+  "decision_by": "<human or authorized role>",
+  "decision_at": "<ISO-8601 timestamp>",
+  "notes": ""
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vibe Design Execute"
+  short_description: "Run a design request from specification through evaluation"
+  default_prompt: "Use $vibe-design-execute to take this design request from specification through a rendered, evaluated artifact."

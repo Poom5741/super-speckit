@@ -1,0 +1,77 @@
+schema_version: "1.0"
+workflow:
+  id: "super-speckit"
+  name: "Super-SpecKit evidence-first delivery"
+  version: "0.1.0"
+  author: "super-speckit"
+  description: "Runs Spec Kit SDD with design-first, independent QA, and human merge gates"
+requires:
+  speckit_version: ">=0.8.5"
+inputs:
+  feature:
+    type: string
+    required: true
+    prompt: "Feature request or feature ID"
+  ui_change:
+    type: boolean
+    default: false
+    prompt: "Does this change alter a user-facing interface?"
+steps:
+  - id: assess
+    type: prompt
+    message: "Run ask-super-speckit for '{{ inputs.feature }}'. Report current evidence and the recommended next safe stage."
+  - id: specify
+    command: speckit.specify
+    input:
+      args: "{{ inputs.feature }}"
+  - id: clarify
+    command: speckit.clarify
+    input:
+      args: "{{ inputs.feature }}"
+  - id: design
+    type: if
+    condition: "{{ inputs.ui_change }}"
+    then:
+      - id: design-first
+        type: prompt
+        message: "Run super-speckit.design-first for this feature. Create the design brief, static HTML prototype, and design decision artifact."
+      - id: design-gate
+        type: gate
+        message: "Review the HTML design artifact. Approve, request revision, or abort before UI implementation."
+        options: [approve, reject]
+        on_reject: abort
+  - id: plan
+    command: speckit.plan
+    input:
+      args: "{{ inputs.feature }}"
+  - id: tasks
+    command: speckit.tasks
+    input:
+      args: "{{ inputs.feature }}"
+  - id: analyze
+    command: speckit.analyze
+    input:
+      args: "{{ inputs.feature }}"
+  - id: lane-plan
+    type: prompt
+    message: "Run super-speckit.parallelize and super-speckit.matrix. Do not create worktrees until the dependency and risk plan is recorded."
+  - id: implementation-gate
+    type: gate
+    message: "Review scope, risk, design decision where applicable, and planned worktree lanes."
+    options: [approve, reject]
+    on_reject: abort
+  - id: implement-and-verify
+    type: prompt
+    message: "Use super-speckit.start, then verify the immutable candidate in a clean QA worktree. Run environment-ready, policy-selected gates, runtime QA, OCR triage, and defect/retest loops. Produce a proof pack."
+  - id: final-manual-review
+    type: prompt
+    message: "Run super-speckit.final-manual-review. Guide the human through one step at a time; record and report every observed result to ask-super-speckit. Confirmed failures go to a new bug worktree and independent retest. Blocked steps wait; they never become passes."
+  - id: release-gate
+    type: gate
+    message: "Review super-speckit.release summary and proof pack. This is a human merge decision; no automatic merge occurs."
+    options: [approve, reject]
+    on_reject: abort
+  - id: converge
+    command: speckit.converge
+    input:
+      args: "{{ inputs.feature }}"

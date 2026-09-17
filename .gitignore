@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.super-speckit/state/
+.super-speckit/qa/
+.super-speckit/bugs/
+.super-speckit/design/

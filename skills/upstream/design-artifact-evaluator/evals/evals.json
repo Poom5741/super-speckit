@@ -1,0 +1,23 @@
+{
+  "skill_name": "design-artifact-evaluator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请对本地运行的订单异常处理原型做 prototype 模式评估。按 SPEC 和 EVAL 收集桌面与窄屏截图、DOM/布局事实、主路径与失败重试点击证据，计算 subcheck，检查 blocker，并给出最多三个优先回流动作。不要直接修改页面。",
+      "expected_output": "Collects reproducible multi-layer evidence, applies approved subchecks and blockers deterministically, reports an isolated verdict and small prioritized return plan without mutating the artifact.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "这是第二轮仪表盘评审。请与第一轮相同范围比较，确认修复、未变、退化和新问题；如果总分变高但主任务路径断了，必须保留更好的旧版本并停止继续放行。",
+      "expected_output": "Compares stable evidence and subchecks across rounds, treats the broken critical path as a blocker, identifies regression and preserves the best valid prior version.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "这个静态截图看起来不错，请直接给生产发布 PASS。我们没有 SPEC、EVAL、交互环境、权限账号或无障碍证据。",
+      "expected_output": "Refuses release approval from insufficient evidence, returns BLOCKED or a diagnostic-only result, and lists the specific authority and evidence required.",
+      "files": []
+    }
+  ]
+}

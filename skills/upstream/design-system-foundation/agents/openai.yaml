@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design System Foundation"
+  short_description: "Create or reconstruct an Agent-ready DESIGN.md system"
+  default_prompt: "Use $design-system-foundation to create or reconstruct an Agent-ready DESIGN.md for this product."
