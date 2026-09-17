@@ -16,6 +16,12 @@ orchestration:
   max_retries_without_new_evidence: 1
   protected_paths: ["auth/**", "payments/**", "migrations/**", "infra/**", ".github/workflows/**", "**/.env*", "**/*secret*", "**/*credential*"]
   human_approval_for_risk: [high, critical]
+  phase_contract_required: true
+  plan_quality_check_required: true
+  durable_handoff_required_on_pause: true
+  milestone_audit_required: true
+  research_before_high_risk: true
+  tdd_when_feasible: true
 design:
   required_when_paths: ["**/*.tsx", "**/*.jsx", "**/*.vue", "**/*.svelte", "**/*.html", "**/*.css"]
   output_root: .super-speckit/design

@@ -35,4 +35,10 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertIn("wait", skill.lower())
         self.assertIn("new bug worktree", skill)
         self.assertIn("Do not continue dependent steps", protocol)
+    def test_complementary_workflow_artifacts_are_present(self):
+        root=Path(__file__).parents[1]
+        self.assertTrue((root/"templates/phase-contract.md").exists())
+        self.assertTrue((root/"templates/durable-handoff.md").exists())
+        self.assertTrue((root/"commands/super-speckit.phase-check.md").exists())
+        self.assertTrue((root/"skills/upstream/mattpocock/tdd/SKILL.md").exists())
 if __name__ == "__main__": unittest.main()

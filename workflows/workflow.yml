@@ -54,7 +54,7 @@ steps:
       args: "{{ inputs.feature }}"
   - id: lane-plan
     type: prompt
-    message: "Run super-speckit.parallelize and super-speckit.matrix. Do not create worktrees until the dependency and risk plan is recorded."
+    message: "Run super-speckit.parallelize, super-speckit.matrix, and super-speckit.phase-check. Do not create worktrees until the dependency, risk, and phase-contract evidence is recorded."
   - id: implementation-gate
     type: gate
     message: "Review scope, risk, design decision where applicable, and planned worktree lanes."
@@ -71,6 +71,9 @@ steps:
     message: "Review super-speckit.release summary and proof pack. This is a human merge decision; no automatic merge occurs."
     options: [approve, reject]
     on_reject: abort
+  - id: handoff
+    type: prompt
+    message: "Write a super-speckit.handoff with factual evidence, next safe action, and any blocker/resume condition before convergence."
   - id: converge
     command: speckit.converge
     input:

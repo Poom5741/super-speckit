@@ -7,6 +7,8 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `ask-super-speckit` | Main orchestrator: inspect state, recommend the next safe stage, and coordinate only the chosen stage. |
 | `super-speckit.design-first` | Create/review a static HTML design prototype before UI implementation. |
 | `super-speckit.parallelize` | Produce risk/dependency-aware lane and gate plan before creating worktrees. |
+| `super-speckit.phase-check` | Create a GSD-inspired, Spec-Kit-linked phase contract and plan-quality gate. |
+| `super-speckit.handoff` | Persist a factual, resumable handoff when any lane pauses, fails, or completes. |
 | `super-speckit.environment-ready` | Prove a clean test environment is ready before runtime QA. |
 | `super-speckit.final-manual-review` | Human-led, AI-recorded final review with bug-fix/retest and wait branches. |
 | `super-speckit.start` | Create a feature maker worktree and state record from native Spec Kit artifacts. |

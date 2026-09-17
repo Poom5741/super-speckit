@@ -28,6 +28,15 @@
       "installed_to": "skills/upstream/paulrberg/frontend-design",
       "role": "independent rendered-UI checker",
       "license_note": "Verify upstream repository MIT license before redistribution."
+    },
+    {
+      "name": "mattpocock engineering skills",
+      "repository": "https://github.com/mattpocock/skills",
+      "commit": "74ca5fe077456a0b3b2f5310cf9430999fd0b5fd",
+      "paths": ["skills/engineering/setup-matt-pocock-skills", "skills/engineering/grill-with-docs", "skills/engineering/domain-modeling", "skills/engineering/research", "skills/engineering/tdd", "skills/engineering/diagnosing-bugs", "skills/engineering/code-review", "skills/engineering/wayfinder", "skills/productivity/handoff"],
+      "installed_to": "skills/upstream/mattpocock",
+      "role": "repo grounding, research, TDD, diagnosis, review, navigation, and durable handoffs",
+      "license_note": "Consult upstream license and notices before redistribution."
     }
   ]
 }
