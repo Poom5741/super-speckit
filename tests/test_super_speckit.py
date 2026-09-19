@@ -42,6 +42,10 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertTrue((root/"templates/durable-handoff.md").exists())
         self.assertTrue((root/"commands/super-speckit.phase-check.md").exists())
         self.assertTrue((root/"skills/upstream/mattpocock/tdd/SKILL.md").exists())
+        self.assertTrue((root/"skills/upstream/mattpocock/diagnosing-bugs/SKILL.md").exists())
+        self.assertTrue((root/"commands/super-speckit.diagnose.md").exists())
+        orchestrator=(root/"commands/ask-super-speckit.md").read_text()
+        self.assertIn("super-speckit.diagnose", orchestrator)
     def test_cloud_pack_is_bounded_and_rejects_obvious_secrets(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); handoff=root/"handoff.md"; pack=root/"pack.md"

@@ -16,7 +16,7 @@ Route in this order:
 8. Candidate without readiness receipt → `super-speckit.environment-ready`.
 9. Candidate awaiting independent proof → `super-speckit.verify` and, if configured, OCR; use pinned Matt `code-review` as another static lane, never runtime proof.
 10. Automated proof pack complete but human acceptance pending → `super-speckit.final-manual-review`.
-11. Confirmed defect → pinned Matt `diagnosing-bugs` if root cause is unclear, then `super-speckit.fix`/`retest`, and resume manual review at its affected path.
+11. Confirmed defect or a red test/runtime failure → `super-speckit.diagnose`: use pinned Matt `diagnosing-bugs` to build a tight red-capable feedback loop. For a rendered web app, use the opt-in OpenAI browser-debugging workflow when its plugin is available; otherwise collect equivalent Playwright evidence. Then use `super-speckit.fix`/`retest`, and resume manual review at its affected path.
 12. Any pause, completion, or block → `super-speckit.handoff`.
 13. Complete proof pack and manual-review handoff → `super-speckit.release`, milestone audit, then native converge.
 

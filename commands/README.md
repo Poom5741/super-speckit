@@ -19,6 +19,7 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `super-speckit.explore` | Run bounded browser exploration and record observed coverage. |
 | `super-speckit.ocr` | Run/ingest OCR static review and triage findings. |
 | `super-speckit.file-bug` | Reproduce, classify, and persist a confirmed QA failure. |
+| `super-speckit.diagnose` | Route a codebase or live-app failure through evidence-backed root-cause diagnosis before a fix worktree is opened. |
 | `super-speckit.fix` | Create a bug-fix worktree and require regression coverage. |
 | `super-speckit.retest` | Independently retest a candidate bug fix. |
 | `super-speckit.release` | Generate merge-readiness and project QA summary. |

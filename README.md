@@ -18,6 +18,7 @@ Static review is evidence about code. A passing runtime verification is evidence
 - GSD-style phase contracts, plan-quality checks, durable handoffs, and milestone audits—without replacing Spec Kit’s core artifacts or independent QA.
 - optional Codex Cloud delegation for bounded research, maker, and bug-fix work; cloud output returns through a fresh local independent QA lane.
 - a durable bug artifact, regression test obligation, independent retest, project QA summary, and explicit unverified items.
+- a root-cause diagnosis lane that requires a tight reproduction for codebase failures and browser-runtime evidence for rendered-app failures.
 
 It is intentionally an extension, not a competing fork of the Spec Kit CLI. The upstream project changes quickly; install normal Spec Kit first and keep its commands current.
 
@@ -49,7 +50,7 @@ speckit.plan → speckit.tasks → analyze → risk/parallelism plan
 super-speckit.start FEATURE-123 → maker worktree → commit candidate
       ↓
 super-speckit.verify FEATURE-123 → clean QA worktree → gates + E2E + exploration
-      ├─ confirmed failure → bug artifact → bug maker worktree → independent retest
+      ├─ confirmed failure → diagnose (tight repro + root cause) → bug artifact → bug maker worktree → independent retest
       └─ pass + OCR triage resolved/accepted → merge decision
       ↓
 speckit.converge → project QA summary (including unverified scope and proof-pack)
@@ -70,9 +71,11 @@ Use `commands/` as agent slash-command definitions or adapt them to your integra
 
 See [commands](commands/README.md), [design-first skill](skills/design-first/SKILL.md), [orchestrator skill](skills/ask-super-speckit/SKILL.md), [schemas](schemas/README.md), [orchestration rules](docs/orchestration.md), [state machine](docs/state-machine.md), and the [worked example](examples/feature-042.md).
 
-The shipped upstream design skills and their pinned source revisions are listed in [sources.lock.json](sources.lock.json). The locally authored final review procedure is [final-manual-review](skills/final-manual-review/SKILL.md); it is intentionally limited to human/AI handoff, evidence, waiting, and bug-routing mechanics.
+The shipped upstream design and debugging skills and their pinned source revisions are listed in [sources.lock.json](sources.lock.json). The locally authored final review procedure is [final-manual-review](skills/final-manual-review/SKILL.md); it is intentionally limited to human/AI handoff, evidence, waiting, and bug-routing mechanics.
 
 See [compatibility map](docs/compatibility-map.md) for what was selectively adopted from GSD, Matt Pocock’s engineering skills, MAQA, AWO/Orka, and the design workflow suite—and what was intentionally kept out to avoid conflicts.
+
+See the [debugging skill landscape](docs/debug-skill-landscape.md) for the selected codebase/runtime diagnosis routing and the upstream skills evaluated but intentionally not duplicated.
 
 ## Codex Cloud delegation
 
