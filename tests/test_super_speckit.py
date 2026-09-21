@@ -46,6 +46,16 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertTrue((root/"commands/super-speckit.diagnose.md").exists())
         orchestrator=(root/"commands/ask-super-speckit.md").read_text()
         self.assertIn("super-speckit.diagnose", orchestrator)
+    def test_premium_ui_skill_sources_and_routing_are_present(self):
+        root=Path(__file__).parents[1]
+        sources=json.loads((root/"sources.lock.json").read_text())["sources"]
+        names={source["name"] for source in sources}
+        self.assertIn("UI/UX Pro Max", names)
+        self.assertIn("Frontend Agent Skills", names)
+        self.assertTrue((root/"skills/upstream/nextlevelbuilder/ui-ux-pro-max/SKILL.md").exists())
+        self.assertTrue((root/"skills/upstream/hueyexe/ui-visual-composition/SKILL.md").exists())
+        bridge=(root/"skills/design-first/SKILL.md").read_text()
+        self.assertIn("Commit to one direction", bridge)
     def test_cloud_pack_is_bounded_and_rejects_obvious_secrets(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); handoff=root/"handoff.md"; pack=root/"pack.md"

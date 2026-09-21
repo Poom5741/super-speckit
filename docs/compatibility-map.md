@@ -10,6 +10,8 @@ Super-SpecKit keeps native Spec Kit as the source of requirements, plan, tasks, 
 | [MAQA](https://github.com/GenieRobot/spec-kit-maqa-ext) | dependency-aware isolated feature lanes | parallelization plan and maker worktrees | static analysis as release proof |
 | [AWO](https://github.com/ystepanoff/awo) / [Orka](https://github.com/Dusttoo/orka) | read-only checking, proof pack, policy/budgets | QA receipts, proof pack, risk policy | automatic merge |
 | [vibe-design-skills](https://github.com/nick3/vibe-design-skills) | foundation, design execution, independent visual evaluation | pinned upstream design lane | self-evaluation as release approval |
+| [UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | searchable design intelligence for visual direction, token choices, motion, chart, UX, and stack decisions | pinned premium-design direction lane | mixing catalog styles; replacing project stack or human design approval |
+| [Frontend Agent Skills](https://github.com/hueyexe/frontend-agent-skills) | focused composition, interaction, forms, IA, usability, content, accessibility, design-system, and research specialists | selected on demand by the design-first bridge | loading every specialist for every screen; self-approval of rendered UI |
 | [Centillex Desk](https://centillex.com/desk) | optional local “pack and move” transport across agent vendors | redacted cloud-task pack and optional Desk adapter | evidence/release authority |
 | [Codex Cloud](https://learn.chatgpt.com/docs/codex/cli) | configured cloud execution and local diff collection | primary `codex cloud exec/status/diff/apply` adapter | automatic application into integration or QA approval |
 

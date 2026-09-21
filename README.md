@@ -19,6 +19,7 @@ Static review is evidence about code. A passing runtime verification is evidence
 - optional Codex Cloud delegation for bounded research, maker, and bug-fix work; cloud output returns through a fresh local independent QA lane.
 - a durable bug artifact, regression test obligation, independent retest, project QA summary, and explicit unverified items.
 - a root-cause diagnosis lane that requires a tight reproduction for codebase failures and browser-runtime evidence for rendered-app failures.
+- a premium UI lane: a pinned design-intelligence catalog plus focused skills for composition, interactions, navigation, forms, accessibility, content, usability, research, and design-system architecture.
 
 It is intentionally an extension, not a competing fork of the Spec Kit CLI. The upstream project changes quickly; install normal Spec Kit first and keep its commands current.
 
@@ -73,7 +74,7 @@ See [commands](commands/README.md), [design-first skill](skills/design-first/SKI
 
 The shipped upstream design and debugging skills and their pinned source revisions are listed in [sources.lock.json](sources.lock.json). The locally authored final review procedure is [final-manual-review](skills/final-manual-review/SKILL.md); it is intentionally limited to human/AI handoff, evidence, waiting, and bug-routing mechanics.
 
-See [compatibility map](docs/compatibility-map.md) for what was selectively adopted from GSD, Matt Pocock’s engineering skills, MAQA, AWO/Orka, and the design workflow suite—and what was intentionally kept out to avoid conflicts.
+See [compatibility map](docs/compatibility-map.md) for what was selectively adopted from GSD, Matt Pocock’s engineering skills, MAQA, AWO/Orka, UI/UX Pro Max, Frontend Agent Skills, and the design workflow suite—and what was intentionally kept out to avoid conflicts.
 
 See the [debugging skill landscape](docs/debug-skill-landscape.md) for the selected codebase/runtime diagnosis routing and the upstream skills evaluated but intentionally not duplicated.
 

@@ -37,6 +37,24 @@
       "installed_to": "skills/upstream/mattpocock",
       "role": "repo grounding, research, TDD, diagnosis, review, navigation, and durable handoffs",
       "license_note": "Consult upstream license and notices before redistribution."
+    },
+    {
+      "name": "UI/UX Pro Max",
+      "repository": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "dcc40ff5133ef78276117db0cc34e7b83cc8aeba",
+      "paths": [".claude/skills/ui-ux-pro-max", ".claude/skills/ui-styling", ".claude/skills/design-system", ".claude/skills/brand"],
+      "installed_to": "skills/upstream/nextlevelbuilder",
+      "role": "premium design intelligence, style/token decisions, implementation styling, and brand constraints",
+      "license_note": "MIT; retain upstream notices and treat catalog output as recommendations."
+    },
+    {
+      "name": "Frontend Agent Skills",
+      "repository": "https://github.com/hueyexe/frontend-agent-skills",
+      "commit": "2841c079dd8a9c634882227194dc42e25227710d",
+      "paths": ["ui-visual-composition", "interaction-patterns-components", "information-architecture-navigation", "forms-inputs-checkout", "ux-usability-foundations", "ux-writing-content-design", "accessibility-inclusive-design", "design-systems-frontend-architecture", "ux-research-discovery-testing"],
+      "installed_to": "skills/upstream/hueyexe",
+      "role": "specialist UX, inclusive design, composition, interaction, forms, information architecture, content, systems, and research",
+      "license_note": "MIT; retain upstream notices."
     }
   ]
 }
