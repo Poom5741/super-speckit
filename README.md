@@ -25,6 +25,16 @@ Static review is evidence about code. A passing runtime verification is evidence
 
 It is intentionally an extension, not a competing fork of the Spec Kit CLI. The upstream project changes quickly; install normal Spec Kit first and keep its commands current.
 
+## One-command installation
+
+Install the public bootstrap skill with:
+
+```bash
+npx skills add https://github.com/Poom5741/super-speckit/tree/main/installable/super-speckit
+```
+
+Then invoke `$super-speckit-installer` in the target repository. It installs the complete kit to `.super-speckit/`, creates a project `super-speckit.yml` if absent, and initializes the YAML work-state manifest. The direct folder URL avoids exposing the kit's internal and vendored skills as unrelated installation choices. Pin an exact commit or tag URL for reproducible installations.
+
 ## Install into a Spec Kit repository
 
 1. Initialise or update native Spec Kit for your chosen agent (`specify init ...`).

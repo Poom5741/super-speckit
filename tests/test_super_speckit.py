@@ -3,6 +3,7 @@ from pathlib import Path
 
 SCRIPT = Path(__file__).parents[1] / "scripts/super_speckit.py"
 CLOUD_SCRIPT = Path(__file__).parents[1] / "scripts/cloud_handoff.py"
+INSTALL_SCRIPT = Path(__file__).parents[1] / "installable/super-speckit/scripts/install_project.py"
 class SuperSpecKitTests(unittest.TestCase):
     def invoke(self, *args):
         return subprocess.run(["python3", str(SCRIPT), *args], text=True, capture_output=True)
@@ -27,6 +28,14 @@ class SuperSpecKitTests(unittest.TestCase):
             self.assertEqual(state["feature"]["state"],"planned")
             self.assertEqual(state["state_validation"]["status"],"pass")
             self.assertTrue(state["artifacts"]["work_state_manifest_exists"])
+    def test_public_installer_copies_a_complete_kit_from_local_source(self):
+        with tempfile.TemporaryDirectory() as d:
+            destination=Path(d)/"project"
+            result=subprocess.run(["python3",str(INSTALL_SCRIPT),"--source",str(Path(__file__).parents[1]),"--target",str(destination)],text=True,capture_output=True)
+            self.assertEqual(result.returncode,0, result.stderr)
+            self.assertTrue((destination/".super-speckit/SKILL.md").exists())
+            self.assertTrue((destination/".super-speckit/state/work-state.yml").exists())
+            self.assertTrue((destination/"super-speckit.yml").exists())
     def test_same_person_cannot_be_maker_and_checker(self):
         with tempfile.TemporaryDirectory() as d:
             r=self.invoke("create-feature","F-1","--repo",d,"--maker","same","--checker","same","--matrix","x.md")
