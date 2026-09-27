@@ -6,7 +6,7 @@
 - Last verified fact and evidence:
 - Work completed:
 - Next smallest safe action:
-- Open decision / required human input:
+- Autonomous decision made / evidence / reversible alternatives:
 - Blocker and resume condition:
 - Relevant commands, environment receipt, and artifact paths:
 

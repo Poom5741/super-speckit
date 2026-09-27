@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse, html, json, re, subprocess, sys
 from pathlib import Path
 
-STATES = {"planned", "maker_running", "candidate_ready", "qa_running", "qa_failed", "bug_fixing", "retest_running", "ready_for_human_merge", "merged", "blocked"}
+STATES = {"planned", "maker_running", "candidate_ready", "qa_running", "qa_failed", "bug_fixing", "retest_running", "ready_for_merge", "merged", "blocked"}
 SHA = re.compile(r"^[0-9a-f]{7,64}$")
 
 def root(value: str) -> Path: return Path(value).resolve()
@@ -30,7 +30,7 @@ def cmd_transition(args):
     if args.sha:
         if not SHA.match(args.sha): raise ValueError("candidate SHA must be 7-64 lowercase hex characters")
         data["candidate_sha"] = args.sha
-    if args.state in {"candidate_ready", "qa_running", "ready_for_human_merge"} and not data.get("candidate_sha"): raise ValueError("state requires a candidate SHA")
+    if args.state in {"candidate_ready", "qa_running", "ready_for_merge"} and not data.get("candidate_sha"): raise ValueError("state requires a candidate SHA")
     if args.state == "qa_running" and data["maker"] == data["checker"]: raise ValueError("QA requires distinct maker/checker")
     data["state"] = args.state; save(repo,args.feature,data); print(json.dumps(data, indent=2))
 
@@ -39,7 +39,7 @@ def cmd_validate(args):
     for p in (repo / ".super-speckit/state/features").glob("*.json"):
         try:
             d=json.loads(p.read_text()); assert d["state"] in STATES; assert d["maker"] != d["checker"]
-            if d["state"] in {"candidate_ready","qa_running","ready_for_human_merge","merged"}: assert SHA.match(d.get("candidate_sha") or "")
+            if d["state"] in {"candidate_ready","qa_running","ready_for_merge","merged"}: assert SHA.match(d.get("candidate_sha") or "")
             assert (repo / d["matrix"]).exists()
         except Exception as e: failures.append(f"{p}: {e}")
     if failures: print("\n".join(failures)); return 1

@@ -21,7 +21,7 @@ class SuperSpecKitTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             r=Path(d); m=r/"x.md"; m.write_text("x")
             self.invoke("init","--repo",d); self.invoke("create-feature","F-1","--repo",d,"--maker","a","--checker","b","--matrix","x.md")
-            self.assertNotEqual(self.invoke("transition","F-1","ready_for_human_merge","--repo",d).returncode,0)
+            self.assertNotEqual(self.invoke("transition","F-1","ready_for_merge","--repo",d).returncode,0)
     def test_design_first_makes_safe_html_decision_artifacts(self):
         with tempfile.TemporaryDirectory() as d:
             result=self.invoke("design-first","F-9","--repo",d,"--title","Farmer <Edit>","--summary","Update contact details")
@@ -56,6 +56,23 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertTrue((root/"skills/upstream/hueyexe/ui-visual-composition/SKILL.md").exists())
         bridge=(root/"skills/design-first/SKILL.md").read_text()
         self.assertIn("Commit to one direction", bridge)
+    def test_feedback_loop_is_a_required_orchestrator_stage(self):
+        root=Path(__file__).parents[1]
+        command=(root/"commands/super-speckit.feedback-loop.md").read_text()
+        orchestrator=(root/"commands/ask-super-speckit.md").read_text()
+        constitution=(root/"templates/constitution-addon.md").read_text()
+        self.assertIn("public seam", command)
+        self.assertIn("super-speckit.feedback-loop", orchestrator)
+        self.assertIn("Native feedback loops", constitution)
+    def test_orchestrator_is_autonomous_but_preserves_evidence_limits(self):
+        root=Path(__file__).parents[1]
+        skill=(root/"skills/ask-super-speckit/SKILL.md").read_text()
+        policy=(root/"skills/ask-super-speckit/references/autonomous-execution.md").read_text()
+        config=(root/"config/super-speckit.yml").read_text()
+        self.assertIn("autonomous orchestrator", skill)
+        self.assertIn("Self-healing loop", policy)
+        self.assertIn("not a pass", policy)
+        self.assertIn("autonomous_when_ready: true", config)
     def test_cloud_pack_is_bounded_and_rejects_obvious_secrets(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); handoff=root/"handoff.md"; pack=root/"pack.md"

@@ -11,7 +11,7 @@ Artifacts are human-readable Markdown plus JSON for orchestration. IDs are stabl
 | Bug | `.super-speckit/bugs/BUG-<id>.md` | Confirmed failures have reproducibility and evidence. |
 | Project summary | `.super-speckit/qa/summary.md` | Explicitly names unverified scope. |
 | Proof pack | `.super-speckit/qa/<run-id>/proof-pack.json` | Binds all evidence to one immutable candidate and environment receipt. |
-| Design decision | `.super-speckit/design/<feature>/decision.json` | UI work cannot start until `approved` or explicitly `not-required`. |
+| Design decision | `.super-speckit/design/<feature>/decision.json` | UI work cannot start until the orchestrator records `approved` or `not-required`, with evidence and rationale. |
 
 JSON shape used by the included validator:
 
@@ -19,7 +19,7 @@ JSON shape used by the included validator:
 {"id":"FEATURE-042","state":"qa_running","candidate_sha":"40+ hex chars","maker":"agent-a","checker":"agent-b","matrix":"specs/042-foo/verification-matrix.md","runs":["QA-042-001"],"bugs":[]}
 ```
 
-Allowed states: `planned`, `maker_running`, `candidate_ready`, `qa_running`, `qa_failed`, `bug_fixing`, `retest_running`, `ready_for_human_merge`, `merged`, `blocked`.
+Allowed states: `planned`, `maker_running`, `candidate_ready`, `qa_running`, `qa_failed`, `bug_fixing`, `retest_running`, `ready_for_merge`, `merged`, `blocked`.
 
 Proof pack minimum shape:
 

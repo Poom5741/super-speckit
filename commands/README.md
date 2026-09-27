@@ -15,6 +15,7 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `super-speckit.final-manual-review` | Human-led, AI-recorded final review with bug-fix/retest and wait branches. |
 | `super-speckit.start` | Create a feature maker worktree and state record from native Spec Kit artifacts. |
 | `super-speckit.matrix` | Create/review the requirements-to-verification matrix. |
+| `super-speckit.feedback-loop` | Discover, run, and record the smallest real feedback loop before a change. |
 | `super-speckit.verify` | Create a clean QA worktree and execute independent verification. |
 | `super-speckit.explore` | Run bounded browser exploration and record observed coverage. |
 | `super-speckit.ocr` | Run/ingest OCR static review and triage findings. |

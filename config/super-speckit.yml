@@ -7,7 +7,7 @@ worktrees:
   retain_failed_qa_worktrees: false
 roles:
   require_distinct_maker_and_checker: true
-  merge_requires_human: true
+  merge_requires_human: false
 orchestration:
   entry_command: ask-super-speckit
   max_parallel_lanes: 3
@@ -15,13 +15,15 @@ orchestration:
   max_repair_cycles: 3
   max_retries_without_new_evidence: 1
   protected_paths: ["auth/**", "payments/**", "migrations/**", "infra/**", ".github/workflows/**", "**/.env*", "**/*secret*", "**/*credential*"]
-  human_approval_for_risk: [high, critical]
+  human_approval_for_risk: []
+  autonomous_execution: true
   phase_contract_required: true
   plan_quality_check_required: true
   durable_handoff_required_on_pause: true
   milestone_audit_required: true
   research_before_high_risk: true
   tdd_when_feasible: true
+  feedback_loop_required: true
 delegation:
   enabled: false # explicit opt-in; never silently send repository context to a cloud service
   default_transport: codex-cloud
@@ -42,7 +44,7 @@ design:
 risk:
   default: medium
   critical_paths: ["auth/**", "payments/**", "migrations/**", "data-deletion/**"]
-  high_requires: ["independent-runtime-qa", "security-review", "human-approval"]
+  high_requires: ["independent-runtime-qa", "security-review"]
 gates:
   format: ""
   lint: ""
@@ -75,3 +77,4 @@ merge:
   required_gate_status: pass
   require_ocr_triage_complete: true
   require_no_open_confirmed_bugs: true
+  autonomous_when_ready: true
