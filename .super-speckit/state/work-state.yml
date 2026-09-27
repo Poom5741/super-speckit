@@ -1,0 +1,4 @@
+schema_version: 1
+authority: files-and-commands
+generated_from: .super-speckit/state/features/*.json
+features: []

@@ -13,6 +13,20 @@ class SuperSpecKitTests(unittest.TestCase):
             self.assertEqual(self.invoke("create-feature","F-1","--repo",d,"--maker","maker","--checker","checker","--matrix","specs/f/verification-matrix.md").returncode,0)
             self.assertEqual(self.invoke("transition","F-1","candidate_ready","--repo",d,"--sha","abcdef1").returncode,0)
             self.assertEqual(self.invoke("validate","--repo",d).returncode,0)
+    def test_status_reports_native_state_and_git_without_chat_memory(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); matrix=root/"matrix.md"; matrix.write_text("# matrix")
+            self.assertEqual(self.invoke("init","--repo",d).returncode,0)
+            self.assertEqual(self.invoke("create-feature","F-1","--repo",d,"--maker","maker","--checker","checker","--matrix","matrix.md").returncode,0)
+            manifest=(root/".super-speckit/state/work-state.yml").read_text()
+            self.assertIn('id: "F-1"', manifest)
+            self.assertIn('state: "planned"', manifest)
+            result=self.invoke("status","--repo",d,"--feature","F-1","--strict")
+            self.assertEqual(result.returncode,0)
+            state=json.loads(result.stdout)
+            self.assertEqual(state["feature"]["state"],"planned")
+            self.assertEqual(state["state_validation"]["status"],"pass")
+            self.assertTrue(state["artifacts"]["work_state_manifest_exists"])
     def test_same_person_cannot_be_maker_and_checker(self):
         with tempfile.TemporaryDirectory() as d:
             r=self.invoke("create-feature","F-1","--repo",d,"--maker","same","--checker","same","--matrix","x.md")

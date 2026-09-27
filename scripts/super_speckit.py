@@ -9,20 +9,66 @@ SHA = re.compile(r"^[0-9a-f]{7,64}$")
 
 def root(value: str) -> Path: return Path(value).resolve()
 def state_path(repo: Path, feature: str) -> Path: return repo / ".super-speckit/state/features" / f"{feature}.json"
+def manifest_path(repo: Path) -> Path: return repo / ".super-speckit/state/work-state.yml"
 def load(repo: Path, feature: str) -> dict: return json.loads(state_path(repo, feature).read_text())
 def save(repo: Path, feature: str, data: dict) -> None:
     p = state_path(repo, feature); p.parent.mkdir(parents=True, exist_ok=True); p.write_text(json.dumps(data, indent=2) + "\n")
 
+def render_work_state_manifest(repo: Path) -> str:
+    """Render a dependency-free YAML index that humans and other tools can inspect."""
+    records=[]
+    for path in sorted((repo / ".super-speckit/state/features").glob("*.json")):
+        records.append(json.loads(path.read_text()))
+    lines=["schema_version: 1", "authority: files-and-commands", "generated_from: .super-speckit/state/features/*.json", "features:"]
+    if not records:
+        lines[-1]="features: []"
+    for data in records:
+        lines.extend([
+            f"  - id: {json.dumps(data.get('id'))}",
+            f"    state: {json.dumps(data.get('state'))}",
+            f"    candidate_sha: {json.dumps(data.get('candidate_sha'))}",
+            f"    maker: {json.dumps(data.get('maker'))}",
+            f"    checker: {json.dumps(data.get('checker'))}",
+            f"    matrix: {json.dumps(data.get('matrix'))}",
+            f"    runs: {json.dumps(data.get('runs', []))}",
+            f"    bugs: {json.dumps(data.get('bugs', []))}",
+        ])
+    return "\n".join(lines)+"\n"
+
+def write_work_state_manifest(repo: Path) -> None:
+    manifest_path(repo).parent.mkdir(parents=True, exist_ok=True)
+    manifest_path(repo).write_text(render_work_state_manifest(repo))
+
+def git_value(repo: Path, *args: str) -> str | None:
+    result=subprocess.run(["git","-C",str(repo),*args],text=True,capture_output=True)
+    return result.stdout.strip() if result.returncode == 0 else None
+
+def validation_failures(repo: Path) -> list[str]:
+    failures=[]
+    for p in (repo / ".super-speckit/state/features").glob("*.json"):
+        try:
+            d=json.loads(p.read_text()); assert d["state"] in STATES; assert d["maker"] != d["checker"]
+            if d["state"] in {"candidate_ready","qa_running","ready_for_merge","merged"}: assert SHA.match(d.get("candidate_sha") or "")
+            assert (repo / d["matrix"]).exists()
+        except Exception as e: failures.append(f"{p}: {e}")
+    manifest=manifest_path(repo)
+    if not manifest.exists():
+        failures.append(f"missing required state manifest: {manifest}")
+    elif manifest.read_text() != render_work_state_manifest(repo):
+        failures.append(f"stale state manifest: {manifest}; run state mutation or regenerate it")
+    return failures
+
 def cmd_init(args):
     repo = root(args.repo)
     for path in [".super-speckit/state/features", ".super-speckit/qa", ".super-speckit/bugs"]: (repo / path).mkdir(parents=True, exist_ok=True)
+    write_work_state_manifest(repo)
     print(f"initialized {repo / '.super-speckit'}")
 
 def cmd_create(args):
     repo = root(args.repo)
     if args.maker == args.checker: raise ValueError("maker and checker must be distinct")
     data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "runs": [], "bugs": []}
-    save(repo, args.feature, data); print(state_path(repo,args.feature))
+    save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
     repo = root(args.repo); data = load(repo,args.feature)
@@ -32,18 +78,33 @@ def cmd_transition(args):
         data["candidate_sha"] = args.sha
     if args.state in {"candidate_ready", "qa_running", "ready_for_merge"} and not data.get("candidate_sha"): raise ValueError("state requires a candidate SHA")
     if args.state == "qa_running" and data["maker"] == data["checker"]: raise ValueError("QA requires distinct maker/checker")
-    data["state"] = args.state; save(repo,args.feature,data); print(json.dumps(data, indent=2))
+    data["state"] = args.state; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data, indent=2))
 
 def cmd_validate(args):
-    repo = root(args.repo); failures=[]
-    for p in (repo / ".super-speckit/state/features").glob("*.json"):
-        try:
-            d=json.loads(p.read_text()); assert d["state"] in STATES; assert d["maker"] != d["checker"]
-            if d["state"] in {"candidate_ready","qa_running","ready_for_merge","merged"}: assert SHA.match(d.get("candidate_sha") or "")
-            assert (repo / d["matrix"]).exists()
-        except Exception as e: failures.append(f"{p}: {e}")
+    repo = root(args.repo); failures=validation_failures(repo)
     if failures: print("\n".join(failures)); return 1
     print("super-speckit state valid"); return 0
+
+def cmd_status(args):
+    """Print a machine-readable evidence snapshot; never infer state from conversation."""
+    repo=root(args.repo); failures=validation_failures(repo)
+    feature=None
+    if args.feature:
+        path=state_path(repo,args.feature)
+        feature={"id":args.feature,"state_file":str(path.relative_to(repo)),"exists":path.exists()}
+        if path.exists():
+            data=json.loads(path.read_text())
+            feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists()})
+    status={
+        "schema_version":1,
+        "repository":str(repo),
+        "git":{"head":git_value(repo,"rev-parse","HEAD"),"branch":git_value(repo,"branch","--show-current"),"dirty":bool(git_value(repo,"status","--porcelain")),"worktrees":(git_value(repo,"worktree","list","--porcelain") or "").count("worktree ")},
+        "feature":feature,
+        "state_validation":{"status":"pass" if not failures else "fail","failures":failures},
+        "artifacts":{"config_exists":(repo/"super-speckit.yml").exists() or (repo/"config/super-speckit.yml").exists(),"native_specify_exists":(repo/".specify").exists(),"qa_root_exists":(repo/".super-speckit/qa").exists(),"work_state_manifest":str(manifest_path(repo).relative_to(repo)),"work_state_manifest_exists":manifest_path(repo).exists()},
+    }
+    print(json.dumps(status,indent=2))
+    return 1 if args.strict and failures else 0
 
 def cmd_worktree(args):
     repo=root(args.repo); dest=Path(args.path).resolve()
@@ -67,6 +128,7 @@ def main():
     p=argparse.ArgumentParser(); sub=p.add_subparsers(dest="cmd",required=True)
     for name, fn in [("init",cmd_init),("validate",cmd_validate)]:
         x=sub.add_parser(name); x.add_argument("--repo",default="."); x.set_defaults(fn=fn)
+    x=sub.add_parser("status"); x.add_argument("--repo",default="."); x.add_argument("--feature"); x.add_argument("--strict",action="store_true"); x.set_defaults(fn=cmd_status)
     x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.set_defaults(fn=cmd_create)
     x=sub.add_parser("transition"); x.add_argument("feature"); x.add_argument("state"); x.add_argument("--repo",default="."); x.add_argument("--sha"); x.set_defaults(fn=cmd_transition)
     x=sub.add_parser("worktree"); x.add_argument("--repo",default="."); x.add_argument("--path",required=True); x.add_argument("--branch",required=True); x.add_argument("--ref",default="HEAD"); x.set_defaults(fn=cmd_worktree)

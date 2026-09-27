@@ -4,6 +4,10 @@
 
 The autonomous orchestrator runs native `specify`, `plan`, `tasks`, and optionally `clarify`, `checklist`, `analyze` as evidence requires. Translate each testable requirement into `verification-matrix.md`; update the native plan/tasks if the matrix exposes missing work. `converge` is run after verification to record remaining scope.
 
+## 1.1 Files and commands are the work-state authority
+
+Conversation is never a state store. Before and after every material stage, the orchestrator runs the configured `status` and `validate` commands, then reads the real `.super-speckit/state/work-state.yml` index, per-feature JSON, native artifacts, proof pack, and Git state they identify. The resulting command receipt—not an agent summary—decides whether a stage may advance. A mismatch, missing artifact, dirty unexpected worktree, or invalid state routes to recovery and is recorded as evidence.
+
 ## 2. Feedback loop before work
 
 Before changing production code, configuration, data behavior, or UI, the autonomous orchestrator creates a feedback-loop receipt. It searches existing project tools and selects the smallest public-seam signal that can distinguish correct from incorrect behavior. Use red-green TDD for code where a test seam exists; otherwise use API/DB assertions, browser/visual evidence, replay, fixtures, simulator, property/fuzz, differential, performance, or bounded human observation. Source inspection, a clean exit status, and static review alone are never sufficient.

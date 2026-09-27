@@ -20,6 +20,7 @@ Static review is evidence about code. A passing runtime verification is evidence
 - a durable bug artifact, regression test obligation, independent retest, project QA summary, and explicit unverified items.
 - a root-cause diagnosis lane that requires a tight reproduction for codebase failures and browser-runtime evidence for rendered-app failures.
 - a native feedback-loop rule: every change begins by finding and running a real public-seam signal—red-green tests where possible, otherwise an equivalent browser, API, DB, replay, simulator, visual, differential, performance, or bounded-observation loop.
+- command-backed state authority: agents re-check native artifacts, feature state, Git, and proof packs before and after material stages instead of trusting conversation memory.
 - a premium UI lane: a pinned design-intelligence catalog plus focused skills for composition, interactions, navigation, forms, accessibility, content, usability, research, and design-system architecture.
 
 It is intentionally an extension, not a competing fork of the Spec Kit CLI. The upstream project changes quickly; install normal Spec Kit first and keep its commands current.

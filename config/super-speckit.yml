@@ -24,6 +24,13 @@ orchestration:
   research_before_high_risk: true
   tdd_when_feasible: true
   feedback_loop_required: true
+state_evidence:
+  source_of_truth: yaml-json-files-and-commands
+  work_state_manifest: .super-speckit/state/work-state.yml
+  require_pre_stage_check: true
+  require_post_stage_check: true
+  status_command: "python3 scripts/super_speckit.py status --repo . --feature {{feature}} --strict"
+  validation_command: "python3 scripts/super_speckit.py validate --repo ."
 delegation:
   enabled: false # explicit opt-in; never silently send repository context to a cloud service
   default_transport: codex-cloud
