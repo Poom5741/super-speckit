@@ -30,6 +30,10 @@ def render_work_state_manifest(repo: Path) -> str:
             f"    maker: {json.dumps(data.get('maker'))}",
             f"    checker: {json.dumps(data.get('checker'))}",
             f"    matrix: {json.dumps(data.get('matrix'))}",
+            f"    purpose_status: {json.dumps(data.get('purpose', {}).get('status', 'not_started'))}",
+            f"    purpose_map: {json.dumps(data.get('purpose', {}).get('map'))}",
+            f"    grill_status: {json.dumps(data.get('grill', {}).get('status', 'not_started'))}",
+            f"    grill_artifact: {json.dumps(data.get('grill', {}).get('artifact'))}",
             f"    runs: {json.dumps(data.get('runs', []))}",
             f"    bugs: {json.dumps(data.get('bugs', []))}",
         ])
@@ -48,7 +52,12 @@ def validation_failures(repo: Path) -> list[str]:
     for p in (repo / ".super-speckit/state/features").glob("*.json"):
         try:
             d=json.loads(p.read_text()); assert d["state"] in STATES; assert d["maker"] != d["checker"]
+            assert d.get("purpose", {}).get("status") in {"not_started", "draft", "confirmed", "rework"}
+            assert d.get("grill", {}).get("status") in {"not_started", "complete"}
             if d["state"] in {"candidate_ready","qa_running","ready_for_merge","merged"}: assert SHA.match(d.get("candidate_sha") or "")
+            if d["state"] not in {"planned", "blocked"}:
+                assert d.get("purpose", {}).get("status") == "confirmed", "human purpose confirmation is required"
+                assert d.get("grill", {}).get("status") == "complete", "spec grill is required"
             assert (repo / d["matrix"]).exists()
         except Exception as e: failures.append(f"{p}: {e}")
     manifest=manifest_path(repo)
@@ -67,7 +76,7 @@ def cmd_init(args):
 def cmd_create(args):
     repo = root(args.repo)
     if args.maker == args.checker: raise ValueError("maker and checker must be distinct")
-    data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "runs": [], "bugs": []}
+    data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "runs": [], "bugs": []}
     save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
@@ -78,6 +87,8 @@ def cmd_transition(args):
         data["candidate_sha"] = args.sha
     if args.state in {"candidate_ready", "qa_running", "ready_for_merge"} and not data.get("candidate_sha"): raise ValueError("state requires a candidate SHA")
     if args.state == "qa_running" and data["maker"] == data["checker"]: raise ValueError("QA requires distinct maker/checker")
+    if args.state not in {"planned", "blocked"} and data.get("purpose", {}).get("status") != "confirmed": raise ValueError("human purpose confirmation is required before work begins")
+    if args.state not in {"planned", "blocked"} and data.get("grill", {}).get("status") != "complete": raise ValueError("a completed evidence-labeled spec grill is required before work begins")
     data["state"] = args.state; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data, indent=2))
 
 def cmd_validate(args):
@@ -94,7 +105,7 @@ def cmd_status(args):
         feature={"id":args.feature,"state_file":str(path.relative_to(repo)),"exists":path.exists()}
         if path.exists():
             data=json.loads(path.read_text())
-            feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists()})
+            feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists(),"purpose":data.get("purpose"),"grill":data.get("grill")})
     status={
         "schema_version":1,
         "repository":str(repo),
@@ -124,6 +135,34 @@ def cmd_design(args):
     (directory / "decision.json").write_text(json.dumps(decision,indent=2)+"\n")
     print(directory / "prototype.html")
 
+def cmd_purpose_gate(args):
+    """Draft a visual purpose map. Only confirm-purpose can mark it confirmed."""
+    repo=root(args.repo); data=load(repo,args.feature)
+    directory=repo / ".super-speckit/purpose" / args.feature; directory.mkdir(parents=True, exist_ok=True)
+    title=html.escape(args.title); outcome=html.escape(args.outcome); people=html.escape(args.people); success=html.escape(args.success); non_goals=html.escape(args.non_goals)
+    markdown=f"""# Purpose Map — {args.feature}\n\n## Intended outcome\n{args.outcome}\n\n## People affected\n{args.people}\n\n## Success signal\n{args.success}\n\n## Non-goals\n{args.non_goals}\n\n## Human purpose gate\nThis map is a draft. A human confirms that this is the intended purpose, or corrects it. Technical implementation choices are deliberately outside this gate.\n"""
+    (directory / "purpose-map.md").write_text(markdown)
+    page=f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Purpose Map — {title}</title><style>body{{margin:0;background:#f4f7fb;color:#172033;font:16px/1.5 system-ui,sans-serif}}main{{max-width:960px;margin:auto;padding:32px 20px}}header,section{{background:#fff;border-radius:14px;padding:24px;margin:16px 0;box-shadow:0 1px 3px #17203318}}.tag{{font-weight:700;color:#075bcc}}.grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}}@media(max-width:650px){{.grid{{grid-template-columns:1fr}}}}</style><main><header><p class="tag">HUMAN PURPOSE GATE · DRAFT</p><h1>{title}</h1><p>{outcome}</p></header><section class="grid"><div><h2>Who this serves</h2><p>{people}</p></div><div><h2>How success is recognized</h2><p>{success}</p></div></section><section><h2>Explicit non-goals</h2><p>{non_goals}</p></section><section><h2>What confirmation means</h2><p>Confirm the intent, affected people, success signal, and boundaries. The agent owns technical discovery and delivery after this gate.</p></section></main>'''
+    (directory / "purpose-map.html").write_text(page)
+    decision={"feature":args.feature,"status":"draft","map":"purpose-map.md","visual":"purpose-map.html","confirmed_by":None,"confirmed_at":None,"confirmation":None}
+    (directory / "decision.json").write_text(json.dumps(decision,indent=2)+"\n")
+    data["purpose"]={"status":"draft","map":str((directory / "purpose-map.md").relative_to(repo)),"decision":str((directory / "decision.json").relative_to(repo))}; save(repo,args.feature,data); write_work_state_manifest(repo)
+    print(directory / "purpose-map.html")
+
+def cmd_confirm_purpose(args):
+    repo=root(args.repo); data=load(repo,args.feature); purpose=data.get("purpose", {}); decision_path=repo / (purpose.get("decision") or "")
+    if not decision_path.exists(): raise ValueError("create a purpose map before recording a human purpose decision")
+    decision=json.loads(decision_path.read_text()); decision.update({"status":args.decision,"confirmed_by":args.confirmed_by,"confirmed_at":args.confirmed_at,"confirmation":args.confirmation})
+    decision_path.write_text(json.dumps(decision,indent=2)+"\n")
+    purpose["status"]="confirmed" if args.decision == "confirmed" else "rework"; data["purpose"]=purpose; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["purpose"],indent=2))
+
+def cmd_record_grill(args):
+    repo=root(args.repo); data=load(repo,args.feature)
+    if data.get("purpose", {}).get("status") != "confirmed": raise ValueError("human purpose confirmation is required before the spec grill")
+    artifact=repo / args.artifact
+    if not artifact.exists(): raise ValueError(f"missing grill artifact: {artifact}")
+    data["grill"]={"status":"complete","artifact":args.artifact}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["grill"],indent=2))
+
 def main():
     p=argparse.ArgumentParser(); sub=p.add_subparsers(dest="cmd",required=True)
     for name, fn in [("init",cmd_init),("validate",cmd_validate)]:
@@ -133,6 +172,9 @@ def main():
     x=sub.add_parser("transition"); x.add_argument("feature"); x.add_argument("state"); x.add_argument("--repo",default="."); x.add_argument("--sha"); x.set_defaults(fn=cmd_transition)
     x=sub.add_parser("worktree"); x.add_argument("--repo",default="."); x.add_argument("--path",required=True); x.add_argument("--branch",required=True); x.add_argument("--ref",default="HEAD"); x.set_defaults(fn=cmd_worktree)
     x=sub.add_parser("design-first"); x.add_argument("feature"); x.add_argument("--title",required=True); x.add_argument("--summary",required=True); x.add_argument("--repo",default="."); x.set_defaults(fn=cmd_design)
+    x=sub.add_parser("purpose-gate"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--title",required=True); x.add_argument("--outcome",required=True); x.add_argument("--people",required=True); x.add_argument("--success",required=True); x.add_argument("--non-goals",required=True); x.set_defaults(fn=cmd_purpose_gate)
+    x=sub.add_parser("confirm-purpose"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--decision",choices=["confirmed","rework"],required=True); x.add_argument("--confirmed-by",required=True); x.add_argument("--confirmed-at",required=True); x.add_argument("--confirmation",required=True); x.set_defaults(fn=cmd_confirm_purpose)
+    x=sub.add_parser("record-grill"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.set_defaults(fn=cmd_record_grill)
     a=p.parse_args()
     try: result=a.fn(a); return result or 0
     except Exception as e: print(f"error: {e}",file=sys.stderr); return 2

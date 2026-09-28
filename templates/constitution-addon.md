@@ -5,3 +5,7 @@ Changes SHALL be specified, planned, and task-broken using native Spec Kit artif
 ## Native feedback loops
 
 Before any material implementation, the orchestrator SHALL discover and run the cheapest real feedback loop available for the changed behavior. Tests use red-green development at an agreed public seam when possible. Other work SHALL use an equivalent observable loop such as API/DB assertions, browser or visual checks, trace replay, simulator, fixture, differential, performance, or bounded human observation. A successful command exit, static analysis, or source reading alone is not proof. Missing feedback capability is a tracked engineering gap, not permission to guess.
+
+## Purpose and adversarial understanding
+
+Before technical implementation begins, the intended outcome, affected people, success signal, and non-goals SHALL be human-confirmed in a Purpose Map. A separate evidence-labeled Spec Grill SHALL challenge the resulting spec; agents may resolve technical questions autonomously but SHALL return to the Purpose Gate when discovery would materially alter the confirmed purpose.

@@ -12,6 +12,11 @@ class SuperSpecKitTests(unittest.TestCase):
             r=Path(d); matrix=r/"specs/f/verification-matrix.md"; matrix.parent.mkdir(parents=True); matrix.write_text("# matrix")
             self.assertEqual(self.invoke("init","--repo",d).returncode,0)
             self.assertEqual(self.invoke("create-feature","F-1","--repo",d,"--maker","maker","--checker","checker","--matrix","specs/f/verification-matrix.md").returncode,0)
+            self.assertNotEqual(self.invoke("transition","F-1","maker_running","--repo",d).returncode,0)
+            self.assertEqual(self.invoke("purpose-gate","F-1","--repo",d,"--title","Safe edit","--outcome","Save a profile safely","--people","Account holders","--success","The saved value persists","--non-goals","Do not change authorization").returncode,0)
+            self.assertEqual(self.invoke("confirm-purpose","F-1","--repo",d,"--decision","confirmed","--confirmed-by","product-owner","--confirmed-at","2026-09-28T00:00:00Z","--confirmation","Purpose is correct").returncode,0)
+            grill=r/".super-speckit/grills/F-1/spec-grill.md"; grill.parent.mkdir(parents=True); grill.write_text("# Evidence-labeled Spec Grill")
+            self.assertEqual(self.invoke("record-grill","F-1","--repo",d,"--artifact",".super-speckit/grills/F-1/spec-grill.md").returncode,0)
             self.assertEqual(self.invoke("transition","F-1","candidate_ready","--repo",d,"--sha","abcdef1").returncode,0)
             self.assertEqual(self.invoke("validate","--repo",d).returncode,0)
     def test_status_reports_native_state_and_git_without_chat_memory(self):
@@ -87,6 +92,17 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertIn("public seam", command)
         self.assertIn("super-speckit.feedback-loop", orchestrator)
         self.assertIn("Native feedback loops", constitution)
+    def test_purpose_gate_and_spec_grill_are_required_and_file_backed(self):
+        root=Path(__file__).parents[1]
+        purpose=(root/"commands/super-speckit.purpose-gate.md").read_text()
+        grill=(root/"commands/super-speckit.spec-grill.md").read_text()
+        template=(root/"templates/spec-grill.md").read_text()
+        workflow=(root/"workflows/workflow.yml").read_text()
+        self.assertIn("human", purpose.lower())
+        self.assertIn("Builder", grill)
+        self.assertIn("proven / inferred / assumed / unknown", template)
+        self.assertIn("purpose-gate", workflow)
+        self.assertIn("spec-grill", workflow)
     def test_orchestrator_is_autonomous_but_preserves_evidence_limits(self):
         root=Path(__file__).parents[1]
         skill=(root/"skills/ask-super-speckit/SKILL.md").read_text()

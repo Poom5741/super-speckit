@@ -15,6 +15,7 @@ Static review is evidence about code. A passing runtime verification is evidence
 - a design-first HTML preview, design-system brief, and approval record before UI implementation;
 - policy-selected gates, environment-readiness receipts, immutable proof packs, and bounded repair loops;
 - an autonomous orchestrator that chooses and runs the next safe stage, self-heals through diagnosis/fix/retest loops, and records external blockers truthfully.
+- a visual Purpose Map with one human gate for outcome, affected people, success signal, and non-goals; followed by an adversarial, evidence-labeled Spec Grill that resolves technical detail autonomously.
 - GSD-style phase contracts, plan-quality checks, durable handoffs, and milestone audits—without replacing Spec Kit’s core artifacts or independent QA.
 - optional Codex Cloud delegation for bounded research, maker, and bug-fix work; cloud output returns through a fresh local independent QA lane.
 - a durable bug artifact, regression test obligation, independent retest, project QA summary, and explicit unverified items.
@@ -49,14 +50,16 @@ Requirements: Git worktrees, Python 3.9+, a test runner, and for browser gates P
 
 ## Start with `ask-super-speckit`
 
-`ask-super-speckit` is the only normal entry point. Give it a feature, defect, idea, or constraint; it reads the evidence, chooses the next safe stage, and autonomously carries the work through to a verified result. It records every material decision, uses independent QA, and self-heals failed work instead of waiting for routine approval.
+`ask-super-speckit` is the only normal entry point. Give it a feature, defect, idea, or constraint; it drafts a visual Purpose Map, pauses once for a human to confirm the goal, then reads the evidence, chooses the next safe stage, and autonomously carries the work through to a verified result. The human confirms purpose—not technical implementation. It records every material decision, uses independent QA, and self-heals failed work instead of waiting for routine approval.
 
 For a UI-facing change it begins with `design-first`: produce a static HTML prototype and `design-brief.md`, compare it against any declared design system, record an evidence-backed autonomous design decision, and continue. The prototype is a decision artifact—not production code. If an external designer is available, it emits a portable prompt/hand-off bundle for v0, Google Stitch, or Claude Design; their output is imported and reviewed like any other untrusted design input.
 
 ## Daily flow
 
 ```text
-ask-super-speckit → speckit.specify → clarify/checklist → design-first (UI) → autonomous design decision
+ask-super-speckit → visual Purpose Map → human purpose confirmation → speckit.specify → clarify/checklist
+      ↓
+Builder / Examiner / Investigator / Resolver Spec Grill → design-first (UI) → autonomous design decision
       ↓
 speckit.plan → speckit.tasks → analyze → feedback loop → risk/parallelism plan
       ↓

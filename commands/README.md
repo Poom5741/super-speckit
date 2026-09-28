@@ -5,6 +5,8 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | Command | Purpose |
 | --- | --- |
 | `ask-super-speckit` | Main orchestrator: inspect state, recommend the next safe stage, and coordinate only the chosen stage. |
+| `super-speckit.purpose-gate` | Draft a visual purpose map and record the human’s one purpose-level confirmation. |
+| `super-speckit.spec-grill` | Challenge a confirmed spec with independent roles and evidence classifications. |
 | `super-speckit.status` | Command-backed state snapshot before and after each autonomous stage. |
 | `super-speckit.design-first` | Create/review a static HTML design prototype before UI implementation. |
 | `super-speckit.parallelize` | Produce risk/dependency-aware lane and gate plan before creating worktrees. |

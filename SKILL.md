@@ -15,7 +15,7 @@ Maker and checker must be different agents or independently scoped runs. The che
 
 ## Entry and exit criteria
 
-Start only after `spec.md`, `plan.md`, `tasks.md`, and a requirements-to-verification matrix identify the intended scope. End with a QA summary that labels every requirement `verified`, `not-verified`, or `not-applicable`, and lists evidence paths. Missing environment access is an explicit unverified item, not a pass.
+Start by drafting a visual Purpose Map. A human confirms only its intended outcome, affected people, success signal, and non-goals; agents then own technical choices. After native specification, run the evidence-labeled Builder/Examiner/Investigator/Resolver Spec Grill before maker work. Start implementation only after `spec.md`, `plan.md`, `tasks.md`, a requirements-to-verification matrix, confirmed purpose record, and completed grill identify the intended scope. End with a QA summary that labels every requirement `verified`, `not-verified`, or `not-applicable`, and lists evidence paths. Missing environment access is an explicit unverified item, not a pass.
 
 ## Runtime evidence
 

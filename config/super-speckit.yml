@@ -24,6 +24,10 @@ orchestration:
   research_before_high_risk: true
   tdd_when_feasible: true
   feedback_loop_required: true
+  purpose_gate_required: true
+  spec_grill_required: true
+  purpose_gate_human_scope: [outcome, affected_people, success_signal, non_goals]
+  purpose_gate_human_technical_decisions: false
 state_evidence:
   source_of_truth: yaml-json-files-and-commands
   work_state_manifest: .super-speckit/state/work-state.yml

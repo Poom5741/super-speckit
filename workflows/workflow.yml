@@ -20,6 +20,9 @@ steps:
   - id: assess
     type: prompt
     message: "Run ask-super-speckit for '{{ inputs.feature }}'. Autonomously inspect evidence, choose the next stage, and continue until delivered or truthfully blocked."
+  - id: purpose-gate
+    type: prompt
+    message: "Run super-speckit.purpose-gate. Draft a visual Purpose Map from the request, then obtain one human confirmation of outcome, affected people, success signal, and non-goals. Do not ask the human to make technical decisions."
   - id: specify
     command: speckit.specify
     input:
@@ -28,6 +31,9 @@ steps:
     command: speckit.clarify
     input:
       args: "{{ inputs.feature }}"
+  - id: spec-grill
+    type: prompt
+    message: "Run super-speckit.spec-grill after purpose confirmation. Use independent Builder, Examiner, Investigator, and Resolver roles; link evidence and label every material answer proven, inferred, assumed, or unknown. Return to Purpose Gate only for a purpose-level conflict."
   - id: design
     type: if
     condition: "{{ inputs.ui_change }}"
