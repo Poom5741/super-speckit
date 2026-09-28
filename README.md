@@ -16,6 +16,7 @@ Static review is evidence about code. A passing runtime verification is evidence
 - policy-selected gates, environment-readiness receipts, immutable proof packs, and bounded repair loops;
 - an autonomous orchestrator that chooses and runs the next safe stage, self-heals through diagnosis/fix/retest loops, and records external blockers truthfully.
 - a visual Purpose Map with one human gate for outcome, affected people, success signal, and non-goals; followed by an adversarial, evidence-labeled Spec Grill that resolves technical detail autonomously.
+- a GSD-inspired continuity layer: scope routing, a diagram-first Project Atlas, visual Change Stories, slice reassessment, and state-verified local↔cloud handoffs.
 - GSD-style phase contracts, plan-quality checks, durable handoffs, and milestone audits—without replacing Spec Kit’s core artifacts or independent QA.
 - optional Codex Cloud delegation for bounded research, maker, and bug-fix work; cloud output returns through a fresh local independent QA lane.
 - a durable bug artifact, regression test obligation, independent retest, project QA summary, and explicit unverified items.
@@ -59,7 +60,9 @@ For a UI-facing change it begins with `design-first`: produce a static HTML prot
 ```text
 ask-super-speckit → visual Purpose Map → human purpose confirmation → speckit.specify → clarify/checklist
       ↓
-Builder / Examiner / Investigator / Resolver Spec Grill → design-first (UI) → autonomous design decision
+Builder / Examiner / Investigator / Resolver Spec Grill → scope route → Project Atlas + Change Story
+      ↓
+design-first (UI) → autonomous design decision
       ↓
 speckit.plan → speckit.tasks → analyze → feedback loop → risk/parallelism plan
       ↓
@@ -73,6 +76,8 @@ speckit.converge → project QA summary (including unverified scope and proof-pa
 ```
 
 Use `commands/` as agent slash-command definitions or adapt them to your integration. The orchestrator is an inspectable state/evidence system with autonomous execution enabled by configuration.
+
+`ask-super-speckit` remains the only normal entry point. Atlas, routing, reassessment, transfer, recovery, and verification are internal stages selected from the checked work state; users do not need to memorize or sequence commands.
 
 ## Safety and operating rules
 

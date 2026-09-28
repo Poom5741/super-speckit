@@ -17,6 +17,8 @@ class SuperSpecKitTests(unittest.TestCase):
             self.assertEqual(self.invoke("confirm-purpose","F-1","--repo",d,"--decision","confirmed","--confirmed-by","product-owner","--confirmed-at","2026-09-28T00:00:00Z","--confirmation","Purpose is correct").returncode,0)
             grill=r/".super-speckit/grills/F-1/spec-grill.md"; grill.parent.mkdir(parents=True); grill.write_text("# Evidence-labeled Spec Grill")
             self.assertEqual(self.invoke("record-grill","F-1","--repo",d,"--artifact",".super-speckit/grills/F-1/spec-grill.md").returncode,0)
+            self.assertEqual(self.invoke("route","F-1","normal","--repo",d,"--rationale","Touches a persisted product workflow").returncode,0)
+            self.assertEqual(self.invoke("atlas-init","F-1","--repo",d,"--summary","Save a profile safely").returncode,0)
             self.assertEqual(self.invoke("transition","F-1","candidate_ready","--repo",d,"--sha","abcdef1").returncode,0)
             self.assertEqual(self.invoke("validate","--repo",d).returncode,0)
     def test_status_reports_native_state_and_git_without_chat_memory(self):
@@ -103,6 +105,14 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertIn("proven / inferred / assumed / unknown", template)
         self.assertIn("purpose-gate", workflow)
         self.assertIn("spec-grill", workflow)
+    def test_atlas_route_and_transfer_are_file_backed(self):
+        root=Path(__file__).parents[1]
+        self.assertTrue((root/"commands/super-speckit.atlas.md").exists())
+        self.assertTrue((root/"commands/super-speckit.route.md").exists())
+        self.assertTrue((root/"commands/super-speckit.transfer.md").exists())
+        transfer=(root/"templates/agent-transfer-handoff.md").read_text()
+        self.assertIn("Attempt ID", transfer)
+        self.assertIn("Re-run the status", transfer)
     def test_orchestrator_is_autonomous_but_preserves_evidence_limits(self):
         root=Path(__file__).parents[1]
         skill=(root/"skills/ask-super-speckit/SKILL.md").read_text()
@@ -116,9 +126,10 @@ class SuperSpecKitTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); handoff=root/"handoff.md"; pack=root/"pack.md"
             handoff.write_text("# Durable handoff\nVerified SHA: abcdef1\n")
-            result=subprocess.run(["python3",str(CLOUD_SCRIPT),"--handoff",str(handoff),"--output",str(pack),"--role","maker","--base-sha","abcdef1","--branch","ss/feature/F-1","--objective","Add the scoped validation"],text=True,capture_output=True)
+            result=subprocess.run(["python3",str(CLOUD_SCRIPT),"--handoff",str(handoff),"--output",str(pack),"--role","maker","--base-sha","abcdef1","--branch","ss/feature/F-1","--objective","Add the scoped validation","--stage","maker_running","--attempt-id","ATT-1","--state-receipt",".super-speckit/receipts/ATT-1.json"],text=True,capture_output=True)
             self.assertEqual(result.returncode,0)
             self.assertIn("Do not merge",pack.read_text())
+            self.assertIn("maker_running",pack.read_text())
             handoff.write_text("Authorization: Bearer secret")
             denied=subprocess.run(["python3",str(CLOUD_SCRIPT),"--handoff",str(handoff),"--output",str(pack),"--role","maker","--base-sha","abcdef1","--branch","main","--objective","x"],text=True,capture_output=True)
             self.assertNotEqual(denied.returncode,0)

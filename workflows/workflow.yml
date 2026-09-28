@@ -34,6 +34,9 @@ steps:
   - id: spec-grill
     type: prompt
     message: "Run super-speckit.spec-grill after purpose confirmation. Use independent Builder, Examiner, Investigator, and Resolver roles; link evidence and label every material answer proven, inferred, assumed, or unknown. Return to Purpose Gate only for a purpose-level conflict."
+  - id: route-and-understand
+    type: prompt
+    message: "Run super-speckit.route and super-speckit.atlas. Choose micro, normal, or milestone from repository evidence; generate the Project Atlas and a diagram-first Change Story. Treat unknowns as unknowns, not architecture facts."
   - id: design
     type: if
     condition: "{{ inputs.ui_change }}"
@@ -70,7 +73,7 @@ steps:
     message: "Run super-speckit.release. Autonomously merge only if every configured evidence gate passes; otherwise self-heal through diagnosis, fix, and independent retest."
   - id: handoff
     type: prompt
-    message: "Write a super-speckit.handoff with factual evidence, next safe action, and any blocker/resume condition before convergence."
+    message: "Write a super-speckit.handoff with factual evidence, next safe action, and any blocker/resume condition before convergence. For any local/cloud or agent transfer, use super-speckit.transfer with immutable SHA, state receipt, attempt ID, and resume verification."
   - id: converge
     command: speckit.converge
     input:

@@ -26,6 +26,10 @@ orchestration:
   feedback_loop_required: true
   purpose_gate_required: true
   spec_grill_required: true
+  project_atlas_required: true
+  change_story_required: true
+  scope_route_required: true
+  reassess_after_verified_milestone_slice: true
   purpose_gate_human_scope: [outcome, affected_people, success_signal, non_goals]
   purpose_gate_human_technical_decisions: false
 state_evidence:
@@ -35,6 +39,7 @@ state_evidence:
   require_post_stage_check: true
   status_command: "python3 scripts/super_speckit.py status --repo . --feature {{feature}} --strict"
   validation_command: "python3 scripts/super_speckit.py validate --repo ."
+  inconclusive_is_not_pass: true
 delegation:
   enabled: false # explicit opt-in; never silently send repository context to a cloud service
   default_transport: codex-cloud

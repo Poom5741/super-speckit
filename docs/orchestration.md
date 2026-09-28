@@ -4,6 +4,8 @@
 
 The autonomous orchestrator starts with a visual Purpose Map. A human confirms only the intended outcome, affected people, success signal, and non-goals; implementation is not a human questionnaire. It then runs native `specify`, `plan`, `tasks`, and optionally `clarify`, `checklist`, `analyze` as evidence requires. Before maker work, Builder/Examiner/Investigator/Resolver roles complete an evidence-labeled Spec Grill. Translate each testable requirement into `verification-matrix.md`; update the native plan/tasks if the matrix exposes missing work. `converge` is run after verification to record remaining scope.
 
+Before maker work, classify the request as micro, normal, or milestone and create an evidence-linked Project Atlas plus diagram-first Change Story. The route changes planning depth, never proof boundaries. Milestones are split into demoable vertical slices and reassessed after independent verification. A failed or unavailable command is `inconclusive` until evidence supports another classification; it is never a pass.
+
 ## 1.1 Files and commands are the work-state authority
 
 Conversation is never a state store. Before and after every material stage, the orchestrator runs the configured `status` and `validate` commands, then reads the real `.super-speckit/state/work-state.yml` index, per-feature JSON, native artifacts, proof pack, and Git state they identify. The resulting command receipt—not an agent summary—decides whether a stage may advance. A mismatch, missing artifact, dirty unexpected worktree, or invalid state routes to recovery and is recorded as evidence.

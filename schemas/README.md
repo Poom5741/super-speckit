@@ -14,6 +14,9 @@ Artifacts are human-readable Markdown plus JSON for orchestration. IDs are stabl
 | Project summary | `.super-speckit/qa/summary.md` | Explicitly names unverified scope. |
 | Proof pack | `.super-speckit/qa/<run-id>/proof-pack.json` | Binds all evidence to one immutable candidate and environment receipt. |
 | Design decision | `.super-speckit/design/<feature>/decision.json` | UI work cannot start until the orchestrator records `approved` or `not-required`, with evidence and rationale. |
+| Project Atlas | `.super-speckit/atlas/` | Diagram-first, evidence-linked context projection; never execution authority. |
+| Change Story | `.super-speckit/atlas/changes/<feature>/change-story.md` | Shows the proposed change path, protected behavior, proof, and explicit unknowns before implementation. |
+| Agent transfer handoff | `.super-speckit/handoffs/<id>.md` | Carries immutable SHA, state receipt, stage, attempt ID, authority boundary, and receiver resume checks. |
 
 JSON shape used by the included validator:
 

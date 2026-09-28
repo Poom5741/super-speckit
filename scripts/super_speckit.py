@@ -34,6 +34,10 @@ def render_work_state_manifest(repo: Path) -> str:
             f"    purpose_map: {json.dumps(data.get('purpose', {}).get('map'))}",
             f"    grill_status: {json.dumps(data.get('grill', {}).get('status', 'not_started'))}",
             f"    grill_artifact: {json.dumps(data.get('grill', {}).get('artifact'))}",
+            f"    route: {json.dumps(data.get('route', {}).get('kind', 'unclassified'))}",
+            f"    atlas: {json.dumps(data.get('atlas', {}).get('path'))}",
+            f"    change_story: {json.dumps(data.get('change_story', {}).get('path'))}",
+            f"    latest_handoff: {json.dumps(data.get('handoff', {}).get('path'))}",
             f"    runs: {json.dumps(data.get('runs', []))}",
             f"    bugs: {json.dumps(data.get('bugs', []))}",
         ])
@@ -54,10 +58,14 @@ def validation_failures(repo: Path) -> list[str]:
             d=json.loads(p.read_text()); assert d["state"] in STATES; assert d["maker"] != d["checker"]
             assert d.get("purpose", {}).get("status") in {"not_started", "draft", "confirmed", "rework"}
             assert d.get("grill", {}).get("status") in {"not_started", "complete"}
+            assert d.get("route", {}).get("kind", "unclassified") in {"unclassified", "micro", "normal", "milestone"}
             if d["state"] in {"candidate_ready","qa_running","ready_for_merge","merged"}: assert SHA.match(d.get("candidate_sha") or "")
             if d["state"] not in {"planned", "blocked"}:
                 assert d.get("purpose", {}).get("status") == "confirmed", "human purpose confirmation is required"
                 assert d.get("grill", {}).get("status") == "complete", "spec grill is required"
+                assert d.get("route", {}).get("kind") in {"micro", "normal", "milestone"}, "scope route is required"
+                assert (repo / (d.get("atlas", {}).get("path") or "")).exists(), "Project Atlas is required"
+                assert (repo / (d.get("change_story", {}).get("path") or "")).exists(), "Change Story is required"
             assert (repo / d["matrix"]).exists()
         except Exception as e: failures.append(f"{p}: {e}")
     manifest=manifest_path(repo)
@@ -76,7 +84,7 @@ def cmd_init(args):
 def cmd_create(args):
     repo = root(args.repo)
     if args.maker == args.checker: raise ValueError("maker and checker must be distinct")
-    data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "runs": [], "bugs": []}
+    data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "route": {"kind": "unclassified", "rationale": None}, "atlas": {"path": None}, "change_story": {"path": None}, "handoff": {"path": None}, "runs": [], "bugs": []}
     save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
@@ -89,6 +97,9 @@ def cmd_transition(args):
     if args.state == "qa_running" and data["maker"] == data["checker"]: raise ValueError("QA requires distinct maker/checker")
     if args.state not in {"planned", "blocked"} and data.get("purpose", {}).get("status") != "confirmed": raise ValueError("human purpose confirmation is required before work begins")
     if args.state not in {"planned", "blocked"} and data.get("grill", {}).get("status") != "complete": raise ValueError("a completed evidence-labeled spec grill is required before work begins")
+    if args.state not in {"planned", "blocked"} and data.get("route", {}).get("kind") not in {"micro", "normal", "milestone"}: raise ValueError("scope route is required before work begins")
+    if args.state not in {"planned", "blocked"} and not (repo / (data.get("atlas", {}).get("path") or "")).exists(): raise ValueError("Project Atlas is required before work begins")
+    if args.state not in {"planned", "blocked"} and not (repo / (data.get("change_story", {}).get("path") or "")).exists(): raise ValueError("Change Story is required before work begins")
     data["state"] = args.state; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data, indent=2))
 
 def cmd_validate(args):
@@ -105,7 +116,7 @@ def cmd_status(args):
         feature={"id":args.feature,"state_file":str(path.relative_to(repo)),"exists":path.exists()}
         if path.exists():
             data=json.loads(path.read_text())
-            feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists(),"purpose":data.get("purpose"),"grill":data.get("grill")})
+            feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists(),"purpose":data.get("purpose"),"grill":data.get("grill"),"route":data.get("route"),"atlas":data.get("atlas"),"change_story":data.get("change_story"),"handoff":data.get("handoff")})
     status={
         "schema_version":1,
         "repository":str(repo),
@@ -163,6 +174,32 @@ def cmd_record_grill(args):
     if not artifact.exists(): raise ValueError(f"missing grill artifact: {artifact}")
     data["grill"]={"status":"complete","artifact":args.artifact}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["grill"],indent=2))
 
+def cmd_route(args):
+    repo=root(args.repo); data=load(repo,args.feature)
+    data["route"]={"kind":args.kind,"rationale":args.rationale}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["route"],indent=2))
+
+def cmd_atlas_init(args):
+    repo=root(args.repo); data=load(repo,args.feature); directory=repo / ".super-speckit/atlas"
+    directory.mkdir(parents=True, exist_ok=True)
+    readme=directory / "README.md"; graph=directory / "system-map.mmd"
+    if not readme.exists():
+        readme.write_text("# Project Atlas\n\nThis is a diagram-first, evidence-linked map of the codebase. It is a guide, not execution authority. Each statement links to a path, command result, or explicit unknown.\n\n## Update rule\n\nUpdate only the affected component cards after a verified change. Preserve unknowns rather than inventing architecture.\n")
+    if not graph.exists(): graph.write_text("flowchart LR\n  User[User / external actor] --> Entry[Entry points: discover from repository]\n  Entry --> Components[Components: add evidence-linked cards]\n  Components --> Evidence[Runtime / test evidence]\n")
+    feature_dir=directory / "changes" / args.feature; feature_dir.mkdir(parents=True, exist_ok=True)
+    story=feature_dir / "change-story.md"
+    story.write_text(f"# Change Story — {args.feature}\n\n## Confirmed purpose\n{args.summary}\n\n## Route\n{data.get('route', {}).get('kind', 'unclassified')}\n\n## Diagram-first path\n\n```mermaid\nflowchart LR\n  Request[Confirmed purpose] --> Entry[Known entry point: investigate]\n  Entry --> Logic[Changed logic: investigate]\n  Logic --> Data[Data / external boundary: investigate]\n  Data --> Proof[Verification evidence]\n```\n\n## What will change\n\n- Not yet verified. Link affected entry points, components, contracts, and data paths after repository investigation.\n\n## What stays protected\n\n- Preserve the Purpose Map non-goals and existing contracts until evidence supports a change.\n\n## Evidence and unknowns\n\n| Claim | Classification | Evidence / next probe |\n| --- | --- | --- |\n| Change path | unknown | inspect codebase and Atlas cards |\n")
+    data["atlas"]={"path":str(readme.relative_to(repo)),"graph":str(graph.relative_to(repo))}; data["change_story"]={"path":str(story.relative_to(repo))}; save(repo,args.feature,data); write_work_state_manifest(repo); print(story)
+
+def cmd_reassess(args):
+    repo=root(args.repo); data=load(repo,args.feature); path=repo / args.artifact
+    if not path.exists(): raise ValueError(f"missing reassessment artifact: {path}")
+    data["reassessment"]={"path":args.artifact,"decision":args.decision}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["reassessment"],indent=2))
+
+def cmd_record_handoff(args):
+    repo=root(args.repo); data=load(repo,args.feature); path=repo / args.artifact
+    if not path.exists(): raise ValueError(f"missing handoff artifact: {path}")
+    data["handoff"]={"path":args.artifact,"transfer":args.transfer,"stage":args.stage,"attempt_id":args.attempt_id}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["handoff"],indent=2))
+
 def main():
     p=argparse.ArgumentParser(); sub=p.add_subparsers(dest="cmd",required=True)
     for name, fn in [("init",cmd_init),("validate",cmd_validate)]:
@@ -175,6 +212,10 @@ def main():
     x=sub.add_parser("purpose-gate"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--title",required=True); x.add_argument("--outcome",required=True); x.add_argument("--people",required=True); x.add_argument("--success",required=True); x.add_argument("--non-goals",required=True); x.set_defaults(fn=cmd_purpose_gate)
     x=sub.add_parser("confirm-purpose"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--decision",choices=["confirmed","rework"],required=True); x.add_argument("--confirmed-by",required=True); x.add_argument("--confirmed-at",required=True); x.add_argument("--confirmation",required=True); x.set_defaults(fn=cmd_confirm_purpose)
     x=sub.add_parser("record-grill"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.set_defaults(fn=cmd_record_grill)
+    x=sub.add_parser("route"); x.add_argument("feature"); x.add_argument("kind",choices=["micro","normal","milestone"]); x.add_argument("--repo",default="."); x.add_argument("--rationale",required=True); x.set_defaults(fn=cmd_route)
+    x=sub.add_parser("atlas-init"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--summary",required=True); x.set_defaults(fn=cmd_atlas_init)
+    x=sub.add_parser("reassess"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.add_argument("--decision",choices=["keep","split","reorder","defer","cancel"],required=True); x.set_defaults(fn=cmd_reassess)
+    x=sub.add_parser("record-handoff"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.add_argument("--transfer",choices=["local-to-cloud","cloud-to-local","agent-to-agent","same-environment"],required=True); x.add_argument("--stage",required=True); x.add_argument("--attempt-id",required=True); x.set_defaults(fn=cmd_record_handoff)
     a=p.parse_args()
     try: result=a.fn(a); return result or 0
     except Exception as e: print(f"error: {e}",file=sys.stderr); return 2

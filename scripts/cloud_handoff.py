@@ -14,12 +14,18 @@ def main() -> int:
     p.add_argument("--branch", required=True)
     p.add_argument("--objective", required=True)
     p.add_argument("--environment-id", default="")
+    p.add_argument("--stage", default="unspecified")
+    p.add_argument("--attempt-id", default="unspecified")
+    p.add_argument("--state-receipt", default="")
+    p.add_argument("--resume-command", default="python3 scripts/super_speckit.py status --repo . --strict")
     a=p.parse_args()
     handoff=Path(a.handoff).read_text()
     forbidden=("BEGIN PRIVATE KEY", "Authorization: Bearer", "ghp_", "sk-")
     if any(token in handoff for token in forbidden):
         raise SystemExit("refusing cloud pack: handoff appears to contain a secret")
     pack=f"""# Cloud delegation pack\n\n- Transport: `{a.transport}`\n- Role: `{a.role}`\n- Base branch and immutable SHA: `{a.branch}` / `{a.base_sha}`\n- Environment ID: `{a.environment_id or 'not-set'}`\n\n## Bounded objective\n\n{a.objective}\n\n## Constraints\n\n- Read the handoff below before changing code.\n- Work only in the isolated cloud task branch.\n- Do not merge, apply changes locally, publish external work, or claim QA approval.\n- Return candidate SHA, changed files, commands/statuses, tests, and unverified items.\n\n## Redacted durable handoff\n\n{handoff}\n\n## Receiver verification\n\nA separate Super-SpecKit QA worktree will verify any returned change.\n"""
+    pack=pack.replace("\n## Bounded objective", f"\n- Stage / attempt ID: `{a.stage}` / `{a.attempt_id}`\n- State receipt: `{a.state_receipt or 'not-supplied'}`\n\n## Bounded objective")
+    pack=pack.replace("- Read the handoff below before changing code.", f"- Read the handoff below before changing code.\n- Re-run `{a.resume_command}` and stop if the checked SHA/stage disagrees with this pack.")
     output=Path(a.output); output.parent.mkdir(parents=True, exist_ok=True); output.write_text(pack)
     print(output)
     return 0
