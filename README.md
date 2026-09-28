@@ -35,7 +35,9 @@ Install the public bootstrap skill with:
 npx skills add https://github.com/Poom5741/super-speckit/tree/main/installable/super-speckit
 ```
 
-Then invoke `$super-speckit-installer` in the target repository. It installs the complete kit to `.super-speckit/`, creates a project `super-speckit.yml` if absent, and initializes the YAML work-state manifest. The direct folder URL avoids exposing the kit's internal and vendored skills as unrelated installation choices. Pin an exact commit or tag URL for reproducible installations.
+Then invoke `$super-speckit-installer` in the target repository. It installs the complete kit to `.super-speckit/`, creates a project `super-speckit.yml` if absent, initializes the YAML work-state manifest, and registers the four intended project skills in `.agents/skills/`: `$super-speckit`, `$ask-super-speckit`, `$super-speckit-design-first`, and `$super-speckit-final-manual-review`. The direct folder URL avoids exposing internal and vendored skills as unrelated installation choices. Pin an exact commit or tag URL for reproducible installations.
+
+If you installed an older version that exposes only `$super-speckit-installer`, run its `scripts/install_project.py --target . --register-only` command once to repair the project entry points.
 
 ## Install into a Spec Kit repository
 

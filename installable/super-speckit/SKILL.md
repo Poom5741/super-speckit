@@ -7,9 +7,9 @@ description: Install the complete Super-SpecKit evidence-first autonomous delive
 
 Use this skill when a project needs the complete Super-SpecKit workflow rather than a single standalone instruction file.
 
-Run `scripts/install_project.py --target <project-root>`. It downloads the public Super-SpecKit bundle, installs it to `<project-root>/.super-speckit/`, creates `<project-root>/super-speckit.yml` when absent, and initializes the real YAML work-state manifest.
+Run `scripts/install_project.py --target <project-root>`. It downloads the public Super-SpecKit bundle, installs it to `<project-root>/.super-speckit/`, creates `<project-root>/super-speckit.yml` when absent, initializes the real YAML work-state manifest, and registers exactly four discoverable project entry points in `<project-root>/.agents/skills/`: `$super-speckit`, `$ask-super-speckit`, `$super-speckit-design-first`, and `$super-speckit-final-manual-review`.
 
-The installer refuses to overwrite an existing `.super-speckit` directory unless `--force` is explicitly supplied. After installation, use the installed `$super-speckit` skill from `.super-speckit/SKILL.md` and verify files with:
+The installer refuses to overwrite an existing `.super-speckit` directory or existing conflicting skill entry point unless `--force` is explicitly supplied. If an older installation has the kit but no entry points, run `scripts/install_project.py --target <project-root> --register-only`. After installation, use `$ask-super-speckit` as the normal entry point and verify files with:
 
 ```bash
 python3 .super-speckit/scripts/super_speckit.py validate --repo .

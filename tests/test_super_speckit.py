@@ -1,4 +1,4 @@
-import json, subprocess, tempfile, unittest
+import json, shutil, subprocess, tempfile, unittest
 from pathlib import Path
 
 SCRIPT = Path(__file__).parents[1] / "scripts/super_speckit.py"
@@ -44,6 +44,17 @@ class SuperSpecKitTests(unittest.TestCase):
             self.assertTrue((destination/".super-speckit/SKILL.md").exists())
             self.assertTrue((destination/".super-speckit/state/work-state.yml").exists())
             self.assertTrue((destination/"super-speckit.yml").exists())
+            for name in ("super-speckit", "ask-super-speckit", "super-speckit-design-first", "super-speckit-final-manual-review"):
+                self.assertTrue((destination/".agents/skills"/name/"SKILL.md").exists())
+    def test_public_installer_repairs_missing_entrypoints_without_reinstalling_bundle(self):
+        with tempfile.TemporaryDirectory() as d:
+            destination=Path(d)/"project"
+            installed=subprocess.run(["python3",str(INSTALL_SCRIPT),"--source",str(Path(__file__).parents[1]),"--target",str(destination)],text=True,capture_output=True)
+            self.assertEqual(installed.returncode,0, installed.stderr)
+            shutil.rmtree(destination/".agents")
+            repaired=subprocess.run(["python3",str(INSTALL_SCRIPT),"--target",str(destination),"--register-only"],text=True,capture_output=True)
+            self.assertEqual(repaired.returncode,0, repaired.stderr)
+            self.assertTrue((destination/".agents/skills/ask-super-speckit/SKILL.md").exists())
     def test_same_person_cannot_be_maker_and_checker(self):
         with tempfile.TemporaryDirectory() as d:
             r=self.invoke("create-feature","F-1","--repo",d,"--maker","same","--checker","same","--matrix","x.md")
