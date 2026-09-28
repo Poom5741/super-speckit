@@ -9,6 +9,7 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `super-speckit.spec-grill` | Challenge a confirmed spec with independent roles and evidence classifications. |
 | `super-speckit.route` | Select a micro, normal, or milestone route without weakening proof requirements. |
 | `super-speckit.atlas` | Build an evidence-linked Project Atlas and visual Change Story. |
+| `super-speckit.evaluate-atlas` | Measure Atlas value with blinded, independent-QA-backed A/B runs. |
 | `super-speckit.status` | Command-backed state snapshot before and after each autonomous stage. |
 | `super-speckit.design-first` | Create/review a static HTML design prototype before UI implementation. |
 | `super-speckit.parallelize` | Produce risk/dependency-aware lane and gate plan before creating worktrees. |

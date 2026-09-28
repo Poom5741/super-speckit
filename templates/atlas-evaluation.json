@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "FEATURE-EXAMPLE",
+  "condition": "control",
+  "base_sha": "immutable starting commit",
+  "agent_and_model": "record exact agent/model/configuration",
+  "blind_task_brief": "same task brief in both conditions",
+  "atlas_paths": [],
+  "runs": [
+    {
+      "run_id": "CONTROL-1",
+      "completed": false,
+      "duration_seconds": null,
+      "token_count": null,
+      "expected_impacted_components": [],
+      "identified_impacted_components": [],
+      "requirements_total": 0,
+      "requirements_correctly_covered": 0,
+      "unsupported_claims": 0,
+      "independent_qa_status": "not-run",
+      "notes": ""
+    }
+  ]
+}

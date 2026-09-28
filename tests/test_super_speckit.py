@@ -4,6 +4,7 @@ from pathlib import Path
 SCRIPT = Path(__file__).parents[1] / "scripts/super_speckit.py"
 CLOUD_SCRIPT = Path(__file__).parents[1] / "scripts/cloud_handoff.py"
 INSTALL_SCRIPT = Path(__file__).parents[1] / "installable/super-speckit/scripts/install_project.py"
+ATLAS_EVAL_SCRIPT = Path(__file__).parents[1] / "scripts/atlas_eval.py"
 class SuperSpecKitTests(unittest.TestCase):
     def invoke(self, *args):
         return subprocess.run(["python3", str(SCRIPT), *args], text=True, capture_output=True)
@@ -113,6 +114,17 @@ class SuperSpecKitTests(unittest.TestCase):
         transfer=(root/"templates/agent-transfer-handoff.md").read_text()
         self.assertIn("Attempt ID", transfer)
         self.assertIn("Re-run the status", transfer)
+    def test_atlas_evaluation_refuses_a_benefit_claim_without_three_qa_pairs(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); output=root/"report.md"
+            common={"schema_version":1,"task_id":"T-1","base_sha":"abcdef1","agent_and_model":"test-agent","blind_task_brief":"Change one safe behavior"}
+            run={"run_id":"1","completed":True,"duration_seconds":1,"token_count":1,"expected_impacted_components":["api"],"identified_impacted_components":["api"],"requirements_total":1,"requirements_correctly_covered":1,"unsupported_claims":0,"independent_qa_status":"pass"}
+            control=root/"control.json"; atlas=root/"atlas.json"
+            control.write_text(json.dumps({**common,"condition":"control","atlas_paths":[],"runs":[run]}))
+            atlas.write_text(json.dumps({**common,"condition":"atlas","atlas_paths":["atlas.md"],"runs":[run]}))
+            result=subprocess.run(["python3",str(ATLAS_EVAL_SCRIPT),"--control",str(control),"--atlas",str(atlas),"--output",str(output)],text=True,capture_output=True)
+            self.assertEqual(result.returncode,0, result.stderr)
+            self.assertIn("**inconclusive**",output.read_text())
     def test_orchestrator_is_autonomous_but_preserves_evidence_limits(self):
         root=Path(__file__).parents[1]
         skill=(root/"skills/ask-super-speckit/SKILL.md").read_text()

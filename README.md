@@ -79,6 +79,8 @@ Use `commands/` as agent slash-command definitions or adapt them to your integra
 
 `ask-super-speckit` remains the only normal entry point. Atlas, routing, reassessment, transfer, recovery, and verification are internal stages selected from the checked work state; users do not need to memorize or sequence commands.
 
+Atlas value is not assumed. Use `super-speckit.evaluate-atlas` with blinded control-versus-Atlas tasks and independent QA before claiming that it improves agent comprehension or delivery.
+
 ## Safety and operating rules
 
 - QA may write only `.super-speckit/qa/`, `.super-speckit/bugs/`, and ephemeral files in its own worktree. It must not edit, commit, or rebase the maker worktree.
