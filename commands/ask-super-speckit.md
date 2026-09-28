@@ -16,14 +16,15 @@ Route in this order:
 8. Any planned slice without a real baseline feedback loop → `super-speckit.feedback-loop`. Use pinned Matt `tdd` for code behavior and choose an equivalent public-seam loop for every other kind of work.
 9. Planned slice without phase contract/plan-quality evidence → `super-speckit.phase-check`.
 10. Unsliced or conflicting work → `super-speckit.parallelize`.
-11. A bounded maker/research/bug-fix slice suitable for configured cloud execution → `super-speckit.transfer`, then `super-speckit.delegate-cloud`; collect it, then use `super-speckit.collect-cloud` and independent QA.
-12. Candidate without readiness receipt → `super-speckit.environment-ready`.
-13. Candidate awaiting independent proof → `super-speckit.verify` and, if configured, OCR; use pinned Matt `code-review` as another static lane, never runtime proof.
-14. Verified milestone slice with remaining work → `super-speckit.reassess`, update route/Atlas/Change Story, then continue the next safe slice.
-15. Automated proof pack complete → `super-speckit.release`; human manual review is an optional observation lane, not a release dependency.
-16. Confirmed defect or a red test/runtime failure → `super-speckit.diagnose`, then use `super-speckit.fix`/`retest` and resume the affected stage.
-17. A repair failure with new evidence → return to diagnosis and choose the next bounded repair. On the configured repair limit, re-evaluate the architecture, split the problem, or run targeted research; do not retry blindly.
-18. Any pause, completion, external block, or agent transfer → `super-speckit.handoff` or `super-speckit.transfer`. A block records the next automatic probe and resume condition; it is never represented as a request for routine approval.
-19. Complete proof pack → release, milestone audit, then native converge.
+11. OMP detected and at least two dependency-independent lanes exist → `super-speckit.omp-team`; supervise native isolated workers while continuing control-plane work. Do not fan out a micro task or a shared mutable partition.
+12. A bounded maker/research/bug-fix slice suitable for configured cloud execution → `super-speckit.transfer`, then `super-speckit.delegate-cloud`; collect it, then use `super-speckit.collect-cloud` and independent QA.
+13. Candidate without readiness receipt → `super-speckit.environment-ready`.
+14. Candidate awaiting independent proof → `super-speckit.verify` and, if configured, OCR; use pinned Matt `code-review` as another static lane, never runtime proof.
+15. Verified milestone slice with remaining work → `super-speckit.reassess`, update route/Atlas/Change Story, then continue the next safe slice.
+16. Automated proof pack complete → `super-speckit.release`; human manual review is an optional observation lane, not a release dependency.
+17. Confirmed defect or a red test/runtime failure → `super-speckit.diagnose`, then use `super-speckit.fix`/`retest` and resume the affected stage.
+18. A repair failure with new evidence → return to diagnosis and choose the next bounded repair. On the configured repair limit, re-evaluate the architecture, split the problem, or run targeted research; do not retry blindly.
+19. Any pause, completion, external block, or agent transfer → `super-speckit.handoff` or `super-speckit.transfer`. A block records the next automatic probe and resume condition; it is never represented as a request for routine approval.
+20. Complete proof pack → release, milestone audit, then native converge.
 
 Do not create worktrees until the selected stage needs one. Preserve immutable candidate SHA and evidence links in every handoff. Do not expose secrets, bypass protected-path checks, claim unavailable external access, publish/deploy outside configured authority, or convert a blocked/unverified item to pass.

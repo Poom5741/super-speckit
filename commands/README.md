@@ -13,6 +13,7 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `super-speckit.status` | Command-backed state snapshot before and after each autonomous stage. |
 | `super-speckit.design-first` | Create/review a static HTML design prototype before UI implementation. |
 | `super-speckit.parallelize` | Produce risk/dependency-aware lane and gate plan before creating worktrees. |
+| `super-speckit.omp-team` | Use OMP native isolated workers adaptively while the supervisor continues coordination. |
 | `super-speckit.phase-check` | Create a GSD-inspired, Spec-Kit-linked phase contract and plan-quality gate. |
 | `super-speckit.handoff` | Persist a factual, resumable handoff when any lane pauses, fails, or completes. |
 | `super-speckit.transfer` | Produce a state-verified local↔cloud or agent↔agent transfer contract. |

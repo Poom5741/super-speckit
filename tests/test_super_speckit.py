@@ -46,6 +46,7 @@ class SuperSpecKitTests(unittest.TestCase):
             self.assertTrue((destination/"super-speckit.yml").exists())
             for name in ("super-speckit", "ask-super-speckit", "super-speckit-design-first", "super-speckit-final-manual-review"):
                 self.assertTrue((destination/".agents/skills"/name/"SKILL.md").exists())
+            self.assertTrue((destination/".codex/skills/ask-super-speckit/SKILL.md").exists())
     def test_public_installer_repairs_missing_entrypoints_without_reinstalling_bundle(self):
         with tempfile.TemporaryDirectory() as d:
             destination=Path(d)/"project"
@@ -125,6 +126,16 @@ class SuperSpecKitTests(unittest.TestCase):
         transfer=(root/"templates/agent-transfer-handoff.md").read_text()
         self.assertIn("Attempt ID", transfer)
         self.assertIn("Re-run the status", transfer)
+    def test_omp_team_lane_is_adaptive_and_preserves_boundaries(self):
+        root=Path(__file__).parents[1]
+        command=(root/"commands/super-speckit.omp-team.md").read_text()
+        orchestrator=(root/"commands/ask-super-speckit.md").read_text()
+        config=(root/"config/super-speckit.yml").read_text()
+        self.assertIn("workspace isolation", command)
+        self.assertIn("must not sit idle", command)
+        self.assertIn("Makers never share a mutable worktree", command)
+        self.assertIn("super-speckit.omp-team", orchestrator)
+        self.assertIn("enabled_when_omp_detected: true", config)
     def test_atlas_evaluation_refuses_a_benefit_claim_without_three_qa_pairs(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); output=root/"report.md"

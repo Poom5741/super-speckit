@@ -18,10 +18,8 @@ ENTRYPOINTS = {
     "super-speckit-final-manual-review": (".super-speckit/skills/final-manual-review/SKILL.md", "Guide independent human final review and route defects safely."),
 }
 
-def register_entrypoints(target: Path, force: bool) -> None:
-    """Expose the small public skill surface while keeping the full kit in .super-speckit."""
-    root=target / ".agents/skills"
-    for name, (canonical, description) in ENTRYPOINTS.items():
+def write_entrypoints(root: Path, entrypoints: dict[str, tuple[str, str]], force: bool) -> None:
+    for name, (canonical, description) in entrypoints.items():
         directory=root / name; skill=directory / "SKILL.md"
         if directory.exists() and not force:
             if skill.exists() and canonical in skill.read_text():
@@ -30,6 +28,11 @@ def register_entrypoints(target: Path, force: bool) -> None:
         if directory.exists(): shutil.rmtree(directory)
         directory.mkdir(parents=True, exist_ok=True)
         skill.write_text(f"""---\nname: {name}\ndescription: {description}\n---\n\n# {name}\n\nThe canonical Super-SpecKit instructions live at `{canonical}` in this project. Read that file completely before acting, then resolve every referenced project path from the repository root. This wrapper exists only to make the installed entry point discoverable; it is not a second source of workflow truth.\n""")
+
+def register_entrypoints(target: Path, force: bool) -> None:
+    """Expose the normal public surface plus OMP's one orchestrator entry point."""
+    write_entrypoints(target / ".agents/skills", ENTRYPOINTS, force)
+    write_entrypoints(target / ".codex/skills", {"ask-super-speckit": ENTRYPOINTS["ask-super-speckit"]}, force)
 
 def bundle_source(args: argparse.Namespace, temp: Path) -> Path:
     if args.source:
@@ -55,7 +58,7 @@ def install(args: argparse.Namespace) -> None:
             raise ValueError(f"cannot register entry points: missing installed kit at {destination}")
         register_entrypoints(target, args.force)
         subprocess.run(["python3", str(destination / "scripts/super_speckit.py"), "validate", "--repo", str(target)], check=True)
-        print(f"registered Super-SpecKit entry points in {target / '.agents/skills'}")
+        print(f"registered Super-SpecKit entry points in {target / '.agents/skills'} and OMP-compatible .codex/skills")
         return
     if destination.exists() and not args.force:
         raise ValueError(f"refusing to overwrite {destination}; use --force only after reviewing it")

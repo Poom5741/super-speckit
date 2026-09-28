@@ -32,6 +32,17 @@ orchestration:
   reassess_after_verified_milestone_slice: true
   purpose_gate_human_scope: [outcome, affected_people, success_signal, non_goals]
   purpose_gate_human_technical_decisions: false
+omp_team:
+  enabled_when_omp_detected: true
+  mode: adaptive # use a team only when independent work exceeds coordination cost
+  max_workers: 3
+  worker_timeout_minutes: 30
+  supervisor_continues_control_plane: true
+  allowed_roles: [atlas-scout, contract-scout, test-designer, maker, static-reviewer, qa-planner]
+  maker_requires_isolated_worktree: true
+  checker_must_be_independent: true
+  parent_must_not_block_on_background_workers: true
+  cancellation_on_stall: true
 state_evidence:
   source_of_truth: yaml-json-files-and-commands
   work_state_manifest: .super-speckit/state/work-state.yml

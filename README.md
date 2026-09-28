@@ -81,6 +81,10 @@ Use `commands/` as agent slash-command definitions or adapt them to your integra
 
 `ask-super-speckit` remains the only normal entry point. Atlas, routing, reassessment, transfer, recovery, and verification are internal stages selected from the checked work state; users do not need to memorize or sequence commands.
 
+## OMP teams
+
+When [OMP](https://github.com/unsigned-gg/omp) is available, `ask-super-speckit` enables an adaptive native worker team by default. It fans out only dependency-independent work—Atlas/contract discovery, test/QA design, isolated maker partitions, or static review—then keeps the supervisor preparing evidence and QA instead of waiting behind one worker. It does not fan out small tasks, allow shared mutable maker worktrees, or weaken independent checker QA.
+
 Atlas value is not assumed. Use `super-speckit.evaluate-atlas` with blinded control-versus-Atlas tasks and independent QA before claiming that it improves agent comprehension or delivery.
 
 ## Safety and operating rules
