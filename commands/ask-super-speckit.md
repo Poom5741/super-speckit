@@ -20,11 +20,12 @@ Route in this order:
 12. A bounded maker/research/bug-fix slice suitable for configured cloud execution → `super-speckit.transfer`, then `super-speckit.delegate-cloud`; collect it, then use `super-speckit.collect-cloud` and independent QA.
 13. Candidate without readiness receipt → `super-speckit.environment-ready`.
 14. Candidate awaiting independent proof → `super-speckit.verify` and, if configured, OCR; use pinned Matt `code-review` as another static lane, never runtime proof.
-15. Verified milestone slice with remaining work → `super-speckit.reassess`, update route/Atlas/Change Story, then continue the next safe slice.
-16. Automated proof pack complete → `super-speckit.release`; human manual review is an optional observation lane, not a release dependency.
-17. Confirmed defect or a red test/runtime failure → `super-speckit.diagnose`, then use `super-speckit.fix`/`retest` and resume the affected stage.
-18. A repair failure with new evidence → return to diagnosis and choose the next bounded repair. On the configured repair limit, re-evaluate the architecture, split the problem, or run targeted research; do not retry blindly.
-19. Any pause, completion, external block, or agent transfer → `super-speckit.handoff` or `super-speckit.transfer`. A block records the next automatic probe and resume condition; it is never represented as a request for routine approval.
-20. Complete proof pack → release, milestone audit, then native converge.
+15. UI-changing candidate with normal QA complete → `super-speckit.journey-ux`. Confirmed UX defects enter bug-fix/retest and the whole declared journey set reruns on the latest candidate.
+16. Verified milestone slice with remaining work → `super-speckit.reassess`, update route/Atlas/Change Story, then continue the next safe slice.
+17. Automated proof pack complete → `super-speckit.release`; human manual review is an optional observation lane, not a release dependency.
+18. Confirmed defect or a red test/runtime failure → `super-speckit.diagnose`, then use `super-speckit.fix`/`retest` and resume the affected stage.
+19. A repair failure with new evidence → return to diagnosis and choose the next bounded repair. On the configured repair limit, re-evaluate the architecture, split the problem, or run targeted research; do not retry blindly.
+20. Any pause, completion, external block, or agent transfer → `super-speckit.handoff` or `super-speckit.transfer`. A block records the next automatic probe and resume condition; it is never represented as a request for routine approval.
+21. Complete proof pack → release, milestone audit, then native converge.
 
 Do not create worktrees until the selected stage needs one. Preserve immutable candidate SHA and evidence links in every handoff. Do not expose secrets, bypass protected-path checks, claim unavailable external access, publish/deploy outside configured authority, or convert a blocked/unverified item to pass.

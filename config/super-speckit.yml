@@ -93,6 +93,15 @@ qa:
   redact_patterns: ["(?i)authorization:.*", "(?i)password=[^&\\s]+", "(?i)api[_-]?key[=:][^\\s]+"]
   readiness_checks: [] # health endpoint, migration status, fixture reset, namespace allocation
   correlation_header: "X-Super-Speckit-Run"
+journey_ux:
+  required_for_ui_changes: true
+  mode: agent-led-manual-browser
+  require_real_running_app: true
+  rerun_full_declared_set_after_fix: true
+  capture: [screenshot, trace, video, sanitized-logs]
+  required_coverage: [primary, validation-recovery, empty-loading-error, authorization, persistence, responsive, keyboard]
+  no_release_with_confirmed_defect: true
+  no_release_with_blocked_journey: true
 evidence:
   root: .super-speckit/qa
   retain_on_pass_days: 14

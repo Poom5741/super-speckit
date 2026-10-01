@@ -38,6 +38,9 @@ def render_work_state_manifest(repo: Path) -> str:
             f"    atlas: {json.dumps(data.get('atlas', {}).get('path'))}",
             f"    change_story: {json.dumps(data.get('change_story', {}).get('path'))}",
             f"    latest_handoff: {json.dumps(data.get('handoff', {}).get('path'))}",
+            f"    ui_change: {json.dumps(data.get('ui_change', False))}",
+            f"    journey_ux_status: {json.dumps(data.get('journey_ux', {}).get('status', 'not_required'))}",
+            f"    journey_ux_report: {json.dumps(data.get('journey_ux', {}).get('report'))}",
             f"    runs: {json.dumps(data.get('runs', []))}",
             f"    bugs: {json.dumps(data.get('bugs', []))}",
         ])
@@ -60,6 +63,11 @@ def validation_failures(repo: Path) -> list[str]:
             assert d.get("grill", {}).get("status") in {"not_started", "complete"}
             assert d.get("route", {}).get("kind", "unclassified") in {"unclassified", "micro", "normal", "milestone"}
             if d["state"] in {"candidate_ready","qa_running","ready_for_merge","merged"}: assert SHA.match(d.get("candidate_sha") or "")
+            if d.get("ui_change") and d["state"] in {"ready_for_merge", "merged"}:
+                journey=d.get("journey_ux", {})
+                assert journey.get("status") == "passed", "UI release requires passing Journey UX Loop"
+                assert journey.get("candidate_sha") == d.get("candidate_sha"), "Journey UX result must match latest candidate SHA"
+                assert (repo / (journey.get("report") or "")).exists(), "Journey UX report is required"
             if d["state"] not in {"planned", "blocked"}:
                 assert d.get("purpose", {}).get("status") == "confirmed", "human purpose confirmation is required"
                 assert d.get("grill", {}).get("status") == "complete", "spec grill is required"
@@ -84,7 +92,7 @@ def cmd_init(args):
 def cmd_create(args):
     repo = root(args.repo)
     if args.maker == args.checker: raise ValueError("maker and checker must be distinct")
-    data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "route": {"kind": "unclassified", "rationale": None}, "atlas": {"path": None}, "change_story": {"path": None}, "handoff": {"path": None}, "runs": [], "bugs": []}
+    data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "ui_change": args.ui_change, "journey_ux": {"status": "not_required", "report": None, "candidate_sha": None}, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "route": {"kind": "unclassified", "rationale": None}, "atlas": {"path": None}, "change_story": {"path": None}, "handoff": {"path": None}, "runs": [], "bugs": []}
     save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
@@ -100,6 +108,10 @@ def cmd_transition(args):
     if args.state not in {"planned", "blocked"} and data.get("route", {}).get("kind") not in {"micro", "normal", "milestone"}: raise ValueError("scope route is required before work begins")
     if args.state not in {"planned", "blocked"} and not (repo / (data.get("atlas", {}).get("path") or "")).exists(): raise ValueError("Project Atlas is required before work begins")
     if args.state not in {"planned", "blocked"} and not (repo / (data.get("change_story", {}).get("path") or "")).exists(): raise ValueError("Change Story is required before work begins")
+    if data.get("ui_change") and args.state in {"ready_for_merge", "merged"}:
+        journey=data.get("journey_ux", {})
+        if journey.get("status") != "passed" or journey.get("candidate_sha") != data.get("candidate_sha") or not (repo / (journey.get("report") or "")).exists():
+            raise ValueError("UI release requires a passing Journey UX report for the latest candidate SHA")
     data["state"] = args.state; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data, indent=2))
 
 def cmd_validate(args):
@@ -116,7 +128,7 @@ def cmd_status(args):
         feature={"id":args.feature,"state_file":str(path.relative_to(repo)),"exists":path.exists()}
         if path.exists():
             data=json.loads(path.read_text())
-            feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists(),"purpose":data.get("purpose"),"grill":data.get("grill"),"route":data.get("route"),"atlas":data.get("atlas"),"change_story":data.get("change_story"),"handoff":data.get("handoff")})
+            feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists(),"ui_change":data.get("ui_change",False),"journey_ux":data.get("journey_ux"),"purpose":data.get("purpose"),"grill":data.get("grill"),"route":data.get("route"),"atlas":data.get("atlas"),"change_story":data.get("change_story"),"handoff":data.get("handoff")})
     status={
         "schema_version":1,
         "repository":str(repo),
@@ -200,12 +212,19 @@ def cmd_record_handoff(args):
     if not path.exists(): raise ValueError(f"missing handoff artifact: {path}")
     data["handoff"]={"path":args.artifact,"transfer":args.transfer,"stage":args.stage,"attempt_id":args.attempt_id}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["handoff"],indent=2))
 
+def cmd_record_journey_ux(args):
+    repo=root(args.repo); data=load(repo,args.feature); report=repo / args.report
+    if not data.get("ui_change"): raise ValueError("Journey UX results are only tracked for UI-changing features")
+    if not report.exists(): raise ValueError(f"missing Journey UX report: {report}")
+    if not SHA.match(args.sha): raise ValueError("candidate SHA must be 7-64 lowercase hex characters")
+    data["journey_ux"]={"status":args.status,"report":args.report,"candidate_sha":args.sha}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["journey_ux"],indent=2))
+
 def main():
     p=argparse.ArgumentParser(); sub=p.add_subparsers(dest="cmd",required=True)
     for name, fn in [("init",cmd_init),("validate",cmd_validate)]:
         x=sub.add_parser(name); x.add_argument("--repo",default="."); x.set_defaults(fn=fn)
     x=sub.add_parser("status"); x.add_argument("--repo",default="."); x.add_argument("--feature"); x.add_argument("--strict",action="store_true"); x.set_defaults(fn=cmd_status)
-    x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.set_defaults(fn=cmd_create)
+    x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.add_argument("--ui-change",action="store_true"); x.set_defaults(fn=cmd_create)
     x=sub.add_parser("transition"); x.add_argument("feature"); x.add_argument("state"); x.add_argument("--repo",default="."); x.add_argument("--sha"); x.set_defaults(fn=cmd_transition)
     x=sub.add_parser("worktree"); x.add_argument("--repo",default="."); x.add_argument("--path",required=True); x.add_argument("--branch",required=True); x.add_argument("--ref",default="HEAD"); x.set_defaults(fn=cmd_worktree)
     x=sub.add_parser("design-first"); x.add_argument("feature"); x.add_argument("--title",required=True); x.add_argument("--summary",required=True); x.add_argument("--repo",default="."); x.set_defaults(fn=cmd_design)
@@ -216,6 +235,7 @@ def main():
     x=sub.add_parser("atlas-init"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--summary",required=True); x.set_defaults(fn=cmd_atlas_init)
     x=sub.add_parser("reassess"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.add_argument("--decision",choices=["keep","split","reorder","defer","cancel"],required=True); x.set_defaults(fn=cmd_reassess)
     x=sub.add_parser("record-handoff"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.add_argument("--transfer",choices=["local-to-cloud","cloud-to-local","agent-to-agent","same-environment"],required=True); x.add_argument("--stage",required=True); x.add_argument("--attempt-id",required=True); x.set_defaults(fn=cmd_record_handoff)
+    x=sub.add_parser("record-journey-ux"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--report",required=True); x.add_argument("--sha",required=True); x.add_argument("--status",choices=["passed","blocked","defects"],required=True); x.set_defaults(fn=cmd_record_journey_ux)
     a=p.parse_args()
     try: result=a.fn(a); return result or 0
     except Exception as e: print(f"error: {e}",file=sys.stderr); return 2

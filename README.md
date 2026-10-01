@@ -17,6 +17,7 @@ Static review is evidence about code. A passing runtime verification is evidence
 - an autonomous orchestrator that chooses and runs the next safe stage, self-heals through diagnosis/fix/retest loops, and records external blockers truthfully.
 - a visual Purpose Map with one human gate for outcome, affected people, success signal, and non-goals; followed by an adversarial, evidence-labeled Spec Grill that resolves technical detail autonomously.
 - a GSD-inspired continuity layer: scope routing, a diagram-first Project Atlas, visual Change Stories, slice reassessment, and state-verified local↔cloud handoffs.
+- a required agent-led manual browser Journey UX Loop for UI changes: declared journeys are rerun after every confirmed UX fix until the latest candidate has no confirmed defect in the tested scope.
 - GSD-style phase contracts, plan-quality checks, durable handoffs, and milestone audits—without replacing Spec Kit’s core artifacts or independent QA.
 - optional Codex Cloud delegation for bounded research, maker, and bug-fix work; cloud output returns through a fresh local independent QA lane.
 - a durable bug artifact, regression test obligation, independent retest, project QA summary, and explicit unverified items.
@@ -80,6 +81,8 @@ speckit.converge → project QA summary (including unverified scope and proof-pa
 Use `commands/` as agent slash-command definitions or adapt them to your integration. The orchestrator is an inspectable state/evidence system with autonomous execution enabled by configuration.
 
 `ask-super-speckit` remains the only normal entry point. Atlas, routing, reassessment, transfer, recovery, and verification are internal stages selected from the checked work state; users do not need to memorize or sequence commands.
+
+For a UI change, it also runs the Journey UX Loop after normal independent QA. An independent browser checker repeats the declared user journeys after every confirmed fix. A UI candidate cannot become merge-ready without a passing Journey UX report linked to its latest SHA; the honest result is “no confirmed UX defect in the declared journey scope,” never “there are no UX bugs.”
 
 ## OMP teams
 

@@ -22,6 +22,22 @@ class SuperSpecKitTests(unittest.TestCase):
             self.assertEqual(self.invoke("atlas-init","F-1","--repo",d,"--summary","Save a profile safely").returncode,0)
             self.assertEqual(self.invoke("transition","F-1","candidate_ready","--repo",d,"--sha","abcdef1").returncode,0)
             self.assertEqual(self.invoke("validate","--repo",d).returncode,0)
+    def test_ui_release_requires_latest_passing_journey_ux_report(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); matrix=root/"matrix.md"; matrix.write_text("# matrix")
+            self.assertEqual(self.invoke("init","--repo",d).returncode,0)
+            self.assertEqual(self.invoke("create-feature","UI-1","--repo",d,"--maker","maker","--checker","checker","--matrix","matrix.md","--ui-change").returncode,0)
+            self.assertEqual(self.invoke("purpose-gate","UI-1","--repo",d,"--title","Edit profile","--outcome","Save a profile","--people","Account holder","--success","A saved profile","--non-goals","No permission change").returncode,0)
+            self.assertEqual(self.invoke("confirm-purpose","UI-1","--repo",d,"--decision","confirmed","--confirmed-by","owner","--confirmed-at","2026-10-02T00:00:00Z","--confirmation","correct").returncode,0)
+            grill=root/".super-speckit/grills/UI-1/spec-grill.md"; grill.parent.mkdir(parents=True); grill.write_text("# grill")
+            self.assertEqual(self.invoke("record-grill","UI-1","--repo",d,"--artifact",".super-speckit/grills/UI-1/spec-grill.md").returncode,0)
+            self.assertEqual(self.invoke("route","UI-1","normal","--repo",d,"--rationale","A UI workflow").returncode,0)
+            self.assertEqual(self.invoke("atlas-init","UI-1","--repo",d,"--summary","Save profile").returncode,0)
+            self.assertEqual(self.invoke("transition","UI-1","candidate_ready","--repo",d,"--sha","abcdef1").returncode,0)
+            self.assertNotEqual(self.invoke("transition","UI-1","ready_for_merge","--repo",d).returncode,0)
+            report=root/".super-speckit/qa/J-1/journey-ux-report.md"; report.parent.mkdir(parents=True); report.write_text("# journey report")
+            self.assertEqual(self.invoke("record-journey-ux","UI-1","--repo",d,"--report",".super-speckit/qa/J-1/journey-ux-report.md","--sha","abcdef1","--status","passed").returncode,0)
+            self.assertEqual(self.invoke("transition","UI-1","ready_for_merge","--repo",d).returncode,0)
     def test_status_reports_native_state_and_git_without_chat_memory(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); matrix=root/"matrix.md"; matrix.write_text("# matrix")
@@ -136,6 +152,13 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertIn("Makers never share a mutable worktree", command)
         self.assertIn("super-speckit.omp-team", orchestrator)
         self.assertIn("enabled_when_omp_detected: true", config)
+    def test_journey_ux_loop_requires_full_rerun_and_latest_candidate(self):
+        root=Path(__file__).parents[1]
+        command=(root/"commands/super-speckit.journey-ux.md").read_text()
+        template=(root/"templates/journey-ux-report.md").read_text()
+        self.assertIn("full declared journey set", command)
+        self.assertIn("latest candidate SHA", command)
+        self.assertIn("No confirmed UX defect", template)
     def test_atlas_evaluation_refuses_a_benefit_claim_without_three_qa_pairs(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); output=root/"report.md"
