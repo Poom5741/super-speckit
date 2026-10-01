@@ -159,6 +159,19 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertIn("full declared journey set", command)
         self.assertIn("latest candidate SHA", command)
         self.assertIn("No confirmed UX defect", template)
+    def test_rakazo_is_the_default_private_manual_journey_reviewer(self):
+        root=Path(__file__).parents[1]
+        command=(root/"commands/super-speckit.rakazo-journey.md").read_text()
+        packet=(root/"templates/rakazo-journey-task.md").read_text()
+        config=(root/"config/super-speckit.yml").read_text()
+        orchestrator=(root/"commands/ask-super-speckit.md").read_text()
+        self.assertIn("provider: rakazo", config)
+        self.assertIn("require_private_computer: true", config)
+        self.assertIn("Never infer a generic Rakazo REST endpoint", command)
+        self.assertIn("must not edit product code", command)
+        self.assertIn("full declared journey set", command)
+        self.assertIn("private Rakazo Computer", packet)
+        self.assertIn("super-speckit.rakazo-journey", orchestrator)
     def test_atlas_evaluation_refuses_a_benefit_claim_without_three_qa_pairs(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); output=root/"report.md"

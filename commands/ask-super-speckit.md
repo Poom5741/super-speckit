@@ -20,7 +20,7 @@ Route in this order:
 12. A bounded maker/research/bug-fix slice suitable for configured cloud execution → `super-speckit.transfer`, then `super-speckit.delegate-cloud`; collect it, then use `super-speckit.collect-cloud` and independent QA.
 13. Candidate without readiness receipt → `super-speckit.environment-ready`.
 14. Candidate awaiting independent proof → `super-speckit.verify` and, if configured, OCR; use pinned Matt `code-review` as another static lane, never runtime proof.
-15. UI-changing candidate with normal QA complete → `super-speckit.journey-ux`. Confirmed UX defects enter bug-fix/retest and the whole declared journey set reruns on the latest candidate.
+15. UI-changing candidate with normal QA complete → `super-speckit.rakazo-journey`, then `super-speckit.journey-ux`. Rakazo is the default independent manual browser reviewer; a missing configured adapter is truthfully blocked, not passed. Confirmed UX defects enter bug-fix/retest and the whole declared journey set reruns on the latest candidate.
 16. Verified milestone slice with remaining work → `super-speckit.reassess`, update route/Atlas/Change Story, then continue the next safe slice.
 17. Automated proof pack complete → `super-speckit.release`; human manual review is an optional observation lane, not a release dependency.
 18. Confirmed defect or a red test/runtime failure → `super-speckit.diagnose`, then use `super-speckit.fix`/`retest` and resume the affected stage.

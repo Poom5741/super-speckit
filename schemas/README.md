@@ -18,6 +18,7 @@ Artifacts are human-readable Markdown plus JSON for orchestration. IDs are stabl
 | Change Story | `.super-speckit/atlas/changes/<feature>/change-story.md` | Shows the proposed change path, protected behavior, proof, and explicit unknowns before implementation. |
 | Agent transfer handoff | `.super-speckit/handoffs/<id>.md` | Carries immutable SHA, state receipt, stage, attempt ID, authority boundary, and receiver resume checks. |
 | Journey UX report | `.super-speckit/qa/<run-id>/journey-ux-report.md` | UI candidate has declared real-browser journeys, findings, rerun evidence, and unverified scope; release records a passing report for the latest SHA. |
+| Rakazo journey task | `.super-speckit/qa/<run-id>/rakazo-journey-task.md` | Bounded independent-browser assignment naming candidate SHA, clean-environment receipt, journeys, QA-only write boundary, and return contract; not evidence of a completed run by itself. |
 
 JSON shape used by the included validator:
 

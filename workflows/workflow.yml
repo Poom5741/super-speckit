@@ -67,7 +67,7 @@ steps:
     message: "Run super-speckit.feedback-loop. Find and run the cheapest real public-seam feedback loop before implementation; record baseline, assertion, and limits."
   - id: implement-and-verify
     type: prompt
-    message: "Use super-speckit.start, then verify the immutable candidate in a clean QA worktree. Run environment-ready, policy-selected gates, runtime QA, OCR triage, and defect/retest loops. For UI changes, run the required super-speckit.journey-ux browser loop and rerun its full declared journey set after every confirmed UX fix. Produce a proof pack."
+    message: "Use super-speckit.start, then verify the immutable candidate in a clean QA worktree. Run environment-ready, policy-selected gates, runtime QA, OCR triage, and defect/retest loops. For UI changes, prepare the default private-browser Rakazo assignment with super-speckit.rakazo-journey, then run super-speckit.journey-ux and rerun its full declared journey set after every confirmed UX fix. Produce a proof pack."
   - id: release
     type: prompt
     message: "Run super-speckit.release. Autonomously merge only if every configured evidence gate passes; otherwise self-heal through diagnosis, fix, and independent retest."

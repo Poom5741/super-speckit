@@ -102,6 +102,20 @@ journey_ux:
   required_coverage: [primary, validation-recovery, empty-loading-error, authorization, persistence, responsive, keyboard]
   no_release_with_confirmed_defect: true
   no_release_with_blocked_journey: true
+manual_journey_agent:
+  provider: rakazo
+  enabled: true
+  mode: persistent-browser-reviewer
+  rakazo:
+    # Set only to a reviewed, project-local adapter. Super-SpecKit never guesses a Rakazo API or CLI.
+    dispatch_command: ""
+    require_private_computer: true
+    require_clean_browser_profile: true
+    allow_shared_computer: false
+    allow_peer_delegation: false
+    require_live_model: true
+    task_timeout_minutes: 45
+    report_root: .super-speckit/qa
 evidence:
   root: .super-speckit/qa
   retain_on_pass_days: 14

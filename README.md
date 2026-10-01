@@ -17,7 +17,7 @@ Static review is evidence about code. A passing runtime verification is evidence
 - an autonomous orchestrator that chooses and runs the next safe stage, self-heals through diagnosis/fix/retest loops, and records external blockers truthfully.
 - a visual Purpose Map with one human gate for outcome, affected people, success signal, and non-goals; followed by an adversarial, evidence-labeled Spec Grill that resolves technical detail autonomously.
 - a GSD-inspired continuity layer: scope routing, a diagram-first Project Atlas, visual Change Stories, slice reassessment, and state-verified local↔cloud handoffs.
-- a required agent-led manual browser Journey UX Loop for UI changes: declared journeys are rerun after every confirmed UX fix until the latest candidate has no confirmed defect in the tested scope.
+- a required Rakazo-led manual browser Journey UX Loop for UI changes: declared journeys are rerun after every confirmed UX fix until the latest candidate has no confirmed defect in the tested scope.
 - GSD-style phase contracts, plan-quality checks, durable handoffs, and milestone audits—without replacing Spec Kit’s core artifacts or independent QA.
 - optional Codex Cloud delegation for bounded research, maker, and bug-fix work; cloud output returns through a fresh local independent QA lane.
 - a durable bug artifact, regression test obligation, independent retest, project QA summary, and explicit unverified items.
@@ -82,7 +82,7 @@ Use `commands/` as agent slash-command definitions or adapt them to your integra
 
 `ask-super-speckit` remains the only normal entry point. Atlas, routing, reassessment, transfer, recovery, and verification are internal stages selected from the checked work state; users do not need to memorize or sequence commands.
 
-For a UI change, it also runs the Journey UX Loop after normal independent QA. An independent browser checker repeats the declared user journeys after every confirmed fix. A UI candidate cannot become merge-ready without a passing Journey UX report linked to its latest SHA; the honest result is “no confirmed UX defect in the declared journey scope,” never “there are no UX bugs.”
+For a UI change, it also runs the Journey UX Loop after normal independent QA. [Rakazo](https://github.com/elie222/rakazo) is the default independent browser checker: Super-SpecKit prepares a bounded task packet for a private Rakazo Computer and clean browser profile, and accepts only QA evidence—not product-code edits—from the reviewer. A project may configure a reviewed local dispatch adapter; without one the work is honestly blocked for Rakazo dispatch rather than pretending an API exists. Rakazo repeats the declared user journeys after every confirmed fix. A UI candidate cannot become merge-ready without a passing Journey UX report linked to its latest SHA; the honest result is “no confirmed UX defect in the declared journey scope,” never “there are no UX bugs.”
 
 ## OMP teams
 
@@ -103,7 +103,7 @@ Atlas value is not assumed. Use `super-speckit.evaluate-atlas` with blinded cont
 
 See [commands](commands/README.md), [design-first skill](skills/design-first/SKILL.md), [orchestrator skill](skills/ask-super-speckit/SKILL.md), [schemas](schemas/README.md), [orchestration rules](docs/orchestration.md), [state machine](docs/state-machine.md), and the [worked example](examples/feature-042.md).
 
-The shipped upstream design and debugging skills and their pinned source revisions are listed in [sources.lock.json](sources.lock.json). The locally authored final review procedure is [final-manual-review](skills/final-manual-review/SKILL.md); it is intentionally limited to human/AI handoff, evidence, waiting, and bug-routing mechanics.
+The shipped upstream design and debugging skills and their pinned source revisions are listed in [sources.lock.json](sources.lock.json). The locally authored final review procedure is [final-manual-review](skills/final-manual-review/SKILL.md); it is intentionally limited to human/AI handoff, evidence, waiting, and bug-routing mechanics. Rakazo integration is intentionally adapter-based: its live-model/manual browser verification is real-run evidence, while an unavailable run remains unverified rather than passing.
 
 See [compatibility map](docs/compatibility-map.md) for what was selectively adopted from GSD, Matt Pocock’s engineering skills, MAQA, AWO/Orka, UI/UX Pro Max, Frontend Agent Skills, and the design workflow suite—and what was intentionally kept out to avoid conflicts.
 

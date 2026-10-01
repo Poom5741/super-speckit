@@ -2,6 +2,8 @@
 
 Environment receipt: {{environment_receipt}}
 Independent checker: {{checker}}
+Manual browser agent: Rakazo (or recorded adapter exception)
+Rakazo task packet: {{rakazo_task_packet}}
 
 ## Declared journeys
 
