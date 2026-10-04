@@ -33,6 +33,13 @@ orchestration:
   decision_trail_required_for_long_runs: true
   purpose_gate_human_scope: [outcome, affected_people, success_signal, non_goals]
   purpose_gate_human_technical_decisions: false
+ponytail:
+  enabled: true
+  default_intensity: full
+  apply_to: [maker, bug-fix, refactor]
+  allowed_intensities_for_protected_paths: [lite, full]
+  require_decision_trail_note: true
+  never_simplify: [requirements, security, privacy, trust-boundary-validation, data-loss-protection, accessibility, migration-safety, verification]
 omp_team:
   enabled_when_omp_detected: true
   mode: adaptive # use a team only when independent work exceeds coordination cost

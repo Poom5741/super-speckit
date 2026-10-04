@@ -27,6 +27,7 @@ Static review is evidence about code. A passing runtime verification is evidence
 - PStack-inspired recurring-failure enforcement, independent multi-lens static review, and compact decision trails—kept subordinate to runtime proof and the Spec Kit lifecycle.
 - command-backed state authority: agents re-check native artifacts, feature state, Git, and proof packs before and after material stages instead of trusting conversation memory.
 - a premium UI lane: a pinned design-intelligence catalog plus focused skills for composition, interactions, navigation, forms, accessibility, content, usability, research, and design-system architecture.
+- a pinned Ponytail maker lane that reuses code, standard libraries, native platform features, and installed dependencies before adding the smallest necessary code.
 
 It is intentionally an extension, not a competing fork of the Spec Kit CLI. The upstream project changes quickly; install normal Spec Kit first and keep its commands current.
 
@@ -98,6 +99,10 @@ For a UI change, it also runs the Journey UX Loop after normal independent QA. [
 Super-SpecKit now selectively adopts compatible ideas from [PStack](https://github.com/cursor/plugins/tree/main/pstack): a verification-harness bootstrap, `correct`-style structural prevention of repeated failures, an `interrogate` multi-lens static-review panel, a file-backed decision trail, and an independent skill evaluator. These stay internal stages of `$ask-super-speckit`; PStack’s static review does not replace clean runtime QA, and its code-first planning preference does not replace Spec Kit’s artifacts.
 
 The evaluator is deliberately a separate role: it receives a realistic request in a temporary fixture, observes actual artifacts and test results, and cannot edit the source skill. It does not claim to test every skill at once; each evaluation identifies the exact contract and untested modes. Repeated observed failures enter `correct`, which chooses the smallest guard in the order architecture → types/schema → lint/static → CI → regression test → documentation.
+
+## Ponytail minimal implementation
+
+For maker, bug-fix, and refactor slices, Super-SpecKit runs the pinned [Ponytail](https://github.com/DietrichGebert/ponytail) ladder after it understands the relevant flow: skip speculative work, reuse code, standard library, native platform feature, installed dependency, one line, then the smallest new code. This reduces unnecessary code and token use, but is never permission to skip required behavior, security/privacy, trust-boundary validation, data-loss protection, accessibility, migration safety, or independent verification.
 
 ## OMP teams
 

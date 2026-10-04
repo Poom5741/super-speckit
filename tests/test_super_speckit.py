@@ -199,6 +199,18 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertIn("historical bad example", correct)
         self.assertIn("may never mark a runtime matrix row verified", interrogate)
         self.assertIn("PStack (consulted, not vendored)", {source["name"] for source in sources})
+    def test_ponytail_is_pinned_and_cannot_weaken_super_speckit_gates(self):
+        root=Path(__file__).parents[1]
+        upstream=(root/"skills/upstream/ponytail/SKILL.md").read_text()
+        adapter=(root/"commands/super-speckit.ponytail.md").read_text()
+        config=(root/"config/super-speckit.yml").read_text()
+        orchestrator=(root/"commands/ask-super-speckit.md").read_text()
+        self.assertIn("Stop at the first rung that holds", upstream)
+        self.assertTrue((root/"skills/upstream/ponytail/LICENSE").exists())
+        self.assertIn("may never remove or shorten", adapter)
+        self.assertIn("independent QA", adapter)
+        self.assertIn("default_intensity: full", config)
+        self.assertIn("super-speckit.ponytail", orchestrator)
     def test_atlas_evaluation_refuses_a_benefit_claim_without_three_qa_pairs(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); output=root/"report.md"

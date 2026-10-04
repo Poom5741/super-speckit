@@ -64,6 +64,15 @@
       "installed_to": null,
       "role": "reference for verification-harness, corrective enforcement, independent static review, decision trails, and agent operations",
       "license_note": "MIT source consulted for compatible concepts; no PStack files are redistributed in this kit."
+    },
+    {
+      "name": "Ponytail",
+      "repository": "https://github.com/DietrichGebert/ponytail",
+      "commit": "c982cd411abb53323c4baa1baa3c2f020b8d0b08",
+      "path": "skills/ponytail",
+      "installed_to": "skills/upstream/ponytail",
+      "role": "maker, bug-fix, and refactor minimal-solution ladder",
+      "license_note": "MIT; upstream SKILL.md is vendored verbatim with its license."
     }
   ]
 }

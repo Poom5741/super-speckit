@@ -25,6 +25,7 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `super-speckit.start` | Create a feature maker worktree and state record from native Spec Kit artifacts. |
 | `super-speckit.matrix` | Create/review the requirements-to-verification matrix. |
 | `super-speckit.feedback-loop` | Discover, run, and record the smallest real feedback loop before a change. |
+| `super-speckit.ponytail` | Apply Ponytail’s pinned minimal-solution ladder to maker work without weakening safety or QA. |
 | `super-speckit.verification-harness` | Bootstrap or refresh project-local runtime verification and feature-map evidence. |
 | `super-speckit.verify` | Create a clean QA worktree and execute independent verification. |
 | `super-speckit.explore` | Run bounded browser exploration and record observed coverage. |
