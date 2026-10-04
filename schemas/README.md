@@ -19,6 +19,12 @@ Artifacts are human-readable Markdown plus JSON for orchestration. IDs are stabl
 | Agent transfer handoff | `.super-speckit/handoffs/<id>.md` | Carries immutable SHA, state receipt, stage, attempt ID, authority boundary, and receiver resume checks. |
 | Journey UX report | `.super-speckit/qa/<run-id>/journey-ux-report.md` | UI candidate has declared real-browser journeys, findings, rerun evidence, and unverified scope; release records a passing report for the latest SHA. |
 | Rakazo journey task | `.super-speckit/qa/<run-id>/rakazo-journey-task.md` | Bounded independent-browser assignment naming candidate SHA, clean-environment receipt, journeys, QA-only write boundary, and return contract; not evidence of a completed run by itself. |
+| Verification harness | `.super-speckit/verification/verification-harness.md` | Project launch, readiness, test-data, public-seam, evidence, and cleanup contract; its live smoke path is recorded before it supports QA. |
+| Verification feature map | `.super-speckit/verification/feature-map.md` | Capabilities map to deterministic/runtime/API/DB evidence and explicit status. |
+| Static review panel | `.super-speckit/qa/<run-id>/static-review-panel.md` | Independent static lenses, synthesized dispositions, and reviewer limits; never runtime proof. |
+| Corrective enforcement | `.super-speckit/quality/<id>/corrective-enforcement.md` | Repeated failure maps to the smallest proven structural guard plus a historical counterexample. |
+| Decision trail | `.super-speckit/decisions/<feature>/decision-trail.md` | Material decisions link alternatives, command-backed evidence, reversibility, proof, and unknowns. |
+| Skill evaluation | `.super-speckit/evals/<run-id>/skill-evaluation.md` | Independent temporary-fixture behavior test with observed invariants, defects, and untested modes. |
 
 JSON shape used by the included validator:
 

@@ -24,11 +24,16 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `super-speckit.start` | Create a feature maker worktree and state record from native Spec Kit artifacts. |
 | `super-speckit.matrix` | Create/review the requirements-to-verification matrix. |
 | `super-speckit.feedback-loop` | Discover, run, and record the smallest real feedback loop before a change. |
+| `super-speckit.verification-harness` | Bootstrap or refresh project-local runtime verification and feature-map evidence. |
 | `super-speckit.verify` | Create a clean QA worktree and execute independent verification. |
 | `super-speckit.explore` | Run bounded browser exploration and record observed coverage. |
 | `super-speckit.rakazo-journey` | Prepare and verify the default Rakazo private-browser journey-review assignment. |
 | `super-speckit.journey-ux` | Run the required agent-led manual user-journey UX loop for UI changes. |
 | `super-speckit.ocr` | Run/ingest OCR static review and triage findings. |
+| `super-speckit.interrogate` | Run an independent multi-lens static review panel; it cannot pass runtime evidence. |
+| `super-speckit.correct` | Turn repeated observed failures into the smallest proven structural enforcement. |
+| `super-speckit.decision-trail` | Record material autonomous decisions with linked evidence and limits. |
+| `super-speckit.evaluate-skill` | Forward-test changed skills with an independent temporary-workspace evaluator. |
 | `super-speckit.file-bug` | Reproduce, classify, and persist a confirmed QA failure. |
 | `super-speckit.diagnose` | Route a codebase or live-app failure through evidence-backed root-cause diagnosis before a fix worktree is opened. |
 | `super-speckit.fix` | Create a bug-fix worktree and require regression coverage. |

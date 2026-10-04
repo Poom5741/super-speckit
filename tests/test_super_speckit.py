@@ -172,6 +172,23 @@ class SuperSpecKitTests(unittest.TestCase):
         self.assertIn("full declared journey set", command)
         self.assertIn("private Rakazo Computer", packet)
         self.assertIn("super-speckit.rakazo-journey", orchestrator)
+    def test_pstack_compatible_harness_and_skill_evaluator_are_file_backed(self):
+        root=Path(__file__).parents[1]
+        with tempfile.TemporaryDirectory() as d:
+            result=self.invoke("harness-init","--repo",d)
+            self.assertEqual(result.returncode,0, result.stderr)
+            self.assertTrue((Path(d)/".super-speckit/verification/verification-harness.md").exists())
+            self.assertTrue((Path(d)/".super-speckit/verification/feature-map.md").exists())
+        evaluator=(root/"skills/skill-evaluator/SKILL.md").read_text()
+        command=(root/"commands/super-speckit.evaluate-skill.md").read_text()
+        correct=(root/"commands/super-speckit.correct.md").read_text()
+        interrogate=(root/"commands/super-speckit.interrogate.md").read_text()
+        sources=json.loads((root/"sources.lock.json").read_text())["sources"]
+        self.assertIn("temporary fixture", evaluator)
+        self.assertIn("must not modify the source skill", command)
+        self.assertIn("historical bad example", correct)
+        self.assertIn("may never mark a runtime matrix row verified", interrogate)
+        self.assertIn("PStack (consulted, not vendored)", {source["name"] for source in sources})
     def test_atlas_evaluation_refuses_a_benefit_claim_without_three_qa_pairs(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); output=root/"report.md"

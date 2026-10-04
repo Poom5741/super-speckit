@@ -14,6 +14,10 @@ Conversation is never a state store. Before and after every material stage, the 
 
 Before changing production code, configuration, data behavior, or UI, the autonomous orchestrator creates a feedback-loop receipt. It searches existing project tools and selects the smallest public-seam signal that can distinguish correct from incorrect behavior. Use red-green TDD for code where a test seam exists; otherwise use API/DB assertions, browser/visual evidence, replay, fixtures, simulator, property/fuzz, differential, performance, or bounded human observation. Source inspection, a clean exit status, and static review alone are never sufficient.
 
+## 2.1 Verification harness and learning loop
+
+Before runtime QA, create or refresh a project-local verification harness and feature map. It documents executable launch/readiness, isolated test data, public seams, evidence, and cleanup; a live smoke path demonstrates the harness is usable. A static review panel is independent and read-only, but cannot satisfy runtime matrix rows or apply its own findings. When the same failure recurs or a severe escape occurs, create corrective enforcement at the first viable layer—architecture, types/schema, static/lint, CI, regression test, documentation—and prove it catches the historical counterexample. For material changes to this kit, an isolated evaluator subagent forward-tests the affected skill against a realistic fixture before any correction is accepted.
+
 ## 3. Maker lane
 
 Coordinator allocates one branch/worktree per dependency-ready feature. The maker implements only the selected task slice, adds targeted tests, updates the matrix's proposed assets, runs local checks, and commits a candidate SHA. Makers do not self-certify QA.

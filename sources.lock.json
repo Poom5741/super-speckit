@@ -55,6 +55,15 @@
       "installed_to": "skills/upstream/hueyexe",
       "role": "specialist UX, inclusive design, composition, interaction, forms, information architecture, content, systems, and research",
       "license_note": "MIT; retain upstream notices."
+    },
+    {
+      "name": "PStack (consulted, not vendored)",
+      "repository": "https://github.com/cursor/plugins",
+      "commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "path": "pstack",
+      "installed_to": null,
+      "role": "reference for verification-harness, corrective enforcement, independent static review, decision trails, and agent operations",
+      "license_note": "MIT source consulted for compatible concepts; no PStack files are redistributed in this kit."
     }
   ]
 }

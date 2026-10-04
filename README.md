@@ -23,6 +23,8 @@ Static review is evidence about code. A passing runtime verification is evidence
 - a durable bug artifact, regression test obligation, independent retest, project QA summary, and explicit unverified items.
 - a root-cause diagnosis lane that requires a tight reproduction for codebase failures and browser-runtime evidence for rendered-app failures.
 - a native feedback-loop rule: every change begins by finding and running a real public-seam signal—red-green tests where possible, otherwise an equivalent browser, API, DB, replay, simulator, visual, differential, performance, or bounded-observation loop.
+- a project-local verification harness and feature map that make launch, readiness, test-data isolation, live smoke checks, evidence, and cleanup repeatable rather than tribal knowledge.
+- PStack-inspired recurring-failure enforcement, independent multi-lens static review, and compact decision trails—kept subordinate to runtime proof and the Spec Kit lifecycle.
 - command-backed state authority: agents re-check native artifacts, feature state, Git, and proof packs before and after material stages instead of trusting conversation memory.
 - a premium UI lane: a pinned design-intelligence catalog plus focused skills for composition, interactions, navigation, forms, accessibility, content, usability, research, and design-system architecture.
 
@@ -72,6 +74,7 @@ speckit.plan → speckit.tasks → analyze → feedback loop → risk/parallelis
 super-speckit.start FEATURE-123 → maker worktree → commit candidate
       ↓
 super-speckit.verify FEATURE-123 → clean QA worktree → gates + E2E + exploration
+      ├─ interrogate (static panel) + OCR triage → findings only, never runtime proof
       ├─ confirmed failure → diagnose (tight repro + root cause) → bug artifact → bug maker worktree → independent retest
       └─ pass + OCR triage resolved/accepted → autonomous merge
       ↓
@@ -83,6 +86,12 @@ Use `commands/` as agent slash-command definitions or adapt them to your integra
 `ask-super-speckit` remains the only normal entry point. Atlas, routing, reassessment, transfer, recovery, and verification are internal stages selected from the checked work state; users do not need to memorize or sequence commands.
 
 For a UI change, it also runs the Journey UX Loop after normal independent QA. [Rakazo](https://github.com/elie222/rakazo) is the default independent browser checker: Super-SpecKit prepares a bounded task packet for a private Rakazo Computer and clean browser profile, and accepts only QA evidence—not product-code edits—from the reviewer. A project may configure a reviewed local dispatch adapter; without one the work is honestly blocked for Rakazo dispatch rather than pretending an API exists. Rakazo repeats the declared user journeys after every confirmed fix. A UI candidate cannot become merge-ready without a passing Journey UX report linked to its latest SHA; the honest result is “no confirmed UX defect in the declared journey scope,” never “there are no UX bugs.”
+
+## PStack-compatible engineering layer
+
+Super-SpecKit now selectively adopts compatible ideas from [PStack](https://github.com/cursor/plugins/tree/main/pstack): a verification-harness bootstrap, `correct`-style structural prevention of repeated failures, an `interrogate` multi-lens static-review panel, a file-backed decision trail, and an independent skill evaluator. These stay internal stages of `$ask-super-speckit`; PStack’s static review does not replace clean runtime QA, and its code-first planning preference does not replace Spec Kit’s artifacts.
+
+The evaluator is deliberately a separate role: it receives a realistic request in a temporary fixture, observes actual artifacts and test results, and cannot edit the source skill. It does not claim to test every skill at once; each evaluation identifies the exact contract and untested modes. Repeated observed failures enter `correct`, which chooses the smallest guard in the order architecture → types/schema → lint/static → CI → regression test → documentation.
 
 ## OMP teams
 

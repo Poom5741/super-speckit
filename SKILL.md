@@ -15,11 +15,11 @@ Maker and checker must be different agents or independently scoped runs. The che
 
 ## Entry and exit criteria
 
-Start by drafting a visual Purpose Map. A human confirms only its intended outcome, affected people, success signal, and non-goals; agents then own technical choices. After native specification, run the evidence-labeled Builder/Examiner/Investigator/Resolver Spec Grill, scope route, and diagram-first Project Atlas/Change Story before maker work. Start implementation only after `spec.md`, `plan.md`, `tasks.md`, a requirements-to-verification matrix, confirmed purpose record, completed grill, chosen route, and evidence-linked understanding artifacts identify the intended scope. End with a QA summary that labels every requirement `verified`, `not-verified`, or `not-applicable`, and lists evidence paths. Missing environment access is an explicit unverified item, not a pass.
+Start by drafting a visual Purpose Map. A human confirms only its intended outcome, affected people, success signal, and non-goals; agents then own technical choices. After native specification, run the evidence-labeled Builder/Examiner/Investigator/Resolver Spec Grill, scope route, and diagram-first Project Atlas/Change Story before maker work. Start implementation only after `spec.md`, `plan.md`, `tasks.md`, a requirements-to-verification matrix, a project verification harness/feature map, confirmed purpose record, completed grill, chosen route, and evidence-linked understanding artifacts identify the intended scope. End with a QA summary that labels every requirement `verified`, `not-verified`, or `not-applicable`, and lists evidence paths. Missing environment access is an explicit unverified item, not a pass.
 
 ## Runtime evidence
 
-Run configured deterministic checks first, then start the actual app from the QA worktree and run Playwright. Include API or database assertions when a browser observation alone cannot demonstrate persistence, authorization, or integration side effects. Run bounded exploratory cases separately; record tested paths and observations. Capture only non-sensitive traces, screenshots, videos, and logs.
+Run configured deterministic checks first, then start the actual app from the QA worktree and run Playwright. Include API or database assertions when a browser observation alone cannot demonstrate persistence, authorization, or integration side effects. Run bounded exploratory cases separately; record tested paths and observations. A multi-lens static review may identify risks but cannot close runtime matrix rows or auto-apply findings. Capture only non-sensitive traces, screenshots, videos, and logs.
 
 ## Failure handling
 

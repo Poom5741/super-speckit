@@ -13,19 +13,23 @@ Route in this order:
 5. Unknown domain, repository behavior, or decision → choose the least-cost evidence path using pinned Matt `research`, `grill-with-docs`, `domain-modeling`, or `wayfinder`, then update native artifacts.
 6. UI-impacting requirement without a decision → `super-speckit.design-first`, select the most evidence-supported direction, record it as an autonomous decision, and continue.
 7. Missing plan/tasks/matrix → native plan/tasks/matrix.
-8. Any planned slice without a real baseline feedback loop → `super-speckit.feedback-loop`. Use pinned Matt `tdd` for code behavior and choose an equivalent public-seam loop for every other kind of work.
-9. Planned slice without phase contract/plan-quality evidence → `super-speckit.phase-check`.
-10. Unsliced or conflicting work → `super-speckit.parallelize`.
-11. OMP detected and at least two dependency-independent lanes exist → `super-speckit.omp-team`; supervise native isolated workers while continuing control-plane work. Do not fan out a micro task or a shared mutable partition.
-12. A bounded maker/research/bug-fix slice suitable for configured cloud execution → `super-speckit.transfer`, then `super-speckit.delegate-cloud`; collect it, then use `super-speckit.collect-cloud` and independent QA.
-13. Candidate without readiness receipt → `super-speckit.environment-ready`.
-14. Candidate awaiting independent proof → `super-speckit.verify` and, if configured, OCR; use pinned Matt `code-review` as another static lane, never runtime proof.
-15. UI-changing candidate with normal QA complete → `super-speckit.rakazo-journey`, then `super-speckit.journey-ux`. Rakazo is the default independent manual browser reviewer; a missing configured adapter is truthfully blocked, not passed. Confirmed UX defects enter bug-fix/retest and the whole declared journey set reruns on the latest candidate.
-16. Verified milestone slice with remaining work → `super-speckit.reassess`, update route/Atlas/Change Story, then continue the next safe slice.
-17. Automated proof pack complete → `super-speckit.release`; human manual review is an optional observation lane, not a release dependency.
-18. Confirmed defect or a red test/runtime failure → `super-speckit.diagnose`, then use `super-speckit.fix`/`retest` and resume the affected stage.
-19. A repair failure with new evidence → return to diagnosis and choose the next bounded repair. On the configured repair limit, re-evaluate the architecture, split the problem, or run targeted research; do not retry blindly.
-20. Any pause, completion, external block, or agent transfer → `super-speckit.handoff` or `super-speckit.transfer`. A block records the next automatic probe and resume condition; it is never represented as a request for routine approval.
-21. Complete proof pack → release, milestone audit, then native converge.
+8. No project verification harness or stale runtime feature map → `super-speckit.verification-harness`; run its live smoke path before runtime QA.
+9. Any planned slice without a real baseline feedback loop → `super-speckit.feedback-loop`. Use pinned Matt `tdd` for code behavior and choose an equivalent public-seam loop for every other kind of work.
+10. Planned slice without phase contract/plan-quality evidence → `super-speckit.phase-check`.
+11. Unsliced or conflicting work → `super-speckit.parallelize`.
+12. OMP detected and at least two dependency-independent lanes exist → `super-speckit.omp-team`; supervise native isolated workers while continuing control-plane work. Do not fan out a micro task or a shared mutable partition.
+13. A bounded maker/research/bug-fix slice suitable for configured cloud execution → `super-speckit.transfer`, then `super-speckit.delegate-cloud`; collect it, then use `super-speckit.collect-cloud` and independent QA.
+14. Candidate without readiness receipt → `super-speckit.environment-ready`.
+15. Candidate awaiting independent proof → `super-speckit.verify`, then `super-speckit.interrogate` and, if configured, OCR. Static lanes never satisfy runtime requirements or auto-apply their own findings.
+16. UI-changing candidate with normal QA complete → `super-speckit.rakazo-journey`, then `super-speckit.journey-ux`. Rakazo is the default independent manual browser reviewer; a missing configured adapter is truthfully blocked, not passed. Confirmed UX defects enter bug-fix/retest and the whole declared journey set reruns on the latest candidate.
+17. Repeated failure class or severe escape → `super-speckit.correct`; add the smallest proven structural enforcement and a counterexample receipt.
+18. Long autonomous run, material decision, or pause → `super-speckit.decision-trail` before handoff; it supplements, never replaces, file-backed state.
+19. New or materially changed Super-SpecKit skill/command/template → `super-speckit.evaluate-skill` through the independent `super-speckit-skill-evaluator`; correct only observed behavior defects.
+20. Verified milestone slice with remaining work → `super-speckit.reassess`, update route/Atlas/Change Story, then continue the next safe slice.
+21. Automated proof pack complete → `super-speckit.release`; human manual review is an optional observation lane, not a release dependency.
+22. Confirmed defect or a red test/runtime failure → `super-speckit.diagnose`, then use `super-speckit.fix`/`retest` and resume the affected stage.
+23. A repair failure with new evidence → return to diagnosis and choose the next bounded repair. On the configured repair limit, re-evaluate the architecture, split the problem, or run targeted research; do not retry blindly.
+24. Any pause, completion, external block, or agent transfer → `super-speckit.handoff` or `super-speckit.transfer`. A block records the next automatic probe and resume condition; it is never represented as a request for routine approval.
+25. Complete proof pack → release, milestone audit, then native converge.
 
 Do not create worktrees until the selected stage needs one. Preserve immutable candidate SHA and evidence links in every handoff. Do not expose secrets, bypass protected-path checks, claim unavailable external access, publish/deploy outside configured authority, or convert a blocked/unverified item to pass.

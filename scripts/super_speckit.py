@@ -38,6 +38,10 @@ def render_work_state_manifest(repo: Path) -> str:
             f"    atlas: {json.dumps(data.get('atlas', {}).get('path'))}",
             f"    change_story: {json.dumps(data.get('change_story', {}).get('path'))}",
             f"    latest_handoff: {json.dumps(data.get('handoff', {}).get('path'))}",
+            f"    decision_trail: {json.dumps(data.get('decision_trail', {}).get('path'))}",
+            f"    verification_harness: {json.dumps(data.get('verification_harness', {}).get('path'))}",
+            f"    static_review: {json.dumps(data.get('static_review', {}).get('artifact'))}",
+            f"    corrective_enforcement: {json.dumps(data.get('corrective_enforcement', {}).get('artifact'))}",
             f"    ui_change: {json.dumps(data.get('ui_change', False))}",
             f"    journey_ux_status: {json.dumps(data.get('journey_ux', {}).get('status', 'not_required'))}",
             f"    journey_ux_report: {json.dumps(data.get('journey_ux', {}).get('report'))}",
@@ -92,7 +96,7 @@ def cmd_init(args):
 def cmd_create(args):
     repo = root(args.repo)
     if args.maker == args.checker: raise ValueError("maker and checker must be distinct")
-    data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "ui_change": args.ui_change, "journey_ux": {"status": "not_required", "report": None, "candidate_sha": None}, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "route": {"kind": "unclassified", "rationale": None}, "atlas": {"path": None}, "change_story": {"path": None}, "handoff": {"path": None}, "runs": [], "bugs": []}
+    data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "ui_change": args.ui_change, "journey_ux": {"status": "not_required", "report": None, "candidate_sha": None}, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "route": {"kind": "unclassified", "rationale": None}, "atlas": {"path": None}, "change_story": {"path": None}, "handoff": {"path": None}, "decision_trail": {"path": None}, "verification_harness": {"path": None}, "static_review": {"artifact": None}, "corrective_enforcement": {"artifact": None}, "runs": [], "bugs": []}
     save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
@@ -219,6 +223,23 @@ def cmd_record_journey_ux(args):
     if not SHA.match(args.sha): raise ValueError("candidate SHA must be 7-64 lowercase hex characters")
     data["journey_ux"]={"status":args.status,"report":args.report,"candidate_sha":args.sha}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["journey_ux"],indent=2))
 
+def cmd_record_artifact(args):
+    repo=root(args.repo); data=load(repo,args.feature); path=repo / args.artifact
+    if not path.exists(): raise ValueError(f"missing artifact: {path}")
+    if args.kind == "decision-trail": data["decision_trail"]={"path":args.artifact}
+    elif args.kind == "verification-harness": data["verification_harness"]={"path":args.artifact}
+    elif args.kind == "static-review": data["static_review"]={"artifact":args.artifact}
+    elif args.kind == "corrective-enforcement": data["corrective_enforcement"]={"artifact":args.artifact}
+    save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data.get(args.kind.replace("-", "_"), data),indent=2))
+
+def cmd_harness_init(args):
+    repo=root(args.repo); directory=repo / ".super-speckit/verification"; directory.mkdir(parents=True, exist_ok=True)
+    harness=directory / "verification-harness.md"; feature_map=directory / "feature-map.md"
+    if (harness.exists() or feature_map.exists()) and not args.replace: raise ValueError("verification harness exists; use --replace only after reviewing runtime drift")
+    harness.write_text("# Project Verification Harness\n\n## Launch and readiness\n\n- App start command: configure `gates.app_start` in `super-speckit.yml`.\n- App URL: configure `gates.app_url`.\n- Health/readiness checks: configure `qa.readiness_checks`.\n\n## Test-data isolation\n\n- Reset command: configure `qa.fixture_reset_command`.\n- Namespace each run with `qa.isolated_test_namespace`; do not use production identities.\n\n## Real behavior proof\n\n- Map each capability in `feature-map.md` to a real public seam.\n- Browser checks use configured Playwright plus exploratory/Journey UX review where applicable.\n- Add API/DB assertions when UI alone cannot prove a side effect.\n\n## Evidence and cleanup\n\n- Store sanitized commands, logs, traces, screenshots, video, and environment receipt under `.super-speckit/qa/<run-id>/`.\n- Stop app processes, clear only the isolated namespace, and record cleanup outcome.\n- A missing live run is `not-verified`, never pass.\n")
+    feature_map.write_text("# Verification Feature Map\n\n| Capability / requirement | Entry point | Public seam | Deterministic check | Runtime journey | API / DB assertion | Evidence | Status |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| Add project capabilities here |  |  |  |  |  |  | unverified |\n")
+    print(harness)
+
 def main():
     p=argparse.ArgumentParser(); sub=p.add_subparsers(dest="cmd",required=True)
     for name, fn in [("init",cmd_init),("validate",cmd_validate)]:
@@ -236,6 +257,8 @@ def main():
     x=sub.add_parser("reassess"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.add_argument("--decision",choices=["keep","split","reorder","defer","cancel"],required=True); x.set_defaults(fn=cmd_reassess)
     x=sub.add_parser("record-handoff"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.add_argument("--transfer",choices=["local-to-cloud","cloud-to-local","agent-to-agent","same-environment"],required=True); x.add_argument("--stage",required=True); x.add_argument("--attempt-id",required=True); x.set_defaults(fn=cmd_record_handoff)
     x=sub.add_parser("record-journey-ux"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--report",required=True); x.add_argument("--sha",required=True); x.add_argument("--status",choices=["passed","blocked","defects"],required=True); x.set_defaults(fn=cmd_record_journey_ux)
+    x=sub.add_parser("record-artifact"); x.add_argument("feature"); x.add_argument("kind",choices=["decision-trail","verification-harness","static-review","corrective-enforcement"]); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.set_defaults(fn=cmd_record_artifact)
+    x=sub.add_parser("harness-init"); x.add_argument("--repo",default="."); x.add_argument("--replace",action="store_true"); x.set_defaults(fn=cmd_harness_init)
     a=p.parse_args()
     try: result=a.fn(a); return result or 0
     except Exception as e: print(f"error: {e}",file=sys.stderr); return 2

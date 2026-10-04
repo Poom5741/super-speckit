@@ -30,6 +30,7 @@ orchestration:
   change_story_required: true
   scope_route_required: true
   reassess_after_verified_milestone_slice: true
+  decision_trail_required_for_long_runs: true
   purpose_gate_human_scope: [outcome, affected_people, success_signal, non_goals]
   purpose_gate_human_technical_decisions: false
 omp_team:
@@ -93,6 +94,34 @@ qa:
   redact_patterns: ["(?i)authorization:.*", "(?i)password=[^&\\s]+", "(?i)api[_-]?key[=:][^\\s]+"]
   readiness_checks: [] # health endpoint, migration status, fixture reset, namespace allocation
   correlation_header: "X-Super-Speckit-Run"
+verification_harness:
+  required_before_runtime_qa: true
+  root: .super-speckit/verification
+  require_feature_map: true
+  require_live_smoke: true
+  require_cleanup_receipt: true
+  refresh_after_route_or_runtime_drift: true
+static_review_panel:
+  enabled: true
+  lenses: [correctness, architecture, security, maintainability]
+  ui_lenses: [ux-accessibility]
+  reviewer_count: 3
+  must_not_satisfy_runtime_matrix_rows: true
+  must_not_auto_apply_findings: true
+continuous_improvement:
+  enabled: true
+  repeated_failure_threshold: 2
+  enforcement_order: [architecture, type-schema, lint-static, ci, regression-test, documentation]
+  require_historical_counterexample: true
+skill_evaluation:
+  enabled: true
+  mode: independent-forward-test
+  subagent_command: "" # optional reviewed host adapter; never infer a subagent API
+  workspace_root: .super-speckit/evals
+  allow_network: false
+  allow_external_mutations: false
+  retain_failed_runs: true
+  require_observed_artifacts: true
 journey_ux:
   required_for_ui_changes: true
   mode: agent-led-manual-browser
