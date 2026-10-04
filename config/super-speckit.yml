@@ -62,6 +62,12 @@ delegation:
   require_redacted_handoff: true
   require_independent_retest_after_apply: true
   centillex_desk_command: "" # optional, e.g. `desk`; configured separately after local verification
+continuation:
+  path: .super-speckit/continuation.yml
+  update_after_material_stage: true
+  require_git_pull_before_resume: true
+  require_strict_state_check_before_resume: true
+  history_limit: 20
 design:
   required_when_paths: ["**/*.tsx", "**/*.jsx", "**/*.vue", "**/*.svelte", "**/*.html", "**/*.css"]
   output_root: .super-speckit/design

@@ -2,6 +2,7 @@
 """Minimal, dependency-free state/worktree helper for super-speckit."""
 from __future__ import annotations
 import argparse, html, json, re, subprocess, sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 STATES = {"planned", "maker_running", "candidate_ready", "qa_running", "qa_failed", "bug_fixing", "retest_running", "ready_for_merge", "merged", "blocked"}
@@ -10,6 +11,8 @@ SHA = re.compile(r"^[0-9a-f]{7,64}$")
 def root(value: str) -> Path: return Path(value).resolve()
 def state_path(repo: Path, feature: str) -> Path: return repo / ".super-speckit/state/features" / f"{feature}.json"
 def manifest_path(repo: Path) -> Path: return repo / ".super-speckit/state/work-state.yml"
+def continuation_path(repo: Path) -> Path: return repo / ".super-speckit/continuation.yml"
+def timestamp() -> str: return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 def load(repo: Path, feature: str) -> dict: return json.loads(state_path(repo, feature).read_text())
 def save(repo: Path, feature: str, data: dict) -> None:
     p = state_path(repo, feature); p.parent.mkdir(parents=True, exist_ok=True); p.write_text(json.dumps(data, indent=2) + "\n")
@@ -90,6 +93,8 @@ def validation_failures(repo: Path) -> list[str]:
 def cmd_init(args):
     repo = root(args.repo)
     for path in [".super-speckit/state/features", ".super-speckit/qa", ".super-speckit/bugs"]: (repo / path).mkdir(parents=True, exist_ok=True)
+    continuation=continuation_path(repo)
+    if not continuation.exists(): continuation.write_text(json.dumps({"schema_version":1,"authority":"shared-repository-continuation","current":None,"history":[]},indent=2)+"\n")
     write_work_state_manifest(repo)
     print(f"initialized {repo / '.super-speckit'}")
 
@@ -139,7 +144,7 @@ def cmd_status(args):
         "git":{"head":git_value(repo,"rev-parse","HEAD"),"branch":git_value(repo,"branch","--show-current"),"dirty":bool(git_value(repo,"status","--porcelain")),"worktrees":(git_value(repo,"worktree","list","--porcelain") or "").count("worktree ")},
         "feature":feature,
         "state_validation":{"status":"pass" if not failures else "fail","failures":failures},
-        "artifacts":{"config_exists":(repo/"super-speckit.yml").exists() or (repo/"config/super-speckit.yml").exists(),"native_specify_exists":(repo/".specify").exists(),"qa_root_exists":(repo/".super-speckit/qa").exists(),"work_state_manifest":str(manifest_path(repo).relative_to(repo)),"work_state_manifest_exists":manifest_path(repo).exists()},
+        "artifacts":{"config_exists":(repo/"super-speckit.yml").exists() or (repo/"config/super-speckit.yml").exists(),"native_specify_exists":(repo/".specify").exists(),"qa_root_exists":(repo/".super-speckit/qa").exists(),"work_state_manifest":str(manifest_path(repo).relative_to(repo)),"work_state_manifest_exists":manifest_path(repo).exists(),"continuation":str(continuation_path(repo).relative_to(repo)),"continuation_exists":continuation_path(repo).exists()},
     }
     print(json.dumps(status,indent=2))
     return 1 if args.strict and failures else 0
@@ -240,6 +245,16 @@ def cmd_harness_init(args):
     feature_map.write_text("# Verification Feature Map\n\n| Capability / requirement | Entry point | Public seam | Deterministic check | Runtime journey | API / DB assertion | Evidence | Status |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| Add project capabilities here |  |  |  |  |  |  | unverified |\n")
     print(harness)
 
+def cmd_continuation(args):
+    repo=root(args.repo); data=load(repo,args.feature)
+    if args.candidate_sha and not SHA.match(args.candidate_sha): raise ValueError("candidate SHA must be 7-64 lowercase hex characters")
+    path=continuation_path(repo); document=json.loads(path.read_text()) if path.exists() else {"schema_version":1,"authority":"shared-repository-continuation","current":None,"history":[]}
+    current={"feature":args.feature,"stage":args.stage,"next_action":args.next_action,"candidate_sha":args.candidate_sha or data.get("candidate_sha"),"worktree":args.worktree,"evidence":args.evidence,"unknowns":args.unknowns,"updated_at":timestamp()}
+    previous=document.get("current")
+    if previous: document.setdefault("history",[]).append(previous)
+    document["history"]=document.get("history",[])[-args.history_limit:]
+    document["current"]=current; path.write_text(json.dumps(document,indent=2)+"\n"); print(json.dumps(current,indent=2))
+
 def main():
     p=argparse.ArgumentParser(); sub=p.add_subparsers(dest="cmd",required=True)
     for name, fn in [("init",cmd_init),("validate",cmd_validate)]:
@@ -259,6 +274,7 @@ def main():
     x=sub.add_parser("record-journey-ux"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--report",required=True); x.add_argument("--sha",required=True); x.add_argument("--status",choices=["passed","blocked","defects"],required=True); x.set_defaults(fn=cmd_record_journey_ux)
     x=sub.add_parser("record-artifact"); x.add_argument("feature"); x.add_argument("kind",choices=["decision-trail","verification-harness","static-review","corrective-enforcement"]); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.set_defaults(fn=cmd_record_artifact)
     x=sub.add_parser("harness-init"); x.add_argument("--repo",default="."); x.add_argument("--replace",action="store_true"); x.set_defaults(fn=cmd_harness_init)
+    x=sub.add_parser("continuation"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--stage",required=True); x.add_argument("--next-action",required=True); x.add_argument("--candidate-sha"); x.add_argument("--worktree",required=True); x.add_argument("--evidence",action="append",default=[]); x.add_argument("--unknowns",default=""); x.add_argument("--history-limit",type=int,default=20); x.set_defaults(fn=cmd_continuation)
     a=p.parse_args()
     try: result=a.fn(a); return result or 0
     except Exception as e: print(f"error: {e}",file=sys.stderr); return 2

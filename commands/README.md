@@ -16,6 +16,7 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `super-speckit.omp-team` | Use OMP native isolated workers adaptively while the supervisor continues coordination. |
 | `super-speckit.phase-check` | Create a GSD-inspired, Spec-Kit-linked phase contract and plan-quality gate. |
 | `super-speckit.handoff` | Persist a factual, resumable handoff when any lane pauses, fails, or completes. |
+| `super-speckit.continue` | Resume one rolling shared-repository continuation on Pi or another machine. |
 | `super-speckit.transfer` | Produce a state-verified local↔cloud or agent↔agent transfer contract. |
 | `super-speckit.delegate-cloud` | Send a bounded, redacted handoff pack to Codex Cloud or optional Centillex Desk transport. |
 | `super-speckit.collect-cloud` | Inspect and safely collect a cloud result before independent local QA. |

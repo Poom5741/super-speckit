@@ -18,7 +18,8 @@ Route in this order:
 10. Planned slice without phase contract/plan-quality evidence → `super-speckit.phase-check`.
 11. Unsliced or conflicting work → `super-speckit.parallelize`.
 12. OMP detected and at least two dependency-independent lanes exist → `super-speckit.omp-team`; supervise native isolated workers while continuing control-plane work. Do not fan out a micro task or a shared mutable partition.
-13. A bounded maker/research/bug-fix slice suitable for configured cloud execution → `super-speckit.transfer`, then `super-speckit.delegate-cloud`; collect it, then use `super-speckit.collect-cloud` and independent QA.
+13. An active shared continuation → `super-speckit.continue`: pull the shared repository, re-run strict status/validation, verify recorded SHA and stage, then resume its next safe action. Do not create a new handoff for an ordinary local↔Pi switch.
+14. A bounded maker/research/bug-fix slice suitable for configured cloud execution → `super-speckit.transfer`, then `super-speckit.delegate-cloud`; collect it, then use `super-speckit.collect-cloud` and independent QA.
 14. Candidate without readiness receipt → `super-speckit.environment-ready`.
 15. Candidate awaiting independent proof → `super-speckit.verify`, then `super-speckit.interrogate` and, if configured, OCR. Static lanes never satisfy runtime requirements or auto-apply their own findings.
 16. UI-changing candidate with normal QA complete → `super-speckit.rakazo-journey`, then `super-speckit.journey-ux`. Rakazo is the default independent manual browser reviewer; a missing configured adapter is truthfully blocked, not passed. Confirmed UX defects enter bug-fix/retest and the whole declared journey set reruns on the latest candidate.

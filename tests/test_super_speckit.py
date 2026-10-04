@@ -52,6 +52,16 @@ class SuperSpecKitTests(unittest.TestCase):
             self.assertEqual(state["feature"]["state"],"planned")
             self.assertEqual(state["state_validation"]["status"],"pass")
             self.assertTrue(state["artifacts"]["work_state_manifest_exists"])
+            self.assertTrue(state["artifacts"]["continuation_exists"])
+    def test_rolling_continuation_is_created_and_updates_without_handoffs(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); matrix=root/"matrix.md"; matrix.write_text("# matrix")
+            self.assertEqual(self.invoke("init","--repo",d).returncode,0)
+            self.assertEqual(self.invoke("create-feature","F-1","--repo",d,"--maker","maker","--checker","checker","--matrix","matrix.md").returncode,0)
+            self.assertEqual(self.invoke("continuation","F-1","--repo",d,"--stage","planned","--next-action","create purpose map","--worktree","main","--evidence","matrix.md").returncode,0)
+            continuation=json.loads((root/".super-speckit/continuation.yml").read_text())["current"]
+            self.assertEqual(continuation["feature"],"F-1")
+            self.assertEqual(continuation["next_action"],"create purpose map")
     def test_public_installer_copies_a_complete_kit_from_local_source(self):
         with tempfile.TemporaryDirectory() as d:
             destination=Path(d)/"project"

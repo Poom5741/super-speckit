@@ -85,6 +85,12 @@ Use `commands/` as agent slash-command definitions or adapt them to your integra
 
 `ask-super-speckit` remains the only normal entry point. Atlas, routing, reassessment, transfer, recovery, and verification are internal stages selected from the checked work state; users do not need to memorize or sequence commands.
 
+## Continue on Pi or another machine
+
+Commit and push the project after a material stage. Super-SpecKit keeps one rolling `.super-speckit/continuation.yml` beside the existing state files; it records the current feature, stage, next action, candidate SHA, branch/worktree, evidence, and unknowns. On Pi, pull the repository and invoke `$ask-super-speckit` normally. It reads the continuation, reruns strict state validation, verifies the recorded SHA, then resumes the safe next action. It does not need a new handoff document for an ordinary machine switch.
+
+Use a full transfer handoff only for a true cloud/vendor transfer or a change in authority boundary. The continuation file is deliberately repository-local and contains no credentials or model-session data.
+
 For a UI change, it also runs the Journey UX Loop after normal independent QA. [Rakazo](https://github.com/elie222/rakazo) is the default independent browser checker: Super-SpecKit prepares a bounded task packet for a private Rakazo Computer and clean browser profile, and accepts only QA evidence—not product-code edits—from the reviewer. A project may configure a reviewed local dispatch adapter; without one the work is honestly blocked for Rakazo dispatch rather than pretending an API exists. Rakazo repeats the declared user journeys after every confirmed fix. A UI candidate cannot become merge-ready without a passing Journey UX report linked to its latest SHA; the honest result is “no confirmed UX defect in the declared journey scope,” never “there are no UX bugs.”
 
 ## PStack-compatible engineering layer

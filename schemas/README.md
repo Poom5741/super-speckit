@@ -25,6 +25,7 @@ Artifacts are human-readable Markdown plus JSON for orchestration. IDs are stabl
 | Corrective enforcement | `.super-speckit/quality/<id>/corrective-enforcement.md` | Repeated failure maps to the smallest proven structural guard plus a historical counterexample. |
 | Decision trail | `.super-speckit/decisions/<feature>/decision-trail.md` | Material decisions link alternatives, command-backed evidence, reversibility, proof, and unknowns. |
 | Skill evaluation | `.super-speckit/evals/<run-id>/skill-evaluation.md` | Independent temporary-fixture behavior test with observed invariants, defects, and untested modes. |
+| Rolling continuation | `.super-speckit/continuation.yml` | One Git-shared current task record plus bounded history; next machine verifies it against real state and SHA before resuming. |
 
 JSON shape used by the included validator:
 
