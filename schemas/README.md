@@ -40,3 +40,11 @@ Proof pack minimum shape:
 ```json
 {"candidate_sha":"abcdef1","run_id":"QA-42-001","environment_receipt":"environment-receipt.json","gates":[{"name":"unit","status":"pass","log":"unit.log"}],"matrix":"specs/042/verification-matrix.md","evidence":["trace.zip"],"ocr":{"status":"triaged","findings":"ocr-findings.json"},"unverified":[]}
 ```
+
+## Version 2 executable state authority
+
+Feature state uses `state-v2.schema.json`; independent QA receipts use `state-proof.schema.json`. Python `state_contract.py` enforces semantics beyond structural JSON: resolved immutable commits, bounded nonempty files, legal transitions, purpose decision provenance, native artifacts, matrix IDs/digests, baseline/phase receipts, separate clean registered checker checkout, attempt identity, exact coverage, actual command receipts and configured gates, open-bug blocking and observed merge authority.
+
+Legacy state is never implicitly upgraded to release evidence. Use `migrate-state` to preserve records/history while marking non-planned inherited delivery claims blocked for revalidation. State mutation uses a process lock, atomic replacement, monotonic revisions and optional `--expected-revision` compare-and-swap. Canonical feature records are authoritative; YAML is regenerated. A projection mismatch fails closed and can be repaired with `init`; this is not permission to discard evidence.
+
+PStack runtime/control receipts are advisory evidence inputs, not release authority. A faithful panel uses the same rendered prompt and exact candidate for actual configured model seats; lens review is separately labeled. Source inventory, hash integrity and route accounting use `vendor/pstack-manifest.json` and `adapters/pstack/routes.json`; the whole pinned source remains outside discovery.

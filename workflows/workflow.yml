@@ -19,7 +19,7 @@ inputs:
 steps:
   - id: assess
     type: prompt
-    message: "Run ask-super-speckit for '{{ inputs.feature }}'. Autonomously inspect evidence, choose the next stage, and continue until delivered or truthfully blocked."
+    message: "Classify read-only intent before delivery ceremony; load pinned PStack routes and override contract. Run ask-super-speckit for '{{ inputs.feature }}'. Autonomously inspect evidence, choose the next stage, and continue until delivered or truthfully blocked."
   - id: purpose-gate
     type: prompt
     message: "Run super-speckit.purpose-gate. Draft a visual Purpose Map from the request, then obtain one human confirmation of outcome, affected people, success signal, and non-goals. Do not ask the human to make technical decisions."
@@ -61,7 +61,7 @@ steps:
       args: "{{ inputs.feature }}"
   - id: lane-plan
     type: prompt
-    message: "Run super-speckit.parallelize, super-speckit.matrix, and super-speckit.phase-check. Do not create worktrees until the dependency, risk, and phase-contract evidence is recorded."
+    message: "Run super-speckit.parallelize, super-speckit.matrix, and super-speckit.phase-check. For uncertain boundaries use caller-first architect alternatives; declare race/partition/mixed selection and pilot before rolling refill. Do not create worktrees until the dependency, risk, and phase-contract evidence is recorded."
   - id: feedback-loop
     type: prompt
     message: "Run super-speckit.feedback-loop. Find and run the cheapest real public-seam feedback loop before implementation; record baseline, assertion, and limits."
@@ -70,7 +70,7 @@ steps:
     message: "Run super-speckit.verification-harness. Create or refresh the executable project verification harness and feature map, then prove its live smoke path before implementation reaches runtime QA."
   - id: implement-and-verify
     type: prompt
-    message: "Use super-speckit.start, then verify the immutable candidate in a clean QA worktree. Run environment-ready, policy-selected gates, runtime QA, super-speckit.interrogate static review, OCR triage, and defect/retest loops. For UI changes, prepare the default private-browser Rakazo assignment with super-speckit.rakazo-journey, then run super-speckit.journey-ux and rerun its full declared journey set after every confirmed UX fix. Route repeated failures through super-speckit.correct. Produce a proof pack."
+    message: "Use super-speckit.start, then verify the immutable candidate in a clean QA worktree. Run environment-ready, policy-selected gates, runtime QA, super-speckit.interrogate identical-prompt static review (separate from lens review), OCR triage, and defect/retest loops. For UI changes, prepare the default private-browser Rakazo assignment with super-speckit.rakazo-journey, then run super-speckit.journey-ux and rerun its full declared journey set after every confirmed UX fix. Route repeated failures through super-speckit.correct. Produce a proof pack."
   - id: release
     type: prompt
     message: "Run super-speckit.release. Autonomously merge only if every configured evidence gate passes; otherwise self-heal through diagnosis, fix, and independent retest."

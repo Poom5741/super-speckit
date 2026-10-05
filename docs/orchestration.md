@@ -2,7 +2,7 @@
 
 ## 1. Native Spec Kit stays authoritative
 
-The autonomous orchestrator starts with a visual Purpose Map. A human confirms only the intended outcome, affected people, success signal, and non-goals; implementation is not a human questionnaire. It then runs native `specify`, `plan`, `tasks`, and optionally `clarify`, `checklist`, `analyze` as evidence requires. Before maker work, Builder/Examiner/Investigator/Resolver roles complete an evidence-labeled Spec Grill. Translate each testable requirement into `verification-matrix.md`; update the native plan/tasks if the matrix exposes missing work. `converge` is run after verification to record remaining scope.
+First classify intent. Read-only investigations, teaching, explanations and help use pinned PStack methods without delivery-state ceremony. For delivery, the autonomous orchestrator starts with a visual Purpose Map. A human confirms only the intended outcome, affected people, success signal, and non-goals; implementation is not a human questionnaire. It then runs native `specify`, `plan`, `tasks`, and optionally `clarify`, `checklist`, `analyze` as evidence requires. Before maker work, Builder/Examiner/Investigator/Resolver roles complete an evidence-labeled Spec Grill. Translate each testable requirement into `verification-matrix.md`; update the native plan/tasks if the matrix exposes missing work. `converge` is run after verification to record remaining scope.
 
 Before maker work, classify the request as micro, normal, or milestone and create an evidence-linked Project Atlas plus diagram-first Change Story. The route changes planning depth, never proof boundaries. Milestones are split into demoable vertical slices and reassessed after independent verification. A failed or unavailable command is `inconclusive` until evidence supports another classification; it is never a pass.
 
@@ -41,3 +41,13 @@ The coordinator validates the state and renders `summary.md`. When autonomous me
 ## Parallelism
 
 Features may run in parallel only when their task dependencies and test data namespaces do not overlap. QA is per committed candidate, never a shared mutable staging checkout. Queue integration/merge candidates when their changes conflict or their test environments are not isolated.
+
+## PStack integration protocols
+
+Load selected pinned source together with `adapters/pstack/override-contract.md`; the vendor tree never becomes a second coordinator or state store. See `docs/pstack-integration.md` for exact runtime CLI input contracts. Use configured/inherited supported models and adaptive concurrency; unsupported host/model diversity remains an explicit limitation.
+
+Caller-first architecture compares structurally different alternatives; two independent same-shape implementation deviations trigger reassessment. Arena uses identical immutable briefs, frozen isolated outputs and a private judge rubric; swarm declares mode/selection before a verified pilot and bounded rolling refill. Every required partition remains required after dropout. Faithful interrogation uses identical intent/diff/rubric/SHA, preserves lone dissent and records every disposition; lens review is separate.
+
+Launch/Doctor/Drive/Evidence/Cleanup controls remain draft until live smoke and evidence-survival checks. Full verification maintenance drives every declared feature even when documents look current. Performance claims require equivalent tuning, completed work/errors, a measured limiter and five alternating samples per side. Decision trails are append-only, run-bound and audited against available same-run transcripts. Historical correction is structural and distinct from reflection proposals.
+
+Defects, recovery and missing prerequisites precede maker work; an existing candidate awaiting QA precedes another maker slice. Merge needs configured authority, exact candidate behavioral proof and current forge readiness; watcher success or ledger presence alone proves neither verification nor merge. Observe actual merged state. Optional Benny/control UI automation remains dormant until explicitly configured and externally authorized.

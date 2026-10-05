@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Super-SpecKit canonical feature state v2",
+  "type": "object",
+  "required": ["schema_version", "revision", "id", "state", "maker", "checker", "matrix", "purpose", "runs", "bugs"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "revision": {"type": "integer", "minimum": 1},
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$"},
+    "state": {"enum": ["planned", "maker_running", "candidate_ready", "qa_running", "qa_failed", "bug_fixing", "retest_running", "ready_for_merge", "merged", "blocked"]},
+    "candidate_sha": {"type": ["string", "null"], "pattern": "^[a-f0-9]{40,64}$"},
+    "maker": {"type": "string", "minLength": 1},
+    "checker": {"type": "string", "minLength": 1},
+    "matrix": {"type": "string", "minLength": 1},
+    "candidates": {"type": "array", "items": {"type": "object", "required": ["sha", "maker", "matrix_digest"]}},
+    "qa_attempt": {"type": "string", "minLength": 1},
+    "attempt_history": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "proof": {"$ref": "state-proof.schema.json"},
+    "runs": {"type": "array"},
+    "bugs": {"type": "array", "items": {"type": "object", "required": ["id", "status", "evidence"], "properties": {"status": {"enum": ["open", "resolved"]}}}}
+  },
+  "description": "Structural interchange schema. state_contract.py additionally enforces Git resolution, files, graph, purpose, exact QA identity, digests, proof and release authority."
+}

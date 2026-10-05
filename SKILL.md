@@ -11,7 +11,7 @@ Read `docs/orchestration.md` before coordinating a feature. Read `schemas/README
 
 ## Non-negotiable separation
 
-Maker and checker must be different agents or independently scoped runs. The checker receives a committed SHA in a clean QA worktree, not a mutable maker directory. Checker changes are limited to QA evidence and bug artifacts. Never merge automatically.
+Maker and checker must be different agents or independently scoped runs. The checker receives a committed SHA in a clean QA worktree, not a mutable maker directory. Checker changes are limited to QA evidence and bug artifacts. Merge only when configured project authority permits it and exact-candidate proof, open-bug checks, and current forge readiness all pass. Makers and checkers never grant merge authority.
 
 ## Entry and exit criteria
 
@@ -24,3 +24,7 @@ Run configured deterministic checks first, then start the actual app from the QA
 ## Failure handling
 
 Classify initial failure as deterministic, environment, test defect, or suspected flake. Apply the configured reproduction count before creating a confirmed bug artifact, except for a deterministic failure with preserved evidence. Confirmed bugs get a dedicated worktree, a regression test or documented exception, and an independent retest. OCR is triaged independently and cannot close matrix rows.
+
+## PStack engineering toolkit
+
+Read `adapters/pstack/override-contract.md` before using pinned `vendor/pstack` source. `ask-super-speckit` remains the coordinator. Load relevant leaf instructions progressively, with native gate and host overrides; raw vendor skills and dormant automation must not be registered as competing entry points. Read-only teaching and investigation do not create delivery features.

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Minimal, dependency-free state/worktree helper for super-speckit."""
 from __future__ import annotations
-import argparse, html, json, re, subprocess, sys
+import argparse, html, json, re, subprocess, sys, fcntl
+import state_contract as contract
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -9,13 +10,19 @@ STATES = {"planned", "maker_running", "candidate_ready", "qa_running", "qa_faile
 SHA = re.compile(r"^[0-9a-f]{7,64}$")
 
 def root(value: str) -> Path: return Path(value).resolve()
-def state_path(repo: Path, feature: str) -> Path: return repo / ".super-speckit/state/features" / f"{feature}.json"
+def state_path(repo: Path, feature: str) -> Path:
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,99}", feature): raise ValueError("invalid feature ID")
+    return repo / ".super-speckit/state/features" / f"{feature}.json"
 def manifest_path(repo: Path) -> Path: return repo / ".super-speckit/state/work-state.yml"
 def continuation_path(repo: Path) -> Path: return repo / ".super-speckit/continuation.yml"
 def timestamp() -> str: return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 def load(repo: Path, feature: str) -> dict: return json.loads(state_path(repo, feature).read_text())
 def save(repo: Path, feature: str, data: dict) -> None:
-    p = state_path(repo, feature); p.parent.mkdir(parents=True, exist_ok=True); p.write_text(json.dumps(data, indent=2) + "\n")
+    p = state_path(repo, feature)
+    previous=json.loads(p.read_text()) if p.exists() else None
+    if previous and data.get("revision") != previous.get("revision"): raise ValueError("stale revision")
+    data["schema_version"]=2; data["revision"]=(previous or {}).get("revision",0)+1
+    contract.atomic(p,data)
 
 def render_work_state_manifest(repo: Path) -> str:
     """Render a dependency-free YAML index that humans and other tools can inspect."""
@@ -65,29 +72,24 @@ def validation_failures(repo: Path) -> list[str]:
     failures=[]
     for p in (repo / ".super-speckit/state/features").glob("*.json"):
         try:
-            d=json.loads(p.read_text()); assert d["state"] in STATES; assert d["maker"] != d["checker"]
-            assert d.get("purpose", {}).get("status") in {"not_started", "draft", "confirmed", "rework"}
-            assert d.get("grill", {}).get("status") in {"not_started", "complete"}
-            assert d.get("route", {}).get("kind", "unclassified") in {"unclassified", "micro", "normal", "milestone"}
-            if d["state"] in {"candidate_ready","qa_running","ready_for_merge","merged"}: assert SHA.match(d.get("candidate_sha") or "")
-            if d.get("ui_change") and d["state"] in {"ready_for_merge", "merged"}:
-                journey=d.get("journey_ux", {})
-                assert journey.get("status") == "passed", "UI release requires passing Journey UX Loop"
-                assert journey.get("candidate_sha") == d.get("candidate_sha"), "Journey UX result must match latest candidate SHA"
-                assert (repo / (journey.get("report") or "")).exists(), "Journey UX report is required"
-            if d["state"] not in {"planned", "blocked"}:
-                assert d.get("purpose", {}).get("status") == "confirmed", "human purpose confirmation is required"
-                assert d.get("grill", {}).get("status") == "complete", "spec grill is required"
-                assert d.get("route", {}).get("kind") in {"micro", "normal", "milestone"}, "scope route is required"
-                assert (repo / (d.get("atlas", {}).get("path") or "")).exists(), "Project Atlas is required"
-                assert (repo / (d.get("change_story", {}).get("path") or "")).exists(), "Change Story is required"
-            assert (repo / d["matrix"]).exists()
+            d=json.loads(p.read_text())
+            if d.get("schema_version")!=2: raise ValueError("legacy state requires migrate-state")
+            if d["state"] not in STATES or d["maker"]==d["checker"]: raise ValueError("invalid state or checker")
+            contract.file(repo,d["matrix"])
+            if d["state"] not in {"planned","blocked"}: contract.prerequisites(repo,d)
+            if not isinstance(d.get('revision'),int) or d['revision']<1: raise ValueError('positive revision required')
+            if d.get("candidate_sha"):
+                if contract.commit(repo,d['candidate_sha'])!=d['candidate_sha']: raise ValueError('full resolved candidate SHA required')
+                candidates=d.get('candidates',[])
+                if not candidates or candidates[-1]['sha']!=d['candidate_sha']: raise ValueError('candidate history mismatch')
+                if candidates[-1]['matrix_digest']!=contract.digest(contract.file(repo,d['matrix'])): raise ValueError('candidate matrix drift')
+            elif d['state'] in {'candidate_ready','qa_running','qa_failed','retest_running','ready_for_merge','merged'}: raise ValueError('candidate SHA required')
+            if d['state'] in {'qa_running','retest_running'}: contract.qa_checkout(repo,d,d.get('qa_worktree'))
+            if d['state']=='merged': contract.merged(repo,d)
+            if d["state"] in {"ready_for_merge","merged"}: contract.release(repo,d,archived=d["state"]=="merged")
         except Exception as e: failures.append(f"{p}: {e}")
     manifest=manifest_path(repo)
-    if not manifest.exists():
-        failures.append(f"missing required state manifest: {manifest}")
-    elif manifest.read_text() != render_work_state_manifest(repo):
-        failures.append(f"stale state manifest: {manifest}; run state mutation or regenerate it")
+    if not manifest.exists() or manifest.read_text()!=render_work_state_manifest(repo): failures.append("missing or stale work-state manifest")
     return failures
 
 def cmd_init(args):
@@ -100,28 +102,68 @@ def cmd_init(args):
 
 def cmd_create(args):
     repo = root(args.repo)
+    if state_path(repo,args.feature).exists(): raise ValueError("feature already exists")
+    contract.file(repo,args.matrix)
+    if not args.maker.strip() or not args.checker.strip(): raise ValueError("nonempty identities required")
     if args.maker == args.checker: raise ValueError("maker and checker must be distinct")
     data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "ui_change": args.ui_change, "journey_ux": {"status": "not_required", "report": None, "candidate_sha": None}, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "route": {"kind": "unclassified", "rationale": None}, "atlas": {"path": None}, "change_story": {"path": None}, "handoff": {"path": None}, "decision_trail": {"path": None}, "verification_harness": {"path": None}, "static_review": {"artifact": None}, "corrective_enforcement": {"artifact": None}, "runs": [], "bugs": []}
     save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
-    repo = root(args.repo); data = load(repo,args.feature)
-    if args.state not in STATES: raise ValueError("unknown state")
-    if args.sha:
-        if not SHA.match(args.sha): raise ValueError("candidate SHA must be 7-64 lowercase hex characters")
-        data["candidate_sha"] = args.sha
-    if args.state in {"candidate_ready", "qa_running", "ready_for_merge"} and not data.get("candidate_sha"): raise ValueError("state requires a candidate SHA")
-    if args.state == "qa_running" and data["maker"] == data["checker"]: raise ValueError("QA requires distinct maker/checker")
-    if args.state not in {"planned", "blocked"} and data.get("purpose", {}).get("status") != "confirmed": raise ValueError("human purpose confirmation is required before work begins")
-    if args.state not in {"planned", "blocked"} and data.get("grill", {}).get("status") != "complete": raise ValueError("a completed evidence-labeled spec grill is required before work begins")
-    if args.state not in {"planned", "blocked"} and data.get("route", {}).get("kind") not in {"micro", "normal", "milestone"}: raise ValueError("scope route is required before work begins")
-    if args.state not in {"planned", "blocked"} and not (repo / (data.get("atlas", {}).get("path") or "")).exists(): raise ValueError("Project Atlas is required before work begins")
-    if args.state not in {"planned", "blocked"} and not (repo / (data.get("change_story", {}).get("path") or "")).exists(): raise ValueError("Change Story is required before work begins")
-    if data.get("ui_change") and args.state in {"ready_for_merge", "merged"}:
-        journey=data.get("journey_ux", {})
-        if journey.get("status") != "passed" or journey.get("candidate_sha") != data.get("candidate_sha") or not (repo / (journey.get("report") or "")).exists():
-            raise ValueError("UI release requires a passing Journey UX report for the latest candidate SHA")
-    data["state"] = args.state; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data, indent=2))
+    repo=root(args.repo); data=load(repo,args.feature)
+    contract.transition(repo,data,args.state,args.sha,args.worktree,args.attempt_id)
+    save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data,indent=2))
+
+def cmd_record_prerequisite(args):
+    repo=root(args.repo); data=load(repo,args.feature); artifact=contract.file(repo,args.artifact)
+    data.setdefault('prerequisite_receipts',{})[args.kind]={'artifact':args.artifact,'digest':contract.digest(artifact)}
+    save(repo,args.feature,data); write_work_state_manifest(repo)
+
+def cmd_record_proof(args):
+    repo=root(args.repo); data=load(repo,args.feature)
+    if data['state'] not in {'qa_running','retest_running'}: raise ValueError('proof requires an active QA attempt')
+    receipt=json.loads(contract.file(repo,args.receipt).read_text())
+    receipt['environment_digest']=contract.digest(contract.file(repo,receipt.get('environment')))
+    contract.proof(repo,data,receipt)
+    if data.get('proof'): raise ValueError('duplicate proof receipt')
+    data['proof']=receipt; data.setdefault('runs',[]).append(receipt)
+    save(repo,args.feature,data); write_work_state_manifest(repo)
+
+def cmd_bug(args):
+    repo=root(args.repo); data=load(repo,args.feature); contract.file(repo,args.evidence)
+    bugs=data.setdefault('bugs',[])
+    if args.cmd=='record-bug':
+        if any(x['id']==args.bug_id for x in bugs): raise ValueError('duplicate bug')
+        bugs.append({'id':args.bug_id,'status':'open','evidence':args.evidence,'candidate_sha':data.get('candidate_sha')})
+    else:
+        bug=next((x for x in bugs if x['id']==args.bug_id),None)
+        if not bug or bug['status']=='resolved': raise ValueError('unknown or already resolved bug')
+        bug.update(status='resolved',resolution=args.evidence)
+    save(repo,args.feature,data); write_work_state_manifest(repo)
+
+def cmd_next(args):
+    repo=root(args.repo); data=load(repo,args.feature)
+    print(json.dumps({'feature':args.feature,'revision':data.get('revision'),'candidate_sha':data.get('candidate_sha'),'next_stage':contract.next_stage(repo,data)}))
+
+def cmd_migrate(args):
+    repo=root(args.repo)
+    for p in (repo/'.super-speckit/state/features').glob('*.json'):
+        data=json.loads(p.read_text())
+        if data.get('schema_version')==2: continue
+        contract.atomic(repo/'.super-speckit/state/migration-backups'/p.name,data)
+        data['state']='blocked'; data['migration_reason']='Legacy evidence must be revalidated'; data['schema_version']=2
+        data['candidates']=[]; data.pop('proof',None)
+        if data.get('candidate_sha'):
+            try: data['legacy_candidate_sha']=contract.commit(repo,data['candidate_sha']); data['candidate_sha']=None
+            except ValueError: data['candidate_sha']=None
+        save(repo,data['id'],data)
+    write_work_state_manifest(repo)
+
+def cmd_merge_receipt(args):
+    repo=root(args.repo); data=load(repo,args.feature)
+    receipt=json.loads(contract.file(repo,args.receipt).read_text())
+    if receipt.get('candidate_sha')!=data.get('candidate_sha'): raise ValueError('merge candidate mismatch')
+    data['merge_receipt']=receipt; save(repo,args.feature,data); write_work_state_manifest(repo)
 
 def cmd_validate(args):
     repo = root(args.repo); failures=validation_failures(repo)
@@ -182,17 +224,17 @@ def cmd_purpose_gate(args):
     print(directory / "purpose-map.html")
 
 def cmd_confirm_purpose(args):
-    repo=root(args.repo); data=load(repo,args.feature); purpose=data.get("purpose", {}); decision_path=repo / (purpose.get("decision") or "")
+    repo=root(args.repo); data=load(repo,args.feature); purpose=data.get("purpose", {}); decision_path=contract.file(repo,purpose.get("decision"))
     if not decision_path.exists(): raise ValueError("create a purpose map before recording a human purpose decision")
     decision=json.loads(decision_path.read_text()); decision.update({"status":args.decision,"confirmed_by":args.confirmed_by,"confirmed_at":args.confirmed_at,"confirmation":args.confirmation})
-    decision_path.write_text(json.dumps(decision,indent=2)+"\n")
+    contract.atomic(decision_path,decision)
     purpose["status"]="confirmed" if args.decision == "confirmed" else "rework"; data["purpose"]=purpose; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["purpose"],indent=2))
 
 def cmd_record_grill(args):
     repo=root(args.repo); data=load(repo,args.feature)
     if data.get("purpose", {}).get("status") != "confirmed": raise ValueError("human purpose confirmation is required before the spec grill")
-    artifact=repo / args.artifact
-    if not artifact.exists(): raise ValueError(f"missing grill artifact: {artifact}")
+    artifact=contract.file(repo,args.artifact)
+    if not artifact.is_file() or not artifact.stat().st_size: raise ValueError(f"missing grill artifact: {artifact}")
     data["grill"]={"status":"complete","artifact":args.artifact}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["grill"],indent=2))
 
 def cmd_route(args):
@@ -212,25 +254,25 @@ def cmd_atlas_init(args):
     data["atlas"]={"path":str(readme.relative_to(repo)),"graph":str(graph.relative_to(repo))}; data["change_story"]={"path":str(story.relative_to(repo))}; save(repo,args.feature,data); write_work_state_manifest(repo); print(story)
 
 def cmd_reassess(args):
-    repo=root(args.repo); data=load(repo,args.feature); path=repo / args.artifact
-    if not path.exists(): raise ValueError(f"missing reassessment artifact: {path}")
+    repo=root(args.repo); data=load(repo,args.feature); path=contract.file(repo,args.artifact)
+    if not path.is_file() or not path.stat().st_size: raise ValueError(f"missing reassessment artifact: {path}")
     data["reassessment"]={"path":args.artifact,"decision":args.decision}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["reassessment"],indent=2))
 
 def cmd_record_handoff(args):
-    repo=root(args.repo); data=load(repo,args.feature); path=repo / args.artifact
-    if not path.exists(): raise ValueError(f"missing handoff artifact: {path}")
+    repo=root(args.repo); data=load(repo,args.feature); path=contract.file(repo,args.artifact)
+    if not path.is_file() or not path.stat().st_size: raise ValueError(f"missing handoff artifact: {path}")
     data["handoff"]={"path":args.artifact,"transfer":args.transfer,"stage":args.stage,"attempt_id":args.attempt_id}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["handoff"],indent=2))
 
 def cmd_record_journey_ux(args):
-    repo=root(args.repo); data=load(repo,args.feature); report=repo / args.report
+    repo=root(args.repo); data=load(repo,args.feature); report=contract.file(repo,args.report)
     if not data.get("ui_change"): raise ValueError("Journey UX results are only tracked for UI-changing features")
-    if not report.exists(): raise ValueError(f"missing Journey UX report: {report}")
+    if not report.is_file() or not report.stat().st_size: raise ValueError(f"missing Journey UX report: {report}")
     if not SHA.match(args.sha): raise ValueError("candidate SHA must be 7-64 lowercase hex characters")
-    data["journey_ux"]={"status":args.status,"report":args.report,"candidate_sha":args.sha}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["journey_ux"],indent=2))
+    data["journey_ux"]={"status":args.status,"report":args.report,"candidate_sha":contract.commit(repo,args.sha)}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["journey_ux"],indent=2))
 
 def cmd_record_artifact(args):
-    repo=root(args.repo); data=load(repo,args.feature); path=repo / args.artifact
-    if not path.exists(): raise ValueError(f"missing artifact: {path}")
+    repo=root(args.repo); data=load(repo,args.feature); path=contract.file(repo,args.artifact)
+    if not path.is_file() or not path.stat().st_size: raise ValueError(f"missing artifact: {path}")
     if args.kind == "decision-trail": data["decision_trail"]={"path":args.artifact}
     elif args.kind == "verification-harness": data["verification_harness"]={"path":args.artifact}
     elif args.kind == "static-review": data["static_review"]={"artifact":args.artifact}
@@ -247,13 +289,17 @@ def cmd_harness_init(args):
 
 def cmd_continuation(args):
     repo=root(args.repo); data=load(repo,args.feature)
-    if args.candidate_sha and not SHA.match(args.candidate_sha): raise ValueError("candidate SHA must be 7-64 lowercase hex characters")
+    if args.candidate_sha:
+        resolved=contract.commit(repo,args.candidate_sha)
+        if resolved!=data.get('candidate_sha'): raise ValueError('continuation must match current candidate')
+        args.candidate_sha=resolved
+    for evidence in args.evidence: contract.file(repo,evidence)
     path=continuation_path(repo); document=json.loads(path.read_text()) if path.exists() else {"schema_version":1,"authority":"shared-repository-continuation","current":None,"history":[]}
     current={"feature":args.feature,"stage":args.stage,"next_action":args.next_action,"candidate_sha":args.candidate_sha or data.get("candidate_sha"),"worktree":args.worktree,"evidence":args.evidence,"unknowns":args.unknowns,"updated_at":timestamp()}
     previous=document.get("current")
     if previous: document.setdefault("history",[]).append(previous)
     document["history"]=document.get("history",[])[-args.history_limit:]
-    document["current"]=current; path.write_text(json.dumps(document,indent=2)+"\n"); print(json.dumps(current,indent=2))
+    document["current"]=current; contract.atomic(path,document); print(json.dumps(current,indent=2))
 
 def main():
     p=argparse.ArgumentParser(); sub=p.add_subparsers(dest="cmd",required=True)
@@ -261,7 +307,7 @@ def main():
         x=sub.add_parser(name); x.add_argument("--repo",default="."); x.set_defaults(fn=fn)
     x=sub.add_parser("status"); x.add_argument("--repo",default="."); x.add_argument("--feature"); x.add_argument("--strict",action="store_true"); x.set_defaults(fn=cmd_status)
     x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.add_argument("--ui-change",action="store_true"); x.set_defaults(fn=cmd_create)
-    x=sub.add_parser("transition"); x.add_argument("feature"); x.add_argument("state"); x.add_argument("--repo",default="."); x.add_argument("--sha"); x.set_defaults(fn=cmd_transition)
+    x=sub.add_parser("transition"); x.add_argument("feature"); x.add_argument("state"); x.add_argument("--repo",default="."); x.add_argument("--sha"); x.add_argument("--worktree"); x.add_argument("--attempt-id"); x.set_defaults(fn=cmd_transition)
     x=sub.add_parser("worktree"); x.add_argument("--repo",default="."); x.add_argument("--path",required=True); x.add_argument("--branch",required=True); x.add_argument("--ref",default="HEAD"); x.set_defaults(fn=cmd_worktree)
     x=sub.add_parser("design-first"); x.add_argument("feature"); x.add_argument("--title",required=True); x.add_argument("--summary",required=True); x.add_argument("--repo",default="."); x.set_defaults(fn=cmd_design)
     x=sub.add_parser("purpose-gate"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--title",required=True); x.add_argument("--outcome",required=True); x.add_argument("--people",required=True); x.add_argument("--success",required=True); x.add_argument("--non-goals",required=True); x.set_defaults(fn=cmd_purpose_gate)
@@ -275,7 +321,23 @@ def main():
     x=sub.add_parser("record-artifact"); x.add_argument("feature"); x.add_argument("kind",choices=["decision-trail","verification-harness","static-review","corrective-enforcement"]); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.set_defaults(fn=cmd_record_artifact)
     x=sub.add_parser("harness-init"); x.add_argument("--repo",default="."); x.add_argument("--replace",action="store_true"); x.set_defaults(fn=cmd_harness_init)
     x=sub.add_parser("continuation"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--stage",required=True); x.add_argument("--next-action",required=True); x.add_argument("--candidate-sha"); x.add_argument("--worktree",required=True); x.add_argument("--evidence",action="append",default=[]); x.add_argument("--unknowns",default=""); x.add_argument("--history-limit",type=int,default=20); x.set_defaults(fn=cmd_continuation)
+    x=sub.add_parser('record-prerequisite'); x.add_argument('feature'); x.add_argument('kind',choices=['baseline-feedback','phase-contract']); x.add_argument('--repo',default='.'); x.add_argument('--artifact',required=True); x.set_defaults(fn=cmd_record_prerequisite)
+    for name,fn in [('record-proof',cmd_record_proof),('record-merge',cmd_merge_receipt)]:
+        x=sub.add_parser(name); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.add_argument('--receipt',required=True); x.set_defaults(fn=fn)
+    for name in ['record-bug','resolve-bug']:
+        x=sub.add_parser(name); x.add_argument('feature'); x.add_argument('bug_id'); x.add_argument('--repo',default='.'); x.add_argument('--evidence',required=True); x.set_defaults(fn=cmd_bug)
+    x=sub.add_parser('next-stage'); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.set_defaults(fn=cmd_next)
+    x=sub.add_parser('migrate-state'); x.add_argument('--repo',default='.'); x.set_defaults(fn=cmd_migrate)
+    for parser in sub.choices.values(): parser.add_argument('--expected-revision',type=int)
     a=p.parse_args()
-    try: result=a.fn(a); return result or 0
+    try:
+        repo=root(a.repo)
+        if hasattr(a,'feature'): state_path(repo,a.feature)
+        lock=repo/'.super-speckit/state/.lock'; lock.parent.mkdir(parents=True,exist_ok=True)
+        with lock.open('a') as handle:
+            fcntl.flock(handle,fcntl.LOCK_EX)
+            if a.expected_revision is not None:
+                if not hasattr(a,'feature') or load(repo,a.feature).get('revision')!=a.expected_revision: raise ValueError('expected revision mismatch')
+            result=a.fn(a); return result or 0
     except Exception as e: print(f"error: {e}",file=sys.stderr); return 2
 if __name__ == "__main__": raise SystemExit(main())

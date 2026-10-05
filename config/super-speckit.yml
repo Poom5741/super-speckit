@@ -170,3 +170,21 @@ merge:
   require_ocr_triage_complete: true
   require_no_open_confirmed_bugs: true
   autonomous_when_ready: true
+pstack:
+  enabled: true
+  revision: e5a8186d7b43be8d6ac4452440fbead5f1a51c70
+  source_root: vendor/pstack
+  routes: adapters/pstack/routes.json
+  override_contract: adapters/pstack/override-contract.md
+  resource_policy: adaptive-rigor
+  primary_host: zcode
+  cli_hosts: [codex, pi]
+  optional_hosts: [omp, cursor]
+  model_policy: configured-or-inherited
+  fallback: separately-scoped-sequential-workers
+  interrogation_protocol: identical-prompt
+  comment_policy: review-then-selective-edits
+  architecture_reassessment_deviations: 2
+  benchmark_min_samples_per_side: 5
+  automation_enabled: false
+  source_upgrade_policy: deliberate-pinned-revision

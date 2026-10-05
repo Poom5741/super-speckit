@@ -41,3 +41,5 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | `super-speckit.fix` | Create a bug-fix worktree and require regression coverage. |
 | `super-speckit.retest` | Independently retest a candidate bug fix. |
 | `super-speckit.release` | Generate merge-readiness and project QA summary. |
+
+`super-speckit.pstack` loads pinned methods plus declared overrides behind `ask-super-speckit`; vendor skills are never independently registered. See `docs/pstack-integration.md` for route coverage, runtime controls and certification limits.

@@ -1,0 +1,24 @@
+[
+  {
+    "host": "zcode",
+    "status": "passed",
+    "scope": "pstack_host plan/dispatch; immutable brief, clean linked Git worktree, read-only investigation",
+    "exit_code": 0,
+    "write_violations": [],
+    "changed_paths": [],
+    "marker_observed": true,
+    "base": "ea4681e133bb2a3592479a040238537f1b1d0aa1",
+    "limitation": "not full delivery, diversity, scheduler, forge or external-service certification"
+  },
+  {
+    "host": "pi",
+    "status": "passed",
+    "scope": "pstack_host plan/dispatch; immutable brief, clean linked Git worktree, read-only investigation",
+    "exit_code": 0,
+    "write_violations": [],
+    "changed_paths": [],
+    "marker_observed": true,
+    "base": "ea4681e133bb2a3592479a040238537f1b1d0aa1",
+    "limitation": "not full delivery, diversity, scheduler, forge or external-service certification"
+  }
+]

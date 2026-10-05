@@ -14,7 +14,7 @@ Super-SpecKit keeps native Spec Kit as the source of requirements, plan, tasks, 
 | [Frontend Agent Skills](https://github.com/hueyexe/frontend-agent-skills) | focused composition, interaction, forms, IA, usability, content, accessibility, design-system, and research specialists | selected on demand by the design-first bridge | loading every specialist for every screen; self-approval of rendered UI |
 | [Centillex Desk](https://centillex.com/desk) | optional local “pack and move” transport across agent vendors | redacted cloud-task pack and optional Desk adapter | evidence/release authority |
 | [Codex Cloud](https://learn.chatgpt.com/docs/codex/cli) | configured cloud execution and local diff collection | primary `codex cloud exec/status/diff/apply` adapter | automatic application into integration or QA approval |
-| [PStack](https://github.com/cursor/plugins/tree/main/pstack) | project verification harness, multi-lens interrogation, recurring-mistake enforcement, decision trail, independent skill forward-testing | verification-harness, interrogate, correct, decision-trail, skill-evaluator | replacing Spec Kit artifacts; static review as runtime proof; unbounded host-specific agent APIs |
+| [PStack](https://github.com/cursor/plugins/tree/e5a8186d7b43be8d6ac4452440fbead5f1a51c70/pstack) | complete pinned engineering toolkit with progressive routes, caller-first design, architecture races, faithful review, runtime controls, performance/forensics, PR operations, structural learning and dormant automation | vendor source plus explicit adapters behind ask; see pstack-integration.md and certification report | competing coordinator/state authority; static review as runtime proof; guessed model/host APIs; unconfigured external automation |
 | [Ponytail](https://github.com/DietrichGebert/ponytail) | minimal-solution ladder: reuse before new code, platform/stdlib before dependencies, root-cause fixes | pinned upstream maker/bug-fix/refactor lane plus constrained adapter | simplifying requirements, safety/privacy/accessibility, migration safety, feedback loops, or independent QA |
 
 ## GSD-compatible execution rhythm
@@ -23,6 +23,6 @@ Super-SpecKit keeps native Spec Kit as the source of requirements, plan, tasks, 
 2. Check the plan for outcome, requirements, dependencies, verification, and bounded scope before creating a worktree.
 3. Execute one committed slice in a maker lane, preferably test-first where feasible.
 4. Emit a durable handoff when a lane pauses, fails, or completes; never rely only on chat memory.
-5. Independently verify the candidate and audit the milestone against its original requirement IDs before a human merge decision.
+5. Independently verify the candidate and audit the milestone against its original requirement IDs before a merge decision under configured authority.
 
 This gives the useful GSD feedback loop while maintaining Super-SpecKit’s independent checker and evidence rules.

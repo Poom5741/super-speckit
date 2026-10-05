@@ -15,7 +15,20 @@
       "name": "vibe-design-skills",
       "repository": "https://github.com/nick3/vibe-design-skills",
       "commit": "79000e161fdfeb3a35674045a7bcb8d33bf555e1",
-      "paths": ["skills/vibe-design-bootstrap", "skills/vibe-design-execute", "skills/feature-design-spec", "skills/design-artifact-evaluator", "skills/design-system-foundation", "skills/design-system-review", "skills/design-craft-foundation", "skills/design-evaluation-foundation", "skills/product-design-context", "skills/component-pattern-foundation", "skills/design-template-and-variants", "skills/agentic-interface-foundation"],
+      "paths": [
+        "skills/vibe-design-bootstrap",
+        "skills/vibe-design-execute",
+        "skills/feature-design-spec",
+        "skills/design-artifact-evaluator",
+        "skills/design-system-foundation",
+        "skills/design-system-review",
+        "skills/design-craft-foundation",
+        "skills/design-evaluation-foundation",
+        "skills/product-design-context",
+        "skills/component-pattern-foundation",
+        "skills/design-template-and-variants",
+        "skills/agentic-interface-foundation"
+      ],
       "installed_to": "skills/upstream",
       "role": "design foundation, execution, and independent evaluation",
       "license_note": "MIT; retain upstream notices."
@@ -33,7 +46,17 @@
       "name": "mattpocock engineering skills",
       "repository": "https://github.com/mattpocock/skills",
       "commit": "74ca5fe077456a0b3b2f5310cf9430999fd0b5fd",
-      "paths": ["skills/engineering/setup-matt-pocock-skills", "skills/engineering/grill-with-docs", "skills/engineering/domain-modeling", "skills/engineering/research", "skills/engineering/tdd", "skills/engineering/diagnosing-bugs", "skills/engineering/code-review", "skills/engineering/wayfinder", "skills/productivity/handoff"],
+      "paths": [
+        "skills/engineering/setup-matt-pocock-skills",
+        "skills/engineering/grill-with-docs",
+        "skills/engineering/domain-modeling",
+        "skills/engineering/research",
+        "skills/engineering/tdd",
+        "skills/engineering/diagnosing-bugs",
+        "skills/engineering/code-review",
+        "skills/engineering/wayfinder",
+        "skills/productivity/handoff"
+      ],
       "installed_to": "skills/upstream/mattpocock",
       "role": "repo grounding, research, TDD, diagnosis, review, navigation, and durable handoffs",
       "license_note": "Consult upstream license and notices before redistribution."
@@ -42,7 +65,12 @@
       "name": "UI/UX Pro Max",
       "repository": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
       "commit": "dcc40ff5133ef78276117db0cc34e7b83cc8aeba",
-      "paths": [".claude/skills/ui-ux-pro-max", ".claude/skills/ui-styling", ".claude/skills/design-system", ".claude/skills/brand"],
+      "paths": [
+        ".claude/skills/ui-ux-pro-max",
+        ".claude/skills/ui-styling",
+        ".claude/skills/design-system",
+        ".claude/skills/brand"
+      ],
       "installed_to": "skills/upstream/nextlevelbuilder",
       "role": "premium design intelligence, style/token decisions, implementation styling, and brand constraints",
       "license_note": "MIT; retain upstream notices and treat catalog output as recommendations."
@@ -51,19 +79,30 @@
       "name": "Frontend Agent Skills",
       "repository": "https://github.com/hueyexe/frontend-agent-skills",
       "commit": "2841c079dd8a9c634882227194dc42e25227710d",
-      "paths": ["ui-visual-composition", "interaction-patterns-components", "information-architecture-navigation", "forms-inputs-checkout", "ux-usability-foundations", "ux-writing-content-design", "accessibility-inclusive-design", "design-systems-frontend-architecture", "ux-research-discovery-testing"],
+      "paths": [
+        "ui-visual-composition",
+        "interaction-patterns-components",
+        "information-architecture-navigation",
+        "forms-inputs-checkout",
+        "ux-usability-foundations",
+        "ux-writing-content-design",
+        "accessibility-inclusive-design",
+        "design-systems-frontend-architecture",
+        "ux-research-discovery-testing"
+      ],
       "installed_to": "skills/upstream/hueyexe",
       "role": "specialist UX, inclusive design, composition, interaction, forms, information architecture, content, systems, and research",
       "license_note": "MIT; retain upstream notices."
     },
     {
-      "name": "PStack (consulted, not vendored)",
+      "name": "PStack",
       "repository": "https://github.com/cursor/plugins",
-      "commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "commit": "e5a8186d7b43be8d6ac4452440fbead5f1a51c70",
       "path": "pstack",
-      "installed_to": null,
-      "role": "reference for verification-harness, corrective enforcement, independent static review, decision trails, and agent operations",
-      "license_note": "MIT source consulted for compatible concepts; no PStack files are redistributed in this kit."
+      "installed_to": "vendor/pstack",
+      "role": "complete pinned subordinate engineering toolkit; explicit native workflow and host adapters",
+      "license_note": "MIT, Copyright 2026 Lauren Tan; complete unchanged source and LICENSE retained. Optional automation is dormant outside discovery roots.",
+      "manifest": "vendor/pstack-manifest.json"
     },
     {
       "name": "Ponytail",

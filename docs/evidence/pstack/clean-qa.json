@@ -1,0 +1,46 @@
+{
+  "candidate_sha": "980d79d472e0b70455e3756bba13b921a1f2d984",
+  "checkout": "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/super-speckit-final-qa-w6tbnq9f/checkout",
+  "status": "passed",
+  "tests": {
+    "count": 60,
+    "passed": 60,
+    "seconds": 34.832,
+    "output": "/tmp/pstack-clean-qa-tests.log",
+    "state_tests": 14,
+    "includes": [
+      "missing pre-maker baseline/phase receipts",
+      "safe feature IDs",
+      "real local Git merge",
+      "merged record after QA worktree cleanup",
+      "postmerge evidence drift rejection"
+    ]
+  },
+  "source_inventory": {
+    "status": "pass",
+    "source": {
+      "status": "pass",
+      "revision": "e5a8186d7b43be8d6ac4452440fbead5f1a51c70",
+      "files": 164,
+      "failures": []
+    },
+    "counts": {
+      "skills": 27,
+      "principles": 24,
+      "playbooks": 23,
+      "agents": 2,
+      "automations": 12
+    },
+    "failures": [],
+    "execution_coverage": "see docs/pstack-certification.md; adapter-defined is not live-certified"
+  },
+  "source_output": "/tmp/pstack-clean-qa-inventory.json",
+  "diff_check": "passed",
+  "worktree_clean": true,
+  "limitations": [
+    "No live ZCode/Codex/Pi certification",
+    "No external GitHub merge or Benny posting",
+    "Local Git fixture merge does not prove forge integration",
+    "Runtime HTTP fixture is not product browser certification"
+  ]
+}

@@ -39,7 +39,7 @@ Install the public bootstrap skill with:
 npx skills add https://github.com/Poom5741/super-speckit/tree/main/installable/super-speckit
 ```
 
-Then invoke `$super-speckit-installer` in the target repository. It installs the complete kit to `.super-speckit/`, creates a project `super-speckit.yml` if absent, initializes the YAML work-state manifest, and registers the four intended project skills in `.agents/skills/`: `$super-speckit`, `$ask-super-speckit`, `$super-speckit-design-first`, and `$super-speckit-final-manual-review`. The direct folder URL avoids exposing internal and vendored skills as unrelated installation choices. Pin an exact commit or tag URL for reproducible installations.
+Then invoke `$super-speckit-installer` in the target repository. It installs the complete kit to `.super-speckit/`, creates a project `super-speckit.yml` if absent, initializes the YAML work-state manifest, and registers the four intended project skills in `.agents/skills/`: `$super-speckit`, `$ask-super-speckit`, `$super-speckit-design-first`, and `$super-speckit-final-manual-review`. The direct folder URL avoids exposing internal and vendored skills as unrelated installation choices. Pin an exact commit or tag URL for reproducible installations. Identical reinstalls preserve project configuration and evidence. Use `--upgrade` for deliberate bundle updates; changed installed files are reported rather than silently replaced, and prior bundle files are backed up.
 
 If you installed an older version that exposes only `$super-speckit-installer`, run its `scripts/install_project.py --target . --register-only` command once to repair the project entry points.
 
@@ -94,11 +94,15 @@ Use a full transfer handoff only for a true cloud/vendor transfer or a change in
 
 For a UI change, it also runs the Journey UX Loop after normal independent QA. [Rakazo](https://github.com/elie222/rakazo) is the default independent browser checker: Super-SpecKit prepares a bounded task packet for a private Rakazo Computer and clean browser profile, and accepts only QA evidence—not product-code edits—from the reviewer. A project may configure a reviewed local dispatch adapter; without one the work is honestly blocked for Rakazo dispatch rather than pretending an API exists. Rakazo repeats the declared user journeys after every confirmed fix. A UI candidate cannot become merge-ready without a passing Journey UX report linked to its latest SHA; the honest result is “no confirmed UX defect in the declared journey scope,” never “there are no UX bugs.”
 
-## PStack-compatible engineering layer
+## Complete PStack engineering toolkit
 
-Super-SpecKit now selectively adopts compatible ideas from [PStack](https://github.com/cursor/plugins/tree/main/pstack): a verification-harness bootstrap, `correct`-style structural prevention of repeated failures, an `interrogate` multi-lens static-review panel, a file-backed decision trail, and an independent skill evaluator. These stay internal stages of `$ask-super-speckit`; PStack’s static review does not replace clean runtime QA, and its code-first planning preference does not replace Spec Kit’s artifacts.
+The complete pinned [PStack 0.15.13](https://github.com/cursor/plugins/tree/e5a8186d7b43be8d6ac4452440fbead5f1a51c70/pstack) source is preserved under `vendor/pstack/`, outside host skill discovery. Its 51 skills, 23 playbooks, two agents and dormant automation are mapped through explicit adapters behind `ask-super-speckit`. Spec Kit remains the requirements/plan/tasks backbone; native immutable-candidate QA remains the release contract.
 
-The evaluator is deliberately a separate role: it receives a realistic request in a temporary fixture, observes actual artifacts and test results, and cannot edit the source skill. It does not claim to test every skill at once; each evaluation identifies the exact contract and untested modes. Repeated observed failures enter `correct`, which chooses the smallest guard in the order architecture → types/schema → lint/static → CI → regression test → documentation.
+Use `python3 scripts/pstack_adapter.py inventory` to check bundle coverage and hashes. `route <playbook>` selects the native adapter contract; `read <playbook>` supplies the pinned source with fidelity overrides. Relevant leaves load progressively under adaptive rigor. Copied source and route coverage do not imply live provider certification.
+
+ZCode is the primary host. Project `.agents/skills` entry points are supported; host discovery checks user-level shadowing. Codex and Pi use reviewed CLI adapters, and ordinary host switches use shared continuation and command-validated state. OMP and Cursor are optional detected hosts. No global skills/configuration or external automation are enabled by installation.
+
+Read [integration methods](docs/pstack-integration.md) and [certification evidence](docs/pstack-certification.md) for executable runtime controls, complete route coverage, intentional differences, and observed limitations. Benny and make-bot-ui remain dormant until configured and authorized.
 
 ## Ponytail minimal implementation
 

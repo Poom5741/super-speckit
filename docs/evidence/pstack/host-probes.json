@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-06",
+  "coverage": "read-only transport and synthetic investigation, not full provider workflow",
+  "results": [
+    {
+      "host": "zcode",
+      "scope": "read-only CLI transport synthetic investigation only",
+      "status": "passed",
+      "exit_code": 0,
+      "seconds": 22.8,
+      "marker_observed": true,
+      "worktree_unchanged": true,
+      "provider_paths": "process-only overrides to installed built-in and existing personal configuration",
+      "limitation": "not full lifecycle or model-diversity certification"
+    },
+    {
+      "host": "codex",
+      "scope": "read-only CLI transport and synthetic investigation only",
+      "status": "failed",
+      "exit_code": 1,
+      "seconds": 7.5,
+      "marker_observed": false,
+      "worktree_unchanged": true,
+      "limitation": "not full lifecycle, diversity, external services or unattended scheduling certification",
+      "reason": "configured inherited model gpt-6.1-sol rejected by ChatGPT account; no substitute model selected"
+    },
+    {
+      "host": "pi",
+      "scope": "read-only CLI transport and synthetic investigation only",
+      "status": "passed",
+      "exit_code": 0,
+      "seconds": 8.4,
+      "marker_observed": true,
+      "worktree_unchanged": true,
+      "limitation": "not full lifecycle, diversity, external services or unattended scheduling certification"
+    }
+  ]
+}
