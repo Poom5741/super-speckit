@@ -57,6 +57,12 @@ Requirements: Git worktrees, Python 3.9+, a test runner, and for browser gates P
 
 ## Start with `ask-super-speckit`
 
+Optional [TikTok work-break mode](skills/tiktok-work-break/SKILL.md) opens a managed TikTok tab during independent work, closes it before a question needing your judgment, and reopens it after your answer. Ask to enable it for the current chat.
+
+The internal [Rakazo manual QA skill](skills/rakazo-manual-qa/SKILL.md) asks for your instance on first testing use and keeps connection and active-task details in the Git-ignored project file `.super-speckit/qa/rakazo-session.json`. It drives setup, browser dispatch, user journeys, bounded exploratory stress checks, evidence collection, teardown, and retests. Optional project connection settings live under `manual_journey_agent.rakazo` in `super-speckit.yml`.
+
+For tech or blockchain hackathons, ask it to discover or validate an idea. The internal [hackathon skill](skills/hackathon/SKILL.md) compares user problems, current event rules, relevant prize winners, and demo feasibility. It produces a discovery brief and routes requested implementation into normal delivery. Its methods are winner-informed; the skill has no documented prize-winning usage yet.
+
 `ask-super-speckit` is the only normal entry point. Give it a feature, defect, idea, or constraint; it drafts a visual Purpose Map, pauses once for a human to confirm the goal, then reads the evidence, chooses the next safe stage, and autonomously carries the work through to a verified result. The human confirms purpose—not technical implementation. It records every material decision, uses independent QA, and self-heals failed work instead of waiting for routine approval.
 
 For a UI-facing change it begins with `design-first`: produce a static HTML prototype and `design-brief.md`, compare it against any declared design system, record an evidence-backed autonomous design decision, and continue. The prototype is a decision artifact—not production code. If an external designer is available, it emits a portable prompt/hand-off bundle for v0, Google Stitch, or Claude Design; their output is imported and reviewed like any other untrusted design input.

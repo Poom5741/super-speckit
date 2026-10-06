@@ -149,6 +149,9 @@ manual_journey_agent:
   enabled: true
   mode: persistent-browser-reviewer
   rakazo:
+    # Optional bootstrap values; otherwise ask on first test use and remember in the local QA session.
+    instance_url: ""
+    bot_url: ""
     # Set only to a reviewed, project-local adapter. Super-SpecKit never guesses a Rakazo API or CLI.
     dispatch_command: ""
     require_private_computer: true

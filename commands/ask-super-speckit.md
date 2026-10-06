@@ -6,6 +6,8 @@ Never use chat history or an agent's recollection as work-state evidence. First 
 
 Classify intent before delivery-state inspection. Read-only how/why/teach/recall/bro/investigation/forensics/help requests use `super-speckit.pstack` without creating purpose maps, feature state, worktrees, or release ceremony. They retain citations, confidence, runnable safety claims, and explicit unknowns. Delivery requests use canonical state and native Spec Kit.
 
+Hackathon idea discovery, candidate comparison, and validation use `skills/hackathon/SKILL.md` before delivery-state inspection. Research-only requests produce a discovery brief without delivery state. If implementation is also requested, carry the selected brief into the delivery stages below.
+
 For delivery choose the first applicable stage in this strict priority order; completion receipts remove a stage from eligibility:
 
 1. Run `super-speckit.continue` to resume/reconcile active continuation, worker attempts, immutable Git candidate and file-backed state. Preserve completed work and reject stale events.
