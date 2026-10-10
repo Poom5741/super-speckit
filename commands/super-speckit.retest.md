@@ -1,5 +1,5 @@
 ---
-description: Independently retest a confirmed bug fix from a clean QA worktree.
+description: Independently retest a committed bug fix in a fresh QA clone.
 ---
 
-Create a fresh QA worktree from the bug-fix candidate SHA. Execute the original minimal reproduction first, then its regression test and affected matrix journeys. Record pass/fail and evidence. On pass, close the bug only after required feature gates and OCR triage remain satisfactory; on fail, reopen `bug_fixing` with a new evidence run. Never reuse the maker environment as retest evidence.
+Create a fresh outside-repository QA clone at the fix SHA. Run the original reproduction, regression check, affected matrix journeys, and relevant engineering gates. Retain evidence. On pass close the bug only with required independent proof and satisfactory OCR/Journey UX dispositions; on failure resume bug_fixing. Never reuse the maker environment as retest evidence.

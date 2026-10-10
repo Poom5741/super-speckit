@@ -2,7 +2,7 @@
 
 ## Default authority
 
-The orchestrator autonomously chooses and executes project-internal work: clarification by inspection, research, specification, feedback-loop discovery, design direction, planning, task slicing, worktree creation, implementation, diagnosis, repair, retest, evidence collection, convergence, and merge when `merge.autonomous_when_ready` is enabled.
+The orchestrator autonomously chooses and executes project-internal work: clarification by inspection, research, specification, feedback-loop discovery, design direction, planning, task slicing, optional checkout isolation, implementation, diagnosis, repair, retest, evidence collection, convergence, and merge when `merge.autonomous_when_ready` is enabled.
 
 It records consequential choices with the evidence, rejected alternatives, and reversibility. It does not stop for routine approval.
 
@@ -19,3 +19,7 @@ Do not repeat the same action without new evidence. At the configured repair lim
 ## Non-negotiable limits
 
 Autonomy does not manufacture authority or evidence. Do not disclose credentials, alter protected secrets, make irreversible external changes, publish/deploy outside explicitly configured authority, or pretend unavailable systems were checked. Preserve maker/checker separation and clean QA verification even when the same orchestrator owns the whole workflow.
+
+## Unattended execution capability
+
+Follow playbook-delivery.md. Persist a falsifiable predicate, selected steps, authority, budget and checkpoint. Observe the configured host wake/resume mechanism before promising overnight continuation. Prompt text, copied playbooks and an active process do not establish restart recovery. Preserve independent candidate verification and both usability and engineering gates.

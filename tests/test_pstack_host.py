@@ -60,3 +60,18 @@ class HostTests(unittest.TestCase):
             provider=root/'provider.json'; provider.write_text('{"secret":"never read"}')
             self.assertEqual(h.environment_paths({'ZCODE_BUILTIN_PROVIDER_CONFIG_FILE':str(provider)})['ZCODE_BUILTIN_PROVIDER_CONFIG_FILE'],str(provider))
             with self.assertRaises(ValueError): h.environment_paths({'API_SECRET':'must not log'})
+
+class CloneHostTests(unittest.TestCase):
+    def test_clone_dispatch_and_write_scope(self):
+        with tempfile.TemporaryDirectory() as d:
+            repo=Path(d)/'repo'; repo.mkdir()
+            subprocess.run(['git','init','-q',str(repo)],check=True)
+            subprocess.run(['git','-C',str(repo),'-c','user.name=Fixture','-c','user.email=fixture@example.test','commit','--allow-empty','-qm','fixture'],check=True)
+            clone=Path(d)/'clone'
+            subprocess.run(['git','clone','--no-local','-q',str(repo),str(clone)],check=True)
+            brief=Path(d)/'brief'; brief.write_text('Review candidate; do not edit product code')
+            config={'codex':dict(argv=[sys.executable,'-c','print("observed")'],isolation='git-clone')}
+            request=h.plan(config,'codex',brief,clone,role='checker')
+            self.assertEqual(h.dispatch(request)['status'],'completed')
+            request['argv']=[sys.executable,'-c',"from pathlib import Path; Path('product').write_text('bad')"]
+            self.assertEqual(h.dispatch(request)['status'],'write-violation')

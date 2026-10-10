@@ -1,10 +1,10 @@
 # Orchestration rules
 
-## 1. Native Spec Kit stays authoritative
+## 1. Playbooks lead execution; Spec Kit plans selected scopes
 
-First classify intent. Read-only investigations, teaching, explanations and help use pinned PStack methods without delivery-state ceremony. For delivery, the autonomous orchestrator starts with a visual Purpose Map. A human confirms only the intended outcome, affected people, success signal, and non-goals; implementation is not a human questionnaire. It then runs native `specify`, `plan`, `tasks`, and optionally `clarify`, `checklist`, `analyze` as evidence requires. Before maker work, Builder/Examiner/Investigator/Resolver roles complete an evidence-labeled Spec Grill. Translate each testable requirement into `verification-matrix.md`; update the native plan/tasks if the matrix exposes missing work. `converge` is run after verification to record remaining scope.
+Read `skills/ask-super-speckit/references/playbook-delivery.md` for the current delivery contract. Select and persist a PStack playbook first. Micro fixes and mechanical refactors use playbook.md plus a requirements matrix; normal and milestone work retain native spec.md, plan.md, tasks.md, Spec Grill, Atlas and Change Story. Escalate micro scope when uncertain product or cross-boundary design appears. Read-only requests have no delivery ceremony. Preserve explicit user purpose confirmation and provenance; technical choices remain autonomous.
 
-Before maker work, classify the request as micro, normal, or milestone and create an evidence-linked Project Atlas plus diagram-first Change Story. The route changes planning depth, never proof boundaries. Milestones are split into demoable vertical slices and reassessed after independent verification. A failed or unavailable command is `inconclusive` until evidence supports another classification; it is never a pass.
+Before code, record relevant research and a project-specific architecture contract with dependency checks, state ownership, public interfaces and narrow exceptions. Before release, require both independent user-journey evidence and independent engineering review for the exact candidate. Existing state remains compatible; new deliveries use `create-feature --playbook-led` and its research/architecture/review receipts.
 
 ## 1.1 Files and commands are the work-state authority
 
@@ -20,11 +20,11 @@ Before runtime QA, create or refresh a project-local verification harness and fe
 
 ## 3. Maker lane
 
-Coordinator allocates one branch/worktree per dependency-ready feature. The maker implements only the selected task slice, adds targeted tests, updates the matrix's proposed assets, runs local checks, and commits a candidate SHA. Makers do not self-certify QA.
+Coordinator assigns one code-writing owner to the current checkout. Sequence dependent slices; parallel writers require explicitly selected separate clones or worktrees. The maker implements only the selected task slice, adds targeted tests, updates the matrix's proposed assets, runs local checks, and commits a candidate SHA. Makers do not self-certify QA.
 
 ## 4. Checker lane
 
-Coordinator creates `ss/qa/<feature>-<run>` from the candidate SHA. Checker resets test data, generates unique identities/namespaces, runs deterministic gates, starts the app, then executes matrix journeys and needed API/DB assertions. Exploratory QA is a separate timeboxed charters: happy path, empty/error states, authorization, responsive/keyboard, and changed boundary conditions as applicable. The checker writes only QA artifacts.
+Coordinator creates a disposable standalone QA clone outside the maker repository from the candidate SHA with `qa-clone`; optional registered worktrees remain supported. Checker resets test data, generates unique identities/namespaces, runs deterministic gates, starts the app, then executes matrix journeys and needed API/DB assertions. Exploratory QA is a separate timeboxed charters: happy path, empty/error states, authorization, responsive/keyboard, and changed boundary conditions as applicable. The checker writes only QA artifacts.
 
 ## 5. OCR lane
 
@@ -32,11 +32,11 @@ OCR runs on the same candidate commit (before or alongside runtime QA). Triage r
 
 ## 6. Bug loop
 
-No durable bug is created from one ambiguous observation. Preserve evidence, reproduce using the smallest path, then classify. A confirmed bug is a persistent artifact (and optionally a linked issue). A different maker fixes it in `ss/bug/<bug>`, adds regression coverage, and commits. A checker who did not make the fix retests in a new QA worktree. Repeat until verified or explicitly blocked/wont-fix by authorized decision.
+No durable bug is created from one ambiguous observation. Preserve evidence, reproduce using the smallest path, then classify. A confirmed bug is a persistent artifact (and optionally a linked issue). The code-writing owner fixes it in the current checkout, adds regression coverage, and commits. A checker who did not make the fix retests in a new QA clone. Repeat until verified or explicitly blocked/wont-fix by authorized decision.
 
 ## 7. Autonomous merge decision
 
-The coordinator validates the state and renders `summary.md`. When autonomous merge is enabled, it merges a verified candidate and records the resulting SHA. QA worktrees are cleaned only after evidence retention rules are met.
+The coordinator validates the state and renders `summary.md`. When autonomous merge is enabled, it merges a verified candidate and records the resulting SHA. QA checkouts are cleaned only after evidence retention rules are met.
 
 ## Parallelism
 

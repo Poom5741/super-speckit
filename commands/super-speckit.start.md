@@ -1,5 +1,5 @@
 ---
-description: Prepare an isolated maker worktree for a Spec Kit feature.
+description: Start a playbook-led delivery with one code-writing owner.
 ---
 
-Confirm native `spec.md`, `plan.md`, `tasks.md`, and a verification matrix exist. Allocate a feature ID, maker, independent checker, branch and worktree. Create state with `create-feature`; pass `--ui-change` when the feature changes a user-facing interface so the required Journey UX Loop can be enforced. Make the maker worktree from the integration baseline, not from another worktree. Before implementation, run `super-speckit.ponytail` to choose the smallest safe implementation after understanding the affected flow. Move state to `maker_running`. The maker may implement and commit but must not claim final QA or modify QA evidence.
+Read skills/ask-super-speckit/references/playbook-delivery.md. Select a PStack playbook and scope route. Micro needs playbook.md and matrix; normal/milestone requires native planning and understanding artifacts. Preserve the user's confirmed purpose. Create feature state with --playbook-led and distinct maker/checker identities; use --ui-change for interface changes. Record baseline-feedback, phase-contract, research and architecture receipts. Use the current checkout; preserve unrelated changes and sequence code writers. Run Ponytail after understanding, then transition to maker_running. Commit a candidate; never self-certify final QA.

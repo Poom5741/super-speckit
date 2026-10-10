@@ -1,0 +1,593 @@
+[
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo",
+      "init"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "Initialized empty Git repository in /private/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo/.git/\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo",
+      "config",
+      "user.name",
+      "Evaluator"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo",
+      "config",
+      "user.email",
+      "evaluator@example.test"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo",
+      "add",
+      "."
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo",
+      "commit",
+      "-m",
+      "baseline"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "[main (root-commit) 605f9b9] baseline\n 2 files changed, 3 insertions(+)\n create mode 100644 .gitignore\n create mode 100644 app.py\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo/app.py",
+      "  Alice  "
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "  Alice  \n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "init",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "initialized /private/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo/.super-speckit\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "create-feature",
+      "trim",
+      "--maker",
+      "maker",
+      "--checker",
+      "checker",
+      "--matrix",
+      "matrix.json",
+      "--playbook-led",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "/private/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo/.super-speckit/state/features/trim.json\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "purpose-gate",
+      "trim",
+      "--title",
+      "Trim greeting",
+      "--outcome",
+      "Trim greeting whitespace",
+      "--people",
+      "CLI users",
+      "--success",
+      "Alice printed without outer spaces",
+      "--non-goals",
+      "New CLI options",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "/private/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo/.super-speckit/purpose/trim/purpose-map.html\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "confirm-purpose",
+      "trim",
+      "--decision",
+      "confirmed",
+      "--confirmed-by",
+      "user",
+      "--confirmed-at",
+      "2026-10-10T00:00:00Z",
+      "--confirmation",
+      "Fix whitespace in greeting",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "{\n  \"status\": \"confirmed\",\n  \"map\": \".super-speckit/purpose/trim/purpose-map.md\",\n  \"decision\": \".super-speckit/purpose/trim/decision.json\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "route",
+      "trim",
+      "micro",
+      "--rationale",
+      "Known bounded CLI formatting bug",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "{\n  \"kind\": \"micro\",\n  \"rationale\": \"Known bounded CLI formatting bug\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-prerequisite",
+      "trim",
+      "baseline-feedback",
+      "--artifact",
+      "baseline.txt",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-prerequisite",
+      "trim",
+      "phase-contract",
+      "--artifact",
+      "playbook.md",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-prerequisite",
+      "trim",
+      "research",
+      "--artifact",
+      "research.txt",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-prerequisite",
+      "trim",
+      "architecture",
+      "--artifact",
+      "architecture.txt",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "transition",
+      "trim",
+      "maker_running",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "{\n  \"id\": \"trim\",\n  \"state\": \"maker_running\",\n  \"candidate_sha\": null,\n  \"maker\": \"maker\",\n  \"checker\": \"checker\",\n  \"matrix\": \"matrix.json\",\n  \"ui_change\": false,\n  \"journey_ux\": {\n    \"status\": \"not_required\",\n    \"report\": null,\n    \"candidate_sha\": null\n  },\n  \"purpose\": {\n    \"status\": \"confirmed\",\n    \"map\": \".super-speckit/purpose/trim/purpose-map.md\",\n    \"decision\": \".super-speckit/purpose/trim/decision.json\"\n  },\n  \"grill\": {\n    \"status\": \"not_started\",\n    \"artifact\": null\n  },\n  \"route\": {\n    \"kind\": \"micro\",\n    \"rationale\": \"Known bounded CLI formatting bug\"\n  },\n  \"atlas\": {\n    \"path\": null\n  },\n  \"change_story\": {\n    \"path\": null\n  },\n  \"handoff\": {\n    \"path\": null\n  },\n  \"decision_trail\": {\n    \"path\": null\n  },\n  \"verification_harness\": {\n    \"path\": null\n  },\n  \"static_review\": {\n    \"artifact\": null\n  },\n  \"corrective_enforcement\": {\n    \"artifact\": null\n  },\n  \"runs\": [],\n  \"bugs\": [],\n  \"delivery_contract\": \"playbook-v1\",\n  \"schema_version\": 2,\n  \"revision\": 9,\n  \"prerequisite_receipts\": {\n    \"baseline-feedback\": {\n      \"artifact\": \"baseline.txt\",\n      \"digest\": \"be6f055175aa8bf3355e57a6418c0285203b3c89d1dc8b320fdd4d652d3087dc\"\n    },\n    \"phase-contract\": {\n      \"artifact\": \"playbook.md\",\n      \"digest\": \"907e21a368ec74c5df7f9d48a370558011180559bf762838bd175b501e56828b\"\n    },\n    \"research\": {\n      \"artifact\": \"research.txt\",\n      \"digest\": \"76909a61dfbcbfb5f440599179c599bfeda75f5cc43f1c059893af6144c5fca7\"\n    },\n    \"architecture\": {\n      \"artifact\": \"architecture.txt\",\n      \"digest\": \"4ccb3a3df8dc9d1dba49c12f977c49b89fd0516789f4acd24ed89e2c883eda8e\"\n    }\n  }\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo",
+      "add",
+      "."
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo",
+      "commit",
+      "-m",
+      "Fix CLI greeting whitespace"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "[main e750864] Fix CLI greeting whitespace\n 6 files changed, 6 insertions(+), 1 deletion(-)\n create mode 100644 architecture.txt\n create mode 100644 baseline.txt\n create mode 100644 matrix.json\n create mode 100644 playbook.md\n create mode 100644 research.txt\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "e750864e93d6cf1dce25dd28f0411cdcc37a825e\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "transition",
+      "trim",
+      "candidate_ready",
+      "--sha",
+      "e750864e93d6cf1dce25dd28f0411cdcc37a825e",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "{\n  \"id\": \"trim\",\n  \"state\": \"candidate_ready\",\n  \"candidate_sha\": \"e750864e93d6cf1dce25dd28f0411cdcc37a825e\",\n  \"maker\": \"maker\",\n  \"checker\": \"checker\",\n  \"matrix\": \"matrix.json\",\n  \"ui_change\": false,\n  \"journey_ux\": {\n    \"status\": \"not_required\",\n    \"report\": null,\n    \"candidate_sha\": null\n  },\n  \"purpose\": {\n    \"status\": \"confirmed\",\n    \"map\": \".super-speckit/purpose/trim/purpose-map.md\",\n    \"decision\": \".super-speckit/purpose/trim/decision.json\"\n  },\n  \"grill\": {\n    \"status\": \"not_started\",\n    \"artifact\": null\n  },\n  \"route\": {\n    \"kind\": \"micro\",\n    \"rationale\": \"Known bounded CLI formatting bug\"\n  },\n  \"atlas\": {\n    \"path\": null\n  },\n  \"change_story\": {\n    \"path\": null\n  },\n  \"handoff\": {\n    \"path\": null\n  },\n  \"decision_trail\": {\n    \"path\": null\n  },\n  \"verification_harness\": {\n    \"path\": null\n  },\n  \"static_review\": {\n    \"artifact\": null\n  },\n  \"corrective_enforcement\": {\n    \"artifact\": null\n  },\n  \"runs\": [],\n  \"bugs\": [],\n  \"delivery_contract\": \"playbook-v1\",\n  \"schema_version\": 2,\n  \"revision\": 10,\n  \"prerequisite_receipts\": {\n    \"baseline-feedback\": {\n      \"artifact\": \"baseline.txt\",\n      \"digest\": \"be6f055175aa8bf3355e57a6418c0285203b3c89d1dc8b320fdd4d652d3087dc\"\n    },\n    \"phase-contract\": {\n      \"artifact\": \"playbook.md\",\n      \"digest\": \"907e21a368ec74c5df7f9d48a370558011180559bf762838bd175b501e56828b\"\n    },\n    \"research\": {\n      \"artifact\": \"research.txt\",\n      \"digest\": \"76909a61dfbcbfb5f440599179c599bfeda75f5cc43f1c059893af6144c5fca7\"\n    },\n    \"architecture\": {\n      \"artifact\": \"architecture.txt\",\n      \"digest\": \"4ccb3a3df8dc9d1dba49c12f977c49b89fd0516789f4acd24ed89e2c883eda8e\"\n    }\n  },\n  \"candidates\": [\n    {\n      \"sha\": \"e750864e93d6cf1dce25dd28f0411cdcc37a825e\",\n      \"maker\": \"maker\",\n      \"matrix_digest\": \"8b0383aca3044abcbc3c9353119b09f899c5b0674d738cbc6292650c93d7ff03\"\n    }\n  ]\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "qa-clone",
+      "--path",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/qa",
+      "--ref",
+      "e750864e93d6cf1dce25dd28f0411cdcc37a825e",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Cloning into '/private/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/qa'...\nHEAD is now at e750864 Fix CLI greeting whitespace\n"
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "transition",
+      "trim",
+      "qa_running",
+      "--checkout",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/qa",
+      "--attempt-id",
+      "independent-1",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "{\n  \"id\": \"trim\",\n  \"state\": \"qa_running\",\n  \"candidate_sha\": \"e750864e93d6cf1dce25dd28f0411cdcc37a825e\",\n  \"maker\": \"maker\",\n  \"checker\": \"checker\",\n  \"matrix\": \"matrix.json\",\n  \"ui_change\": false,\n  \"journey_ux\": {\n    \"status\": \"not_required\",\n    \"report\": null,\n    \"candidate_sha\": null\n  },\n  \"purpose\": {\n    \"status\": \"confirmed\",\n    \"map\": \".super-speckit/purpose/trim/purpose-map.md\",\n    \"decision\": \".super-speckit/purpose/trim/decision.json\"\n  },\n  \"grill\": {\n    \"status\": \"not_started\",\n    \"artifact\": null\n  },\n  \"route\": {\n    \"kind\": \"micro\",\n    \"rationale\": \"Known bounded CLI formatting bug\"\n  },\n  \"atlas\": {\n    \"path\": null\n  },\n  \"change_story\": {\n    \"path\": null\n  },\n  \"handoff\": {\n    \"path\": null\n  },\n  \"decision_trail\": {\n    \"path\": null\n  },\n  \"verification_harness\": {\n    \"path\": null\n  },\n  \"static_review\": {\n    \"artifact\": null\n  },\n  \"corrective_enforcement\": {\n    \"artifact\": null\n  },\n  \"runs\": [],\n  \"bugs\": [],\n  \"delivery_contract\": \"playbook-v1\",\n  \"schema_version\": 2,\n  \"revision\": 11,\n  \"prerequisite_receipts\": {\n    \"baseline-feedback\": {\n      \"artifact\": \"baseline.txt\",\n      \"digest\": \"be6f055175aa8bf3355e57a6418c0285203b3c89d1dc8b320fdd4d652d3087dc\"\n    },\n    \"phase-contract\": {\n      \"artifact\": \"playbook.md\",\n      \"digest\": \"907e21a368ec74c5df7f9d48a370558011180559bf762838bd175b501e56828b\"\n    },\n    \"research\": {\n      \"artifact\": \"research.txt\",\n      \"digest\": \"76909a61dfbcbfb5f440599179c599bfeda75f5cc43f1c059893af6144c5fca7\"\n    },\n    \"architecture\": {\n      \"artifact\": \"architecture.txt\",\n      \"digest\": \"4ccb3a3df8dc9d1dba49c12f977c49b89fd0516789f4acd24ed89e2c883eda8e\"\n    }\n  },\n  \"candidates\": [\n    {\n      \"sha\": \"e750864e93d6cf1dce25dd28f0411cdcc37a825e\",\n      \"maker\": \"maker\",\n      \"matrix_digest\": \"8b0383aca3044abcbc3c9353119b09f899c5b0674d738cbc6292650c93d7ff03\"\n    }\n  ],\n  \"qa_worktree\": \"/private/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/qa\",\n  \"qa_attempt\": \"independent-1\",\n  \"attempt_history\": [\n    \"independent-1\"\n  ]\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/qa/app.py",
+      "  Alice  "
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "Alice\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/qa/app.py",
+      "   "
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-proof",
+      "trim",
+      "--receipt",
+      "proof.json",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "transition",
+      "trim",
+      "ready_for_merge",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "error: nonempty evidence path required\n"
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-prerequisite",
+      "trim",
+      "engineering-review",
+      "--artifact",
+      "review.json",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "transition",
+      "trim",
+      "ready_for_merge",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "error: engineering review must match exact candidate and independent checker\n"
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-prerequisite",
+      "trim",
+      "engineering-review",
+      "--artifact",
+      "review.json",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "transition",
+      "trim",
+      "ready_for_merge",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "error: engineering review must match exact candidate and independent checker\n"
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-prerequisite",
+      "trim",
+      "engineering-review",
+      "--artifact",
+      "review.json",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "transition",
+      "trim",
+      "ready_for_merge",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "error: passing engineering review with no blocking findings required\n"
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-prerequisite",
+      "trim",
+      "engineering-review",
+      "--artifact",
+      "review.json",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "transition",
+      "trim",
+      "ready_for_merge",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "error: passing engineering review with no blocking findings required\n"
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "record-prerequisite",
+      "trim",
+      "engineering-review",
+      "--artifact",
+      "review.json",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "transition",
+      "trim",
+      "ready_for_merge",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "{\n  \"id\": \"trim\",\n  \"state\": \"ready_for_merge\",\n  \"candidate_sha\": \"e750864e93d6cf1dce25dd28f0411cdcc37a825e\",\n  \"maker\": \"maker\",\n  \"checker\": \"checker\",\n  \"matrix\": \"matrix.json\",\n  \"ui_change\": false,\n  \"journey_ux\": {\n    \"status\": \"not_required\",\n    \"report\": null,\n    \"candidate_sha\": null\n  },\n  \"purpose\": {\n    \"status\": \"confirmed\",\n    \"map\": \".super-speckit/purpose/trim/purpose-map.md\",\n    \"decision\": \".super-speckit/purpose/trim/decision.json\"\n  },\n  \"grill\": {\n    \"status\": \"not_started\",\n    \"artifact\": null\n  },\n  \"route\": {\n    \"kind\": \"micro\",\n    \"rationale\": \"Known bounded CLI formatting bug\"\n  },\n  \"atlas\": {\n    \"path\": null\n  },\n  \"change_story\": {\n    \"path\": null\n  },\n  \"handoff\": {\n    \"path\": null\n  },\n  \"decision_trail\": {\n    \"path\": null\n  },\n  \"verification_harness\": {\n    \"path\": null\n  },\n  \"static_review\": {\n    \"artifact\": null\n  },\n  \"corrective_enforcement\": {\n    \"artifact\": null\n  },\n  \"runs\": [\n    {\n      \"candidate_sha\": \"e750864e93d6cf1dce25dd28f0411cdcc37a825e\",\n      \"checker\": \"checker\",\n      \"worktree\": \"/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/qa\",\n      \"attempt_id\": \"independent-1\",\n      \"environment\": \"environment.json\",\n      \"matrix_digest\": \"8b0383aca3044abcbc3c9353119b09f899c5b0674d738cbc6292650c93d7ff03\",\n      \"requirements\": [\n        {\n          \"id\": \"FR-001\",\n          \"status\": \"passed\",\n          \"kind\": \"public-behavior\",\n          \"public_seam\": \"CLI\",\n          \"evidence\": \"runtime.txt\",\n          \"evidence_digest\": \"725bce1201d438e5168747b278e86caa49685397bac50ab37df7eaa63a8621b0\"\n        }\n      ],\n      \"gates\": [\n        {\n          \"name\": \"runtime\",\n          \"status\": \"passed\",\n          \"evidence\": \"runtime.txt\",\n          \"evidence_digest\": \"725bce1201d438e5168747b278e86caa49685397bac50ab37df7eaa63a8621b0\",\n          \"command\": [\n            \"python3\",\n            \"app.py\",\n            \"  Alice  \"\n          ],\n          \"exit_code\": 0\n        }\n      ],\n      \"environment_digest\": \"e53e01d07b728eb2e963eb34a2b108da0d1b2f0b571500ad3c6078490b168798\"\n    }\n  ],\n  \"bugs\": [],\n  \"delivery_contract\": \"playbook-v1\",\n  \"schema_version\": 2,\n  \"revision\": 18,\n  \"prerequisite_receipts\": {\n    \"baseline-feedback\": {\n      \"artifact\": \"baseline.txt\",\n      \"digest\": \"be6f055175aa8bf3355e57a6418c0285203b3c89d1dc8b320fdd4d652d3087dc\"\n    },\n    \"phase-contract\": {\n      \"artifact\": \"playbook.md\",\n      \"digest\": \"907e21a368ec74c5df7f9d48a370558011180559bf762838bd175b501e56828b\"\n    },\n    \"research\": {\n      \"artifact\": \"research.txt\",\n      \"digest\": \"76909a61dfbcbfb5f440599179c599bfeda75f5cc43f1c059893af6144c5fca7\"\n    },\n    \"architecture\": {\n      \"artifact\": \"architecture.txt\",\n      \"digest\": \"4ccb3a3df8dc9d1dba49c12f977c49b89fd0516789f4acd24ed89e2c883eda8e\"\n    },\n    \"engineering-review\": {\n      \"artifact\": \"review.json\",\n      \"digest\": \"dc426f8f52cd86687bfd716e6b93af27179c6eeb781e0e444b6aaf6fb2f28cb9\"\n    }\n  },\n  \"candidates\": [\n    {\n      \"sha\": \"e750864e93d6cf1dce25dd28f0411cdcc37a825e\",\n      \"maker\": \"maker\",\n      \"matrix_digest\": \"8b0383aca3044abcbc3c9353119b09f899c5b0674d738cbc6292650c93d7ff03\"\n    }\n  ],\n  \"qa_worktree\": \"/private/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/qa\",\n  \"qa_attempt\": \"independent-1\",\n  \"attempt_history\": [\n    \"independent-1\"\n  ],\n  \"proof\": {\n    \"candidate_sha\": \"e750864e93d6cf1dce25dd28f0411cdcc37a825e\",\n    \"checker\": \"checker\",\n    \"worktree\": \"/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/qa\",\n    \"attempt_id\": \"independent-1\",\n    \"environment\": \"environment.json\",\n    \"matrix_digest\": \"8b0383aca3044abcbc3c9353119b09f899c5b0674d738cbc6292650c93d7ff03\",\n    \"requirements\": [\n      {\n        \"id\": \"FR-001\",\n        \"status\": \"passed\",\n        \"kind\": \"public-behavior\",\n        \"public_seam\": \"CLI\",\n        \"evidence\": \"runtime.txt\",\n        \"evidence_digest\": \"725bce1201d438e5168747b278e86caa49685397bac50ab37df7eaa63a8621b0\"\n      }\n    ],\n    \"gates\": [\n      {\n        \"name\": \"runtime\",\n        \"status\": \"passed\",\n        \"evidence\": \"runtime.txt\",\n        \"evidence_digest\": \"725bce1201d438e5168747b278e86caa49685397bac50ab37df7eaa63a8621b0\",\n        \"command\": [\n          \"python3\",\n          \"app.py\",\n          \"  Alice  \"\n        ],\n        \"exit_code\": 0\n      }\n    ],\n    \"environment_digest\": \"e53e01d07b728eb2e963eb34a2b108da0d1b2f0b571500ad3c6078490b168798\"\n  }\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/scripts/super_speckit.py",
+      "validate",
+      "--repo",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "super-speckit state valid\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo",
+      "worktree",
+      "list",
+      "--porcelain"
+    ],
+    "cwd": "None",
+    "exit": 0,
+    "stdout": "worktree /private/var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/delivery-evaluator-6dn_03zb/repo\nHEAD e750864e93d6cf1dce25dd28f0411cdcc37a825e\nbranch refs/heads/main\n\n",
+    "stderr": ""
+  }
+]

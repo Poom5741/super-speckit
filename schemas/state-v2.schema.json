@@ -8,6 +8,7 @@
     "revision": {"type": "integer", "minimum": 1},
     "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$"},
     "state": {"enum": ["planned", "maker_running", "candidate_ready", "qa_running", "qa_failed", "bug_fixing", "retest_running", "ready_for_merge", "merged", "blocked"]},
+    "delivery_contract": {"enum": ["playbook-v1"]},
     "candidate_sha": {"type": ["string", "null"], "pattern": "^[a-f0-9]{40,64}$"},
     "maker": {"type": "string", "minLength": 1},
     "checker": {"type": "string", "minLength": 1},

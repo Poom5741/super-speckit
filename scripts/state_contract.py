@@ -51,23 +51,41 @@ def prerequisites(repo,data):
  if purpose.get('status')!='confirmed': raise ValueError('human purpose confirmation required')
  file(repo,purpose.get('map')); decision=json.loads(file(repo,purpose.get('decision')).read_text())
  if decision.get('status')!='confirmed' or not all(decision.get(k) for k in ['confirmed_by','confirmed_at','confirmation']): raise ValueError('purpose decision evidence incomplete')
- if data.get('grill',{}).get('status')!='complete': raise ValueError('completed spec grill required')
- file(repo,data['grill'].get('artifact'))
  route=data.get('route',{}).get('kind')
  if route not in {'micro','normal','milestone'}: raise ValueError('scope route required')
- file(repo,data.get('atlas',{}).get('path')); file(repo,data.get('change_story',{}).get('path'))
  directory=file(repo,data['matrix']).parent
- for name in (['spec.md'] if route=='micro' else ['spec.md','plan.md','tasks.md']): file(repo,str((directory/name).relative_to(repo)))
+ if route=='micro' and (directory/'playbook.md').exists():
+  file(repo,str((directory/'playbook.md').relative_to(repo)))
+ else:
+  if data.get('grill',{}).get('status')!='complete': raise ValueError('completed spec grill required')
+  file(repo,data['grill'].get('artifact'))
+  file(repo,data.get('atlas',{}).get('path')); file(repo,data.get('change_story',{}).get('path'))
+  for name in (['spec.md'] if route=='micro' else ['spec.md','plan.md','tasks.md']): file(repo,str((directory/name).relative_to(repo)))
  requirements(repo,data)
 
+def playbook_led(repo,data):
+ return data.get('delivery_contract')=='playbook-v1' or (data.get('route',{}).get('kind')=='micro' and (file(repo,data['matrix']).parent/'playbook.md').is_file())
+
+def prework_kinds(repo,data):
+ return ['baseline-feedback','phase-contract']+(['research','architecture'] if playbook_led(repo,data) else [])
+
+def prerequisite_receipt(repo,data,kind):
+ receipt=data.get('prerequisite_receipts',{}).get(kind,{})
+ artifact=file(repo,receipt.get('artifact'))
+ if receipt.get('digest')!=digest(artifact): raise ValueError('stale prerequisite '+kind)
+ return artifact
+
 def qa_checkout(repo,data,path):
- if not path: raise ValueError('QA requires --worktree')
+ if not path: raise ValueError('QA requires --checkout')
  p=Path(path).resolve()
- if p==repo.resolve(): raise ValueError('checker must use a separate worktree')
+ if p==repo.resolve() or p.is_relative_to(repo.resolve()): raise ValueError('checker must use a separate checkout outside the maker repository')
  listed=git(repo,'worktree','list','--porcelain')
- if 'worktree '+str(p)+'\n' not in listed+'\n': raise ValueError('QA checkout must be a registered worktree')
- if git(p,'status','--porcelain'): raise ValueError('QA worktree must be clean')
- if git(p,'rev-parse','HEAD')!=data.get('candidate_sha'): raise ValueError('QA worktree must contain latest exact candidate')
+ linked='worktree '+str(p)+'\n' in listed+'\n'
+ if not linked:
+  if not (p/'.git').is_dir() or git(p,'rev-parse','--show-toplevel')!=str(p): raise ValueError('QA checkout must be a standalone clone or registered worktree')
+  if (p/'.git'/'objects'/'info'/'alternates').exists(): raise ValueError('QA clone must not borrow maker objects')
+ if git(p,'status','--porcelain','--untracked-files=all'): raise ValueError('QA checkout must be clean')
+ if git(p,'rev-parse','HEAD')!=data.get('candidate_sha'): raise ValueError('QA checkout must contain latest exact candidate')
  if not data.get('checker') or data.get('checker')==data.get('maker'): raise ValueError('independent checker required')
  return str(p)
 
@@ -129,6 +147,10 @@ def release(repo,data, archived=False):
  prerequisites(repo,data)
  candidates=data.get('candidates',[])
  if not candidates or candidates[-1]['sha']!=data['candidate_sha'] or candidates[-1]['matrix_digest']!=digest(file(repo,data['matrix'])): raise ValueError('candidate matrix is immutable')
+ if playbook_led(repo,data):
+  review=json.loads(prerequisite_receipt(repo,data,'engineering-review').read_text())
+  if review.get('candidate_sha')!=data['candidate_sha'] or review.get('checker')!=data.get('checker') or review.get('checker')==data.get('maker'): raise ValueError('engineering review must match exact candidate and independent checker')
+  if review.get('status')!='passed' or review.get('blocking_findings')!=[]: raise ValueError('passing engineering review with no blocking findings required')
  receipt=data.get('proof')
  if not receipt: raise ValueError('independent proof receipt required')
  proof(repo,data,receipt,archived=archived)
@@ -149,7 +171,7 @@ def transition(repo,data,target,sha=None,worktree=None,attempt=None):
  if target not in {'planned','blocked'}: prerequisites(repo,data)
  if target=='candidate_ready' and not sha: raise ValueError('new candidate commit --sha required')
  if target in {'maker_running','candidate_ready'}:
-  for kind in ['baseline-feedback','phase-contract']:
+  for kind in prework_kinds(repo,data):
    receipt=data.get('prerequisite_receipts',{}).get(kind,{})
    artifact=file(repo,receipt.get('artifact'))
    if receipt.get('digest')!=digest(artifact): raise ValueError('stale prerequisite '+kind)
@@ -178,12 +200,12 @@ def next_stage(repo,data):
  if data['state']=='blocked': return 'recovery'
  if any(b.get('status')!='resolved' for b in data.get('bugs',[])): return 'bug-fixing'
  if data.get('purpose',{}).get('status')!='confirmed': return 'purpose-gate'
- if data.get('grill',{}).get('status')!='complete': return 'spec-grill'
  if data.get('route',{}).get('kind') not in {'micro','normal','milestone'}: return 'route'
+ if data.get('route',{}).get('kind')!='micro' and data.get('grill',{}).get('status')!='complete': return 'spec-grill'
  try: prerequisites(repo,data)
  except ValueError: return 'native-prerequisites'
  if data['state'] in {'planned','maker_running'}:
-  for kind in ['baseline-feedback','phase-contract']:
+  for kind in prework_kinds(repo,data):
    receipt=data.get('prerequisite_receipts',{}).get(kind,{})
    try:
     if receipt.get('digest')!=digest(file(repo,receipt.get('artifact'))): return kind

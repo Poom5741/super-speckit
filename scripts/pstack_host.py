@@ -66,14 +66,15 @@ def plan(config, host, brief, worktree, model=None, role="worker", allowed_write
     env = environment_paths(entry.get('env', {}))
     argv = entry.get('argv')
     if not isinstance(argv, list) or not argv or not shutil.which(argv[0]): raise ValueError('No configured executable dispatch')
-    if entry.get('isolation') != 'git-worktree': raise ValueError('Dispatch requires declared git-worktree isolation')
+    if entry.get('isolation') not in {'git-clone','git-worktree'}: raise ValueError('Dispatch requires declared git-clone or git-worktree isolation')
     worktree = Path(worktree).resolve()
     head = subprocess.run(['git', '-C', str(worktree), 'rev-parse', 'HEAD'], capture_output=True, text=True, check=True).stdout.strip()
     if subprocess.run(['git', '-C', str(worktree), 'status', '--porcelain'], capture_output=True, text=True, check=True).stdout:
         raise ValueError('Worker worktree must start clean')
     brief = Path(brief).resolve()
     if not brief.is_file() or not brief.stat().st_size: raise ValueError('Immutable brief must be a nonempty file')
-    if not (worktree/'.git').is_file(): raise ValueError('Use an isolated linked git worktree')
+    if entry['isolation']=='git-worktree' and not (worktree/'.git').is_file(): raise ValueError('Use an isolated linked git worktree')
+    if entry['isolation']=='git-clone' and not (worktree/'.git').is_dir(): raise ValueError('Use an isolated standalone clone')
     fields = dict(brief=str(brief), worktree=str(worktree), model=model or entry.get('model', ''))
     if model and '{model}' not in ' '.join(argv): raise ValueError('Configured host does not expose model selection')
     command = []
@@ -95,7 +96,7 @@ def changed_paths(request):
 
 def dispatch(request, timeout=60):
     cwd = Path(request['cwd']).resolve()
-    if not (cwd/'.git').is_file(): raise ValueError('Dispatch requires a linked git worktree')
+    if not (cwd/'.git').exists(): raise ValueError('Dispatch requires a Git checkout')
     brief = Path(request['brief'])
     if hashlib.sha256(brief.read_bytes()).hexdigest() != request['brief_sha256']: raise ValueError('Brief changed after planning')
     head = subprocess.run(['git', '-C', request['cwd'], 'rev-parse', 'HEAD'], capture_output=True, text=True, check=True).stdout.strip()

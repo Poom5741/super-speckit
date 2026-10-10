@@ -107,6 +107,7 @@ def cmd_create(args):
     if not args.maker.strip() or not args.checker.strip(): raise ValueError("nonempty identities required")
     if args.maker == args.checker: raise ValueError("maker and checker must be distinct")
     data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "ui_change": args.ui_change, "journey_ux": {"status": "not_required", "report": None, "candidate_sha": None}, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "route": {"kind": "unclassified", "rationale": None}, "atlas": {"path": None}, "change_story": {"path": None}, "handoff": {"path": None}, "decision_trail": {"path": None}, "verification_harness": {"path": None}, "static_review": {"artifact": None}, "corrective_enforcement": {"artifact": None}, "runs": [], "bugs": []}
+    if args.playbook_led: data['delivery_contract']='playbook-v1'
     save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
@@ -190,6 +191,14 @@ def cmd_status(args):
     }
     print(json.dumps(status,indent=2))
     return 1 if args.strict and failures else 0
+
+def cmd_qa_clone(args):
+    repo=root(args.repo); dest=Path(args.path).resolve()
+    if dest.exists(): raise ValueError(f"destination exists: {dest}")
+    if dest.is_relative_to(repo): raise ValueError("QA clone must be outside maker repository")
+    sha=contract.commit(repo,args.ref)
+    subprocess.run(["git","clone","--no-local","--no-checkout",str(repo),str(dest)],check=True)
+    subprocess.run(["git","-C",str(dest),"checkout","--detach",sha],check=True)
 
 def cmd_worktree(args):
     repo=root(args.repo); dest=Path(args.path).resolve()
@@ -306,8 +315,9 @@ def main():
     for name, fn in [("init",cmd_init),("validate",cmd_validate)]:
         x=sub.add_parser(name); x.add_argument("--repo",default="."); x.set_defaults(fn=fn)
     x=sub.add_parser("status"); x.add_argument("--repo",default="."); x.add_argument("--feature"); x.add_argument("--strict",action="store_true"); x.set_defaults(fn=cmd_status)
-    x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.add_argument("--ui-change",action="store_true"); x.set_defaults(fn=cmd_create)
-    x=sub.add_parser("transition"); x.add_argument("feature"); x.add_argument("state"); x.add_argument("--repo",default="."); x.add_argument("--sha"); x.add_argument("--worktree"); x.add_argument("--attempt-id"); x.set_defaults(fn=cmd_transition)
+    x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.add_argument("--ui-change",action="store_true"); x.add_argument("--playbook-led",action="store_true"); x.set_defaults(fn=cmd_create)
+    x=sub.add_parser("transition"); x.add_argument("feature"); x.add_argument("state"); x.add_argument("--repo",default="."); x.add_argument("--sha"); x.add_argument("--checkout", "--worktree", dest="worktree"); x.add_argument("--attempt-id"); x.set_defaults(fn=cmd_transition)
+    x=sub.add_parser("qa-clone"); x.add_argument("--repo",default="."); x.add_argument("--path",required=True); x.add_argument("--ref",required=True); x.set_defaults(fn=cmd_qa_clone)
     x=sub.add_parser("worktree"); x.add_argument("--repo",default="."); x.add_argument("--path",required=True); x.add_argument("--branch",required=True); x.add_argument("--ref",default="HEAD"); x.set_defaults(fn=cmd_worktree)
     x=sub.add_parser("design-first"); x.add_argument("feature"); x.add_argument("--title",required=True); x.add_argument("--summary",required=True); x.add_argument("--repo",default="."); x.set_defaults(fn=cmd_design)
     x=sub.add_parser("purpose-gate"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--title",required=True); x.add_argument("--outcome",required=True); x.add_argument("--people",required=True); x.add_argument("--success",required=True); x.add_argument("--non-goals",required=True); x.set_defaults(fn=cmd_purpose_gate)
@@ -321,7 +331,7 @@ def main():
     x=sub.add_parser("record-artifact"); x.add_argument("feature"); x.add_argument("kind",choices=["decision-trail","verification-harness","static-review","corrective-enforcement"]); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.set_defaults(fn=cmd_record_artifact)
     x=sub.add_parser("harness-init"); x.add_argument("--repo",default="."); x.add_argument("--replace",action="store_true"); x.set_defaults(fn=cmd_harness_init)
     x=sub.add_parser("continuation"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--stage",required=True); x.add_argument("--next-action",required=True); x.add_argument("--candidate-sha"); x.add_argument("--worktree",required=True); x.add_argument("--evidence",action="append",default=[]); x.add_argument("--unknowns",default=""); x.add_argument("--history-limit",type=int,default=20); x.set_defaults(fn=cmd_continuation)
-    x=sub.add_parser('record-prerequisite'); x.add_argument('feature'); x.add_argument('kind',choices=['baseline-feedback','phase-contract']); x.add_argument('--repo',default='.'); x.add_argument('--artifact',required=True); x.set_defaults(fn=cmd_record_prerequisite)
+    x=sub.add_parser('record-prerequisite'); x.add_argument('feature'); x.add_argument('kind',choices=['baseline-feedback','phase-contract','research','architecture','engineering-review']); x.add_argument('--repo',default='.'); x.add_argument('--artifact',required=True); x.set_defaults(fn=cmd_record_prerequisite)
     for name,fn in [('record-proof',cmd_record_proof),('record-merge',cmd_merge_receipt)]:
         x=sub.add_parser(name); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.add_argument('--receipt',required=True); x.set_defaults(fn=fn)
     for name in ['record-bug','resolve-bug']:

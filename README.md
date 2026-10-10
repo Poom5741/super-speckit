@@ -1,13 +1,15 @@
 # super-speckit
 
-`super-speckit` is a Spec Kit companion that makes **independent runtime verification** a release condition. It retains Spec Kit's `spec.md`, `plan.md`, `tasks.md`, and `converge` artifacts; it adds a controlled maker/checker loop around each implementation slice.
+`super-speckit` combines PStack-led execution, selective Spec Kit planning, Dune-inspired architecture constraints, and independent product and engineering acceptance. One code-writing owner uses the current checkout; independent QA runs the exact committed candidate in a disposable standalone clone. Worktrees remain optional compatibility tools.
 
-Static review is evidence about code. A passing runtime verification is evidence about behavior. Neither is a proof of every possible behavior; both are recorded separately.
+Bounded micro fixes use a persisted playbook and requirement matrix. Normal and milestone work retains Spec Kit's spec.md, plan.md and tasks.md. Relevant research and executable architecture rules precede code. Running-app journeys and independent engineering review precede release. See [delivery contract](skills/ask-super-speckit/references/playbook-delivery.md) and [implementation plan](docs/playbook-delivery-plan.md).
+
+Long runs retain a completion predicate, steps, checkpoints, budget and recovery rules. Unattended resume requires a configured and observed host runner; copied prompts do not provide one.
 
 ## What this first version includes
 
-- feature and bug-fix worktrees isolated from the integration checkout;
-- disposable QA worktrees created from the candidate commit, never from the maker's dirty tree;
+- one code-writing owner in the current checkout, with explicitly isolated parallel writers when needed;
+- disposable QA clones created from the candidate commit, never from the maker's dirty tree;
 - a requirements-to-verification matrix and machine-readable run state;
 - deterministic gates (format, lint, unit, integration, build), Playwright E2E, optional API/DB assertions, and exploratory browser QA;
 - OCR as an independent static-review lane with triage, never as a runtime pass;
@@ -45,7 +47,7 @@ If you installed an older version that exposes only `$super-speckit-installer`, 
 
 ## Install into a Spec Kit repository
 
-1. Initialise or update native Spec Kit for your chosen agent (`specify init ...`).
+1. For normal/milestone planning, initialise or update native Spec Kit (`specify init ...`). Bounded micro delivery can use the compact playbook route.
 2. Copy this directory into the repository as `.super-speckit/`, or place it in your agent's skills directory and invoke `$super-speckit`.
 3. Copy `config/super-speckit.yml` to the repository root as `super-speckit.yml` and set real commands, URLs, seed/reset behavior, design-system sources, and any protected data rules.
 4. Add the short policy in `templates/constitution-addon.md` to `.specify/memory/constitution.md`.
@@ -53,7 +55,7 @@ If you installed an older version that exposes only `$super-speckit-installer`, 
 
 Optionally install the native workflow with `specify workflow add workflows/` (or package this directory). It autonomously progresses through design, implementation, feedback loops, proof, repair, and release based on recorded evidence.
 
-Requirements: Git worktrees, Python 3.9+, a test runner, and for browser gates Playwright plus an application start command. OCR is configured as an external command/API adapter; no credentials are stored in this kit.
+Requirements: Git, Python 3.9+, a test runner, and for browser gates Playwright plus an application start command. OCR is configured as an external command/API adapter; no credentials are stored in this kit.
 
 ## Start with `ask-super-speckit`
 
@@ -63,30 +65,24 @@ The internal [Rakazo manual QA skill](skills/rakazo-manual-qa/SKILL.md) asks for
 
 For tech or blockchain hackathons, ask it to discover or validate an idea. The internal [hackathon skill](skills/hackathon/SKILL.md) compares user problems, current event rules, relevant prize winners, and demo feasibility. It produces a discovery brief and routes requested implementation into normal delivery. Its methods are winner-informed; the skill has no documented prize-winning usage yet.
 
-`ask-super-speckit` is the only normal entry point. Give it a feature, defect, idea, or constraint; it drafts a visual Purpose Map, pauses once for a human to confirm the goal, then reads the evidence, chooses the next safe stage, and autonomously carries the work through to a verified result. The human confirms purpose—not technical implementation. It records every material decision, uses independent QA, and self-heals failed work instead of waiting for routine approval.
+`ask-super-speckit` is the only normal entry point. Give it a feature, defect, idea, or constraint; it drafts a visual Purpose Map, records the user-confirmed goal, asking only when intent is missing, then reads the evidence, chooses the next safe stage, and autonomously carries the work through to a verified result. The human confirms purpose—not technical implementation. It records every material decision, uses independent QA, and self-heals failed work instead of waiting for routine approval.
 
 For a UI-facing change it begins with `design-first`: produce a static HTML prototype and `design-brief.md`, compare it against any declared design system, record an evidence-backed autonomous design decision, and continue. The prototype is a decision artifact—not production code. If an external designer is available, it emits a portable prompt/hand-off bundle for v0, Google Stitch, or Claude Design; their output is imported and reviewed like any other untrusted design input.
 
 ## Daily flow
 
 ```text
-ask-super-speckit → visual Purpose Map → human purpose confirmation → speckit.specify → clarify/checklist
-      ↓
-Builder / Examiner / Investigator / Resolver Spec Grill → scope route → Project Atlas + Change Story
-      ↓
-design-first (UI) → autonomous design decision
-      ↓
-speckit.plan → speckit.tasks → analyze → feedback loop → risk/parallelism plan
-      ↓
-super-speckit.start FEATURE-123 → maker worktree → commit candidate
-      ↓
-super-speckit.verify FEATURE-123 → clean QA worktree → gates + E2E + exploration
-      ├─ interrogate (static panel) + OCR triage → findings only, never runtime proof
-      ├─ confirmed failure → diagnose (tight repro + root cause) → bug artifact → bug maker worktree → independent retest
-      └─ pass + OCR triage resolved/accepted → autonomous merge
-      ↓
-speckit.converge → project QA summary (including unverified scope and proof-pack)
+request → PStack playbook + recorded user purpose → scope route
+  ├─ micro → playbook + requirement matrix
+  └─ normal/milestone → Spec Kit spec/plan/tasks + grill/understanding
+  ↓
+research + architecture constraints + baseline → single-owner implementation
+  ↓
+committed candidate → independent QA clone → user journeys + engineering review
+  ├─ failure → diagnosis → fix → new candidate → independent retest
+  └─ pass → configured release → evidence handback
 ```
+
 
 Use `commands/` as agent slash-command definitions or adapt them to your integration. The orchestrator is an inspectable state/evidence system with autonomous execution enabled by configuration.
 
@@ -122,8 +118,8 @@ Atlas value is not assumed. Use `super-speckit.evaluate-atlas` with blinded cont
 
 ## Safety and operating rules
 
-- QA may write only `.super-speckit/qa/`, `.super-speckit/bugs/`, and ephemeral files in its own worktree. It must not edit, commit, or rebase the maker worktree.
-- QA checks out an immutable candidate SHA in a freshly created worktree. It must reset fixtures, use isolated test accounts/namespaces, and delete the worktree afterward unless evidence requires preservation.
+- QA may write only `.super-speckit/qa/`, `.super-speckit/bugs/`, and ephemeral files in its own checkout. It must not edit, commit, or rebase the maker checkout.
+- QA checks out an immutable candidate SHA in a freshly created standalone clone or explicitly selected worktree. It must reset fixtures, use isolated test accounts/namespaces, and delete the disposable checkout afterward unless evidence requires preservation.
 - A failed automated test with stable evidence can be filed immediately. A flaky or exploratory observation must be reproduced under the configured rule before becoming a confirmed bug.
 - OCR findings are triaged as `fix`, `accepted-risk`, `false-positive`, or `needs-review`; only `fix` blocks merge. OCR cannot satisfy any runtime matrix row.
 - A confirmed bug cannot close until its regression test is added or an explicit exception is recorded, the fix is independently retested, and required gates pass.
@@ -141,7 +137,7 @@ See the [debugging skill landscape](docs/debug-skill-landscape.md) for the selec
 
 ## Codex Cloud delegation
 
-Enable `delegation.enabled` and set a Codex Cloud environment ID in the project configuration. `super-speckit.delegate-cloud` creates a redacted, bounded pack from a durable handoff, submits it with `codex cloud exec`, and records the cloud task ID. `collect-cloud` reviews the diff before any application. Cloud work is a maker lane only: its result always enters a fresh independent QA worktree, so a cloud agent never grades its own implementation. Centillex Desk can use the same pack as an optional local cross-vendor transport.
+Enable `delegation.enabled` and set a Codex Cloud environment ID in the project configuration. `super-speckit.delegate-cloud` creates a redacted, bounded pack from a durable handoff, submits it with `codex cloud exec`, and records the cloud task ID. `collect-cloud` reviews the diff before any application. Cloud work is a maker lane only: its result always enters a fresh independent QA checkout, so a cloud agent never grades its own implementation. Centillex Desk can use the same pack as an optional local cross-vendor transport.
 
 ## Verify the kit itself
 

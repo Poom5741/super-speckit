@@ -1,0 +1,9 @@
+{
+  "bundle": "/Users/poom-work/.agents/skills/super-speckit",
+  "zcode_entry": "/Users/poom-work/.zcode/skills/ask-super-speckit/SKILL.md",
+  "resolved_entry": "/Users/poom-work/.agents/skills/ask-super-speckit/SKILL.md",
+  "backup": "/Users/poom-work/.codex/backups/super-speckit-zcode-20261010T161326Z",
+  "hash_verified_files": 636,
+  "live_zcode_reload": "not-run: no executable on PATH",
+  "unattended_runner": "unconfigured"
+}

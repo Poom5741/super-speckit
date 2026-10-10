@@ -43,8 +43,12 @@ Proof pack minimum shape:
 
 ## Version 2 executable state authority
 
-Feature state uses `state-v2.schema.json`; independent QA receipts use `state-proof.schema.json`. Python `state_contract.py` enforces semantics beyond structural JSON: resolved immutable commits, bounded nonempty files, legal transitions, purpose decision provenance, native artifacts, matrix IDs/digests, baseline/phase receipts, separate clean registered checker checkout, attempt identity, exact coverage, actual command receipts and configured gates, open-bug blocking and observed merge authority.
+Feature state uses `state-v2.schema.json`; independent QA receipts use `state-proof.schema.json`. Python `state_contract.py` enforces semantics beyond structural JSON: resolved immutable commits, bounded nonempty files, legal transitions, purpose decision provenance, native artifacts, matrix IDs/digests, baseline/phase receipts, separate clean standalone clone or registered checker checkout, attempt identity, exact coverage, actual command receipts and configured gates, open-bug blocking and observed merge authority.
 
 Legacy state is never implicitly upgraded to release evidence. Use `migrate-state` to preserve records/history while marking non-planned inherited delivery claims blocked for revalidation. State mutation uses a process lock, atomic replacement, monotonic revisions and optional `--expected-revision` compare-and-swap. Canonical feature records are authoritative; YAML is regenerated. A projection mismatch fails closed and can be repaired with `init`; this is not permission to discard evidence.
 
 PStack runtime/control receipts are advisory evidence inputs, not release authority. A faithful panel uses the same rendered prompt and exact candidate for actual configured model seats; lens review is separately labeled. Source inventory, hash integrity and route accounting use `vendor/pstack-manifest.json` and `adapters/pstack/routes.json`; the whole pinned source remains outside discovery.
+
+## Playbook-led delivery
+
+New create-feature --playbook-led records add delivery_contract=playbook-v1. Micro uses playbook.md beside the matrix instead of mandatory native planning/grill/Atlas. Normal/milestone retains native planning. Research and architecture prerequisite receipts are digest-bound before code; engineering-review JSON is digest-bound and must name the exact candidate, independent checker, passed status and an empty blocking_findings list before release. Legacy records retain their original prerequisites. The proof field worktree and state qa_worktree remain compatibility names for either a standalone clone or a registered worktree. --checkout is the preferred QA CLI argument.

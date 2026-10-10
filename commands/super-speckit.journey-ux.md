@@ -11,7 +11,7 @@ Create `journey-ux-report.md` from its template. Derive declared journeys from t
 For every finding:
 
 1. Preserve the evidence and reproduce it under the configured rule.
-2. Route a confirmed defect to `super-speckit.file-bug` and a new isolated bug-fix worktree.
+2. Route a confirmed defect to `super-speckit.file-bug` and a single-owner bug fix and new candidate.
 3. Require regression coverage when practical, commit a new candidate, and run clean independent QA retest.
 4. Rerun the affected journey **and the full declared journey set** against the latest candidate; update the report rather than carrying an earlier pass forward.
 

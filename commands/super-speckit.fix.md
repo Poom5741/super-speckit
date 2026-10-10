@@ -1,5 +1,5 @@
 ---
-description: Fix a confirmed super-speckit bug in an isolated maker worktree.
+description: Fix a confirmed bug through the active playbook and independent retest.
 ---
 
-Read the bug artifact and original evidence. Create `ss/bug/<bug-id>` from the agreed baseline. Reproduce locally where safe, implement the smallest correct fix, add a regression test at the lowest meaningful layer (or record a justified exception), run relevant checks, and commit a candidate SHA. Update the bug only with fix/reference data; do not mark it closed. Send the committed SHA to a different checker for `super-speckit.retest`.
+Read the bug and original evidence. The single code-writing owner reproduces and fixes it in the current checkout, preserves unrelated changes, adds a regression check or justified exception, and commits a new candidate. Do not close the bug from maker checks. A distinct checker retests the new SHA in a fresh standalone QA clone. Optional separate clones/worktrees are allowed for explicitly isolated parallel makers.
