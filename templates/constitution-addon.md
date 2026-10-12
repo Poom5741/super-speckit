@@ -13,3 +13,7 @@ Before technical implementation begins, the intended outcome, affected people, s
 ## Architecture and engineering acceptance
 
 Every delivery SHALL inspect relevant local structure and language/framework guidance before choosing its implementation. New playbook-led deliveries SHALL retain research and architecture receipts, executable project-specific boundaries, durable-state owners and narrow exceptions. Release SHALL require independent engineering review of the exact candidate and real user-journey evidence. Green tests alone SHALL NOT establish usability. One code writer SHALL own each checkout. Unattended continuation SHALL require an observed host runner, persisted predicate, authority, budget and checkpoints.
+
+## Shared understanding and prevention
+
+PStack investigation SHALL establish relevant conventions, constraints and applicable lessons before scope selection or Spec Kit planning. Small understood features MAY use micro. New knowledge-v2 deliveries SHALL retain source-bound playbook steps, digest-bound shared design and exact-candidate independent result with convention reconciliation. Archify SHALL render relevant Atlas, Change Story and Bug Story when available; fallback limitations SHALL be disclosed. Diagram checks SHALL NOT substitute for behavior or architecture enforcement. Bugs SHALL retain supported cause, regression coverage or justified alternative, independent retest, visual explanation and scoped prevention. Lessons SHALL favor demonstrated structural/test protection and be retrieved when applicable to future investigation.

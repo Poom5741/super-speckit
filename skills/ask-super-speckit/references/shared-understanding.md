@@ -1,0 +1,51 @@
+# Investigation, shared understanding, and learning
+
+Read before routing a delivery or diagnosing a bug. PStack leads investigation and execution; Super-SpecKit maintains canonical state and enforces evidence gates; Spec Kit supplies planning depth when uncertainty warrants it. A skill activates the model's knowledge and tools, rather than assuming its recollection is correct. Establish project evidence before committing to a solution.
+
+## Investigate before choosing planning depth
+
+Select and read the applicable pinned playbook and override contract. Trace the relevant public behavior, callers, ownership, dependencies, conventions, existing tests, architectural rules, and previous applicable bug lessons. Retrieve primary documentation or run focused experiments where local evidence cannot settle a question. Distinguish observed facts, proposals, inferences, and unknowns. Ask only about genuinely missing human intent; resolve technical questions through tools where possible.
+
+Persist the actual ordered source steps and their applicability. Complete with evidence or skip with a reason; selection alone is not execution. Carry project conventions and lessons into concrete plan constraints. Do not load all historical knowledge: retrieve what applies to the affected flow. Unknowns may remain when bounded and irrelevant to proceeding; unresolved decision-critical unknowns are blockers.
+
+Only after investigation choose micro, normal, or milestone. Micro includes a small new feature with understood acceptance, local impact, and established boundaries; novelty alone does not force Spec Kit. Uncertain behavior, consequential data/security decisions, cross-boundary uncertainty, or coordination that needs a detailed plan selects normal/milestone. Reassess when investigation or implementation changes those facts. Use one active PStack plan; native spec/plan/tasks implement its planning steps, not a competing coordinator.
+
+## Shared architecture and change explanation
+
+Keep a durable architecture contract: responsibilities, allowed relationships, state owners, interfaces, meaningful flows, invariants, rationale, and links to executable checks. Separate observed implementation from proposed design. Human and agent share goals, boundaries, tradeoffs, and decision reasons; source and tests carry implementation detail.
+
+Use Archify to render the relevant Atlas and Change Story before maker work, and reconcile them with the verified candidate before completion. Keep a small overview, one feature journey with relevant failure paths, and a change explanation; details and evidence belong behind links. Update the affected view when behavior, ownership, boundary, or design changes materially, not after every code edit. Request human judgment for material product tradeoffs only when existing authorization does not settle them; routine changes within the contract proceed autonomously.
+
+The reviewed Archify revision is recorded under optional_integrations in sources.lock.json; this renderer is installed separately from the kit. Locate an installed Archify skill/package and read its SKILL.md and repository-authoring references before use. Follow its supported schemas, typed source, validation/finalization, repository evidence, and repair limits. Keep editable sources and exact receipts beside the Atlas, Change Story, or Bug Story; retain previous versions/evidence. Never use a diagram's validation receipt as proof that product code obeys the diagram. Dependency/schema checks and public-behavior tests enforce the actual contract.
+
+If Archify is unavailable, use an explicit Mermaid fallback with the same factual content and source links, and record the missing interactive renderer. Do not claim Archify ran. Continue diagnosis and repair; if the user explicitly requires Archify output, that output remains blocked until it is available. Do not silently install/update global tools. Repository evidence support varies by renderer; disclose unsupported source verification.
+
+## Bug Story inside the repair loop
+
+Use the pinned bug-fix/diagnosis playbook. Keep one evolving story per confirmed bug, linked to the affected requirements and original candidate. Show expected path, actual failing path, trigger, supported root cause, corrected path, and verification links. Hypotheses stay labeled until supported. A failed attempt appends evidence and updates the supported explanation; it does not erase earlier evidence or close the bug.
+
+Reproduce through a public seam, investigate the cause, add meaningful regression coverage (or record a justified alternative), fix with one maker, commit a new candidate, and independently retest in a clean clone. Retest the original reproduction, regression coverage, and affected behavior. Continue diagnosis/fix/retest until verified, explicitly paused, a configured limit is exhausted, or a real blocker prevents progress. Repeated same-shape failures reopen architecture. Do not promise endless or unattended execution without the existing runner/authority contract.
+
+Before resolve-bug, reconcile the Bug Story with the fix SHA and checker evidence. Explain what broke, why, what changed, and what proves the fix. Human explanation is not a routine approval gate. Before release, revalidate resolved bugs against the latest candidate; refresh their retest and resolution receipts when the candidate changes. Repeated resolve-bug is supported for knowledge-v2; retain each prior receipt in resolution_history and use new versioned filenames so history remains readable.
+
+## Convert learning into protection
+
+Inspect cause and applicability beyond the symptom. Prefer exact regression coverage, then structural prevention (ownership, validated types, unique constraints, shared boundary), then executable architecture rules. Use durable guidance only where future judgment is needed. Prove a newly claimed guard rejects the historical bad case and accepts a valid case. Never claim it prevents every similar bug.
+
+Each bug gets one prevention decision: encoded, scoped-follow-up, or no-broader-lesson, with scope and reason. Preserve source bug, rationale, counterexample, verification, and exceptions in project-local knowledge. Append corrections that supersede earlier lessons; do not rewrite history. Capture only supported lessons, not speculative universal rules.
+
+A human may add knowledge from the Bug Story. Investigate its scope and conflicts, trace affected flows, then encode justified protections within authorized scope. A broader product/architecture change becomes a linked follow-up; it must not silently expand the original fix. Retrieve applicable lessons during later investigations. Avoid duplicate guidance and retire redundant prose only after structural enforcement is demonstrated.
+
+## Executable knowledge-v2 receipts
+
+New `create-feature --playbook-led` deliveries use `knowledge-v2`; legacy records retain their contract. Store JSON in the feature artifact directory and register with `record-prerequisite <feature> <kind> --artifact <path>`. All paths are nonempty repository files. Each evidence row is `{ "path": "...", "digest": "<sha256>" }`; arrays must be nonempty. Receipt registration freezes the JSON digest. Changed content requires renewed registration and dependent receipts.
+
+- `investigation`: `base_sha` (real commit), `playbook` (catalog playbook ID), `playbook_digest` (SHA-256 of its pinned source), `intent`, `flow`, `scope_rationale`, `unknowns` (list), `unresolved_blockers: []`, `conventions` (list; each has `id`, `rule`, `scope`, `source`, `plan_application`), `evidence`, and ordered `steps`. Each step has unique `id`, `source_step` (number as a string, covering every top-level numbered source step in order), and `status` of pending/completed/skipped. Completed steps have evidence rows; skipped steps have `reason`. Register before `route`. Update through execution; all steps must be completed/skipped before release. A conventions list may be empty when investigation demonstrates no applicable convention.
+- `shared-design`: `investigation_digest`, `observed`, `proposed`, `invariants`, `verification_plan`, and `view`. Register before maker work. Update its investigation link when the active playbook changes; preserve initial proposed meaning and append deviations rather than retroactively presenting the result as the original proposal.
+- `shared-result`: exact `candidate_sha`, independent `checker`, `design_digest`, `status: passed`, `summary`, `deviations` (explicit list), `conventions` (one disposition for each investigated convention: `id`, `status` preserved/changed, `reason`, evidence rows), `evidence`, and `view`. Register after independent QA, before release.
+
+A `view` contains `renderer: archify` or `mermaid`, `source`, `source_digest`, `artifact`, `artifact_digest`. Archify adds `validation_receipt` and `validation_digest`; Mermaid adds a truthful `limitation`. Digests freeze the displayed explanation and editable source. An Archify validation receipt is a JSON command wrapper: `status: passed`, `exit_code: 0`, `command` (actual argv including finalize), matching `source_digest`/`artifact_digest`, and `raw_receipt`/`raw_digest` linking the preserved JSON machine output. Capture the actual command exit code; never infer success from a logging pipeline. This is an accountable artifact-check attestation, not semantic product proof.
+
+For `resolve-bug --evidence <resolution.json>`, include `bug_id`, exact `candidate_sha`, independent `checker`, `status: passed`, `expected`, `actual`, `trigger`, `root_cause`, `fix`, `retest`, evidence rows, and `view`. `regression` is `{status: covered, evidence: [...]}` or `{status: exception, reason: ..., alternative: ...}`. `prevention` has `status` encoded/scoped-follow-up/no-broader-lesson, `reason`, `scope`; encoded includes evidence rows, scoped-follow-up includes `artifact`. Encoded evidence must substantiate the scoped prevention, including bad/valid checks where enforcement is claimed.
+
+These gates reject missing, changed, incomplete, or wrong-candidate receipts. They bind accountable observations, not unseen reasoning or semantic correctness. Independent product/engineering acceptance and actual configured executable checks remain required.

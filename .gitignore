@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+.skill-sandbox/
 .super-speckit/state/*
 !.super-speckit/state/
 !.super-speckit/state/work-state.yml

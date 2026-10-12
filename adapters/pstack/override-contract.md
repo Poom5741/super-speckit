@@ -27,3 +27,7 @@ ZCode is the primary host; Codex/Pi use detected supported CLI controls and shar
 ## Accounting and proof
 
 The route register maps every skill/principle/playbook/agent/Benny file. `vendor/pstack-manifest.json` accounts for every source file including guides, scripts, tests and distribution assets. Adapter definition, fixture-tested behavior and live host certification are separate statuses. Never report copied prompts, string tests or unavailable provider capabilities as completed integration.
+
+## Investigation-led knowledge contract
+
+Before scope selection, execute relevant PStack investigation, trace project conventions and retrieve applicable lessons. Spec Kit planning is downstream of this evidence. Compact understood features are valid. Follow `skills/ask-super-speckit/references/shared-understanding.md`: preserve actual source steps, shared architecture/change/bug explanations, convention dispositions and prevention. New knowledge-v2 state gates make these obligations observable; routing metadata alone never satisfies execution.

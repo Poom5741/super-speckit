@@ -2,7 +2,7 @@
 
 `super-speckit` combines PStack-led execution, selective Spec Kit planning, Dune-inspired architecture constraints, and independent product and engineering acceptance. One code-writing owner uses the current checkout; independent QA runs the exact committed candidate in a disposable standalone clone. Worktrees remain optional compatibility tools.
 
-Bounded micro fixes use a persisted playbook and requirement matrix. Normal and milestone work retains Spec Kit's spec.md, plan.md and tasks.md. Relevant research and executable architecture rules precede code. Running-app journeys and independent engineering review precede release. See [delivery contract](skills/ask-super-speckit/references/playbook-delivery.md) and [implementation plan](docs/playbook-delivery-plan.md).
+After PStack investigation, bounded micro features and fixes use a persisted playbook and requirement matrix. Normal and milestone work retains Spec Kit's spec.md, plan.md and tasks.md. Relevant research and executable architecture rules precede code. Running-app journeys and independent engineering review precede release. See [delivery contract](skills/ask-super-speckit/references/playbook-delivery.md) and [implementation plan](docs/playbook-delivery-plan.md).
 
 Long runs retain a completion predicate, steps, checkpoints, budget and recovery rules. Unattended resume requires a configured and observed host runner; copied prompts do not provide one.
 
@@ -149,3 +149,7 @@ python3 scripts/super_speckit.py validate --repo .
 ## Upstream influences
 
 This design preserves Spec Kit's artifact-driven SDD and convergence model. It takes the isolated per-feature worktree/coordinator idea from MAQA, but replaces its static-only QA gate with an independent clean runtime lane. Its exploratory role split is inspired by `sdlc-skills` manual-qa, condensed into a portable role protocol. See `docs/references.md` for pinned links and integration notes.
+
+## Evidence-backed shared understanding
+
+PStack investigates relevant code, conventions, constraints and previous lessons before choosing compact or native Spec Kit planning. Small understood new features can use the compact route. Archify renders Atlas, Change Stories and evolving Bug Stories; unavailable Archify uses a disclosed Mermaid fallback. Diagram checks do not prove product behavior. New playbook-led deliveries use executable knowledge-v2 receipts for investigation, shared design, complete playbook execution, convention reconciliation and independent candidate-specific results. Bugs require a supported cause, regression protection/alternative, independent retest and scoped prevention decision. See [shared-understanding contract](skills/ask-super-speckit/references/shared-understanding.md); legacy delivery records keep their original gates.

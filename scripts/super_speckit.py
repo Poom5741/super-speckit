@@ -107,7 +107,7 @@ def cmd_create(args):
     if not args.maker.strip() or not args.checker.strip(): raise ValueError("nonempty identities required")
     if args.maker == args.checker: raise ValueError("maker and checker must be distinct")
     data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "ui_change": args.ui_change, "journey_ux": {"status": "not_required", "report": None, "candidate_sha": None}, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "route": {"kind": "unclassified", "rationale": None}, "atlas": {"path": None}, "change_story": {"path": None}, "handoff": {"path": None}, "decision_trail": {"path": None}, "verification_harness": {"path": None}, "static_review": {"artifact": None}, "corrective_enforcement": {"artifact": None}, "runs": [], "bugs": []}
-    if args.playbook_led: data['delivery_contract']='playbook-v1'
+    if args.playbook_led: data['delivery_contract']='knowledge-v2'
     save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
@@ -138,8 +138,13 @@ def cmd_bug(args):
         bugs.append({'id':args.bug_id,'status':'open','evidence':args.evidence,'candidate_sha':data.get('candidate_sha')})
     else:
         bug=next((x for x in bugs if x['id']==args.bug_id),None)
-        if not bug or bug['status']=='resolved': raise ValueError('unknown or already resolved bug')
-        bug.update(status='resolved',resolution=args.evidence)
+        if not bug or (bug['status']=='resolved' and data.get('delivery_contract')!='knowledge-v2'): raise ValueError('unknown or already resolved bug')
+        if data.get('delivery_contract')=='knowledge-v2':
+            for previous in bug.get('resolution_history',[]):
+                if previous.get('digest')!=contract.digest(contract.file(repo,previous.get('artifact'))): raise ValueError('preserve historical resolution; use a new versioned evidence file')
+            contract.knowledge_bug(repo,data,bug,json.loads(contract.file(repo,args.evidence).read_text()))
+        bug.setdefault('resolution_history',[]).append({'artifact':args.evidence,'digest':contract.digest(contract.file(repo,args.evidence)),'candidate_sha':data.get('candidate_sha'),'checker':data.get('checker')})
+        bug.update(status='resolved',resolution=args.evidence,resolution_digest=contract.digest(contract.file(repo,args.evidence)))
     save(repo,args.feature,data); write_work_state_manifest(repo)
 
 def cmd_next(args):
@@ -248,6 +253,7 @@ def cmd_record_grill(args):
 
 def cmd_route(args):
     repo=root(args.repo); data=load(repo,args.feature)
+    if data.get('delivery_contract')=='knowledge-v2': contract.knowledge_investigation(repo,data)
     data["route"]={"kind":args.kind,"rationale":args.rationale}; save(repo,args.feature,data); write_work_state_manifest(repo); print(json.dumps(data["route"],indent=2))
 
 def cmd_atlas_init(args):
@@ -331,7 +337,7 @@ def main():
     x=sub.add_parser("record-artifact"); x.add_argument("feature"); x.add_argument("kind",choices=["decision-trail","verification-harness","static-review","corrective-enforcement"]); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.set_defaults(fn=cmd_record_artifact)
     x=sub.add_parser("harness-init"); x.add_argument("--repo",default="."); x.add_argument("--replace",action="store_true"); x.set_defaults(fn=cmd_harness_init)
     x=sub.add_parser("continuation"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--stage",required=True); x.add_argument("--next-action",required=True); x.add_argument("--candidate-sha"); x.add_argument("--worktree",required=True); x.add_argument("--evidence",action="append",default=[]); x.add_argument("--unknowns",default=""); x.add_argument("--history-limit",type=int,default=20); x.set_defaults(fn=cmd_continuation)
-    x=sub.add_parser('record-prerequisite'); x.add_argument('feature'); x.add_argument('kind',choices=['baseline-feedback','phase-contract','research','architecture','engineering-review']); x.add_argument('--repo',default='.'); x.add_argument('--artifact',required=True); x.set_defaults(fn=cmd_record_prerequisite)
+    x=sub.add_parser('record-prerequisite'); x.add_argument('feature'); x.add_argument('kind',choices=['baseline-feedback','phase-contract','research','architecture','engineering-review','investigation','shared-design','shared-result']); x.add_argument('--repo',default='.'); x.add_argument('--artifact',required=True); x.set_defaults(fn=cmd_record_prerequisite)
     for name,fn in [('record-proof',cmd_record_proof),('record-merge',cmd_merge_receipt)]:
         x=sub.add_parser(name); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.add_argument('--receipt',required=True); x.set_defaults(fn=fn)
     for name in ['record-bug','resolve-bug']:

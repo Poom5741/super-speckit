@@ -1,0 +1,44 @@
+{
+  "incomplete": {
+    "valid": false,
+    "skill_read": false,
+    "incomplete_tool_calls": [
+      "read-1"
+    ],
+    "tmp-artifact-preserved": true,
+    "tmp-artifact-manifested": true
+  },
+  "failed": {
+    "valid": true,
+    "skill_read": false,
+    "incomplete_tool_calls": [],
+    "tmp-artifact-preserved": true,
+    "tmp-artifact-manifested": true
+  },
+  "success": {
+    "valid": true,
+    "skill_read": true,
+    "incomplete_tool_calls": [],
+    "tmp-artifact-preserved": true,
+    "tmp-artifact-manifested": true
+  },
+  "correct": {
+    "passed": 10,
+    "total": 10
+  },
+  "duplicate-invalid-mutant": {
+    "passed": 9,
+    "total": 10
+  },
+  "sibling": {
+    "returncode": 1,
+    "stdout": "",
+    "stderr": "cat: /var/folders/j8/kzn3_ktd0nsdj4_kg8s39yxm0000gp/T/independent-final-1muqode8/sibling/private: Operation not permitted\n"
+  },
+  "own": {
+    "returncode": 0,
+    "stdout": "own",
+    "stderr": ""
+  },
+  "symlink-target-change-detected": true
+}

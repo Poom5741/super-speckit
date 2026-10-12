@@ -1,0 +1,906 @@
+{
+  "date": "2026-10-08",
+  "scope": "Pi-native small-task interpretations, not complete systems",
+  "comparative_trials": 9,
+  "bootstrap_or_exploratory_launches": 12,
+  "runner_sha256": "8ae1dcc646b699846aa6f549338d7edd127714e82950ea9b0c7251678b97a7bb",
+  "comparison_limits": [
+    "Small pilot, no general superiority claim",
+    "Same-domain repair transfer fixture authored by optimizer; results withheld until v2 frozen",
+    "Different batches and recovered provider errors make timing noisy",
+    "Skill text did not eliminate all unsafe intermediate commands",
+    "Earlier validity classifications corrected after checking final Pi stop state; originals retained"
+  ],
+  "runs": [
+    {
+      "run_id": "import-baseline-3-f9bbead9",
+      "case": "import",
+      "repeat": 3,
+      "valid": true,
+      "seconds": 71.91,
+      "tool_calls": 14,
+      "behavior": {
+        "passed": 10,
+        "total": 10,
+        "checks": [
+          {
+            "id": "existing-add-list",
+            "passed": true,
+            "detail": "add/list and existing duplicate rejection preserved"
+          },
+          {
+            "id": "retry-and-identity",
+            "passed": true,
+            "detail": "trimmed identity, first occurrence, existing IDs and retries observed"
+          },
+          {
+            "id": "dry-existing-bytes",
+            "passed": true,
+            "detail": "counts correct and existing bytes unchanged"
+          },
+          {
+            "id": "dry-missing-parent",
+            "passed": true,
+            "detail": "missing parent and store stayed absent"
+          },
+          {
+            "id": "invalid-row-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-id-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-duplicate-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "missing-column-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-missing-store",
+            "passed": true,
+            "detail": "invalid import did not create parent/store"
+          },
+          {
+            "id": "quoted-unicode-text",
+            "passed": true,
+            "detail": "public list returns literal multiline Unicode text"
+          }
+        ]
+      },
+      "profile": "baseline",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "thinking": "medium",
+      "pi_version": "0.84.1",
+      "skill_sha256": null,
+      "subject_runner_sha256": "c9be2a650a358e8b116d80e905baa8850f51cf3316f92fc2e9b97c6cd571aadf",
+      "evidence": "/Users/poom-work/super-speckit/.skill-sandbox/runs/import-baseline-3-f9bbead9",
+      "reported_usage": {
+        "input": 4889,
+        "output": 8894,
+        "cacheRead": 107586,
+        "cacheWrite": 0,
+        "totalTokens": 121369
+      },
+      "provider_errors": [],
+      "verifier-replay": null,
+      "verifier-negative-control": null
+    },
+    {
+      "run_id": "import-pstack-3-b4f50516",
+      "case": "import",
+      "repeat": 3,
+      "valid": true,
+      "seconds": 265.42,
+      "tool_calls": 13,
+      "behavior": {
+        "passed": 10,
+        "total": 10,
+        "checks": [
+          {
+            "id": "existing-add-list",
+            "passed": true,
+            "detail": "add/list and existing duplicate rejection preserved"
+          },
+          {
+            "id": "retry-and-identity",
+            "passed": true,
+            "detail": "trimmed identity, first occurrence, existing IDs and retries observed"
+          },
+          {
+            "id": "dry-existing-bytes",
+            "passed": true,
+            "detail": "counts correct and existing bytes unchanged"
+          },
+          {
+            "id": "dry-missing-parent",
+            "passed": true,
+            "detail": "missing parent and store stayed absent"
+          },
+          {
+            "id": "invalid-row-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-id-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-duplicate-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "missing-column-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-missing-store",
+            "passed": true,
+            "detail": "invalid import did not create parent/store"
+          },
+          {
+            "id": "quoted-unicode-text",
+            "passed": true,
+            "detail": "public list returns literal multiline Unicode text"
+          }
+        ]
+      },
+      "profile": "pi-small-task-pstack",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "thinking": "medium",
+      "pi_version": "0.84.1",
+      "skill_sha256": "e3810d964b299c6ef770036caf731f0a0db0bceac7702d78dee4ecc646ea680d",
+      "subject_runner_sha256": "c9be2a650a358e8b116d80e905baa8850f51cf3316f92fc2e9b97c6cd571aadf",
+      "evidence": "/Users/poom-work/super-speckit/.skill-sandbox/runs/import-pstack-3-b4f50516",
+      "reported_usage": {
+        "input": 15967,
+        "output": 11928,
+        "cacheRead": 96863,
+        "cacheWrite": 0,
+        "totalTokens": 124758
+      },
+      "provider_errors": [],
+      "verifier-replay": {
+        "command": [
+          "bash",
+          ".tmp/test_csv_import.sh"
+        ],
+        "returncode": 0,
+        "seconds": 1.26,
+        "timed_out": false,
+        "variant": null
+      },
+      "verifier-negative-control": {
+        "command": [
+          "bash",
+          ".tmp/test_csv_import.sh"
+        ],
+        "returncode": 1,
+        "seconds": 0.57,
+        "timed_out": false,
+        "variant": "known-bad-import"
+      }
+    },
+    {
+      "run_id": "import-superspeckit-3-148d84e3",
+      "case": "import",
+      "repeat": 3,
+      "valid": true,
+      "seconds": 235.03,
+      "tool_calls": 32,
+      "behavior": {
+        "passed": 10,
+        "total": 10,
+        "checks": [
+          {
+            "id": "existing-add-list",
+            "passed": true,
+            "detail": "add/list and existing duplicate rejection preserved"
+          },
+          {
+            "id": "retry-and-identity",
+            "passed": true,
+            "detail": "trimmed identity, first occurrence, existing IDs and retries observed"
+          },
+          {
+            "id": "dry-existing-bytes",
+            "passed": true,
+            "detail": "counts correct and existing bytes unchanged"
+          },
+          {
+            "id": "dry-missing-parent",
+            "passed": true,
+            "detail": "missing parent and store stayed absent"
+          },
+          {
+            "id": "invalid-row-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-id-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-duplicate-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "missing-column-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-missing-store",
+            "passed": true,
+            "detail": "invalid import did not create parent/store"
+          },
+          {
+            "id": "quoted-unicode-text",
+            "passed": true,
+            "detail": "public list returns literal multiline Unicode text"
+          }
+        ]
+      },
+      "profile": "pi-small-task-superspeckit",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "thinking": "medium",
+      "pi_version": "0.84.1",
+      "skill_sha256": "300903580047674e5514b474717ad6a5ea5bbad85f8541781fda67aefe2f09dc",
+      "subject_runner_sha256": "c9be2a650a358e8b116d80e905baa8850f51cf3316f92fc2e9b97c6cd571aadf",
+      "evidence": "/Users/poom-work/super-speckit/.skill-sandbox/runs/import-superspeckit-3-148d84e3",
+      "reported_usage": {
+        "input": 25894,
+        "output": 15684,
+        "cacheRead": 497881,
+        "cacheWrite": 0,
+        "totalTokens": 539459
+      },
+      "provider_errors": [],
+      "verifier-replay": {
+        "command": [
+          "bash",
+          ".tmp/verify.sh"
+        ],
+        "returncode": 0,
+        "seconds": 1.52,
+        "timed_out": false,
+        "variant": null
+      },
+      "verifier-negative-control": {
+        "command": [
+          "bash",
+          ".tmp/verify.sh"
+        ],
+        "returncode": 2,
+        "seconds": 1.67,
+        "timed_out": false,
+        "variant": "known-bad-import"
+      }
+    },
+    {
+      "run_id": "repair-pstack-1-2450de43",
+      "case": "repair",
+      "repeat": 1,
+      "valid": true,
+      "seconds": 269.57,
+      "tool_calls": 20,
+      "behavior": {
+        "passed": 10,
+        "total": 10,
+        "checks": [
+          {
+            "id": "existing-add-list",
+            "passed": true,
+            "detail": "add/list and existing duplicate rejection preserved"
+          },
+          {
+            "id": "retry-and-identity",
+            "passed": true,
+            "detail": "trimmed identity, first occurrence, existing IDs and retries observed"
+          },
+          {
+            "id": "dry-existing-bytes",
+            "passed": true,
+            "detail": "counts correct and existing bytes unchanged"
+          },
+          {
+            "id": "dry-missing-parent",
+            "passed": true,
+            "detail": "missing parent and store stayed absent"
+          },
+          {
+            "id": "invalid-row-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-id-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-duplicate-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "missing-column-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-missing-store",
+            "passed": true,
+            "detail": "invalid import did not create parent/store"
+          },
+          {
+            "id": "quoted-unicode-text",
+            "passed": true,
+            "detail": "public list returns literal multiline Unicode text"
+          }
+        ]
+      },
+      "profile": "pi-small-task-pstack",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "thinking": "medium",
+      "pi_version": "0.84.1",
+      "skill_sha256": "e3810d964b299c6ef770036caf731f0a0db0bceac7702d78dee4ecc646ea680d",
+      "subject_runner_sha256": "0734de00ec3468922a629204638c83e16dd32a61219c186bd2820f59dc50c816",
+      "evidence": "/Users/poom-work/super-speckit/.skill-sandbox/runs/repair-pstack-1-2450de43",
+      "reported_usage": {
+        "input": 30116,
+        "output": 20175,
+        "cacheRead": 326532,
+        "cacheWrite": 0,
+        "totalTokens": 376823
+      },
+      "provider_errors": [
+        "terminated"
+      ],
+      "verifier-replay": {
+        "command": [
+          "bash",
+          ".tmp/test_import.sh"
+        ],
+        "returncode": 0,
+        "seconds": 2.5,
+        "timed_out": false,
+        "variant": "as-built"
+      },
+      "verifier-negative-control": {
+        "command": [
+          "bash",
+          ".tmp/test_import.sh"
+        ],
+        "returncode": 1,
+        "seconds": 2.5,
+        "timed_out": false,
+        "variant": "known-bad-repair"
+      }
+    },
+    {
+      "run_id": "repair-candidate-1-b5821aac",
+      "case": "repair",
+      "repeat": 1,
+      "valid": true,
+      "seconds": 299.5,
+      "tool_calls": 16,
+      "behavior": {
+        "passed": 10,
+        "total": 10,
+        "checks": [
+          {
+            "id": "existing-add-list",
+            "passed": true,
+            "detail": "add/list and existing duplicate rejection preserved"
+          },
+          {
+            "id": "retry-and-identity",
+            "passed": true,
+            "detail": "trimmed identity, first occurrence, existing IDs and retries observed"
+          },
+          {
+            "id": "dry-existing-bytes",
+            "passed": true,
+            "detail": "counts correct and existing bytes unchanged"
+          },
+          {
+            "id": "dry-missing-parent",
+            "passed": true,
+            "detail": "missing parent and store stayed absent"
+          },
+          {
+            "id": "invalid-row-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-id-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-duplicate-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "missing-column-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-missing-store",
+            "passed": true,
+            "detail": "invalid import did not create parent/store"
+          },
+          {
+            "id": "quoted-unicode-text",
+            "passed": true,
+            "detail": "public list returns literal multiline Unicode text"
+          }
+        ]
+      },
+      "profile": "pi-small-task-pstack-v2",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "thinking": "medium",
+      "pi_version": "0.84.1",
+      "skill_sha256": "5408a09fc066d26a8e390c0e045f408f57dab994f7faa7d8182d6088f184708e",
+      "subject_runner_sha256": "0734de00ec3468922a629204638c83e16dd32a61219c186bd2820f59dc50c816",
+      "evidence": "/Users/poom-work/super-speckit/.skill-sandbox/runs/repair-candidate-1-b5821aac",
+      "reported_usage": {
+        "input": 27196,
+        "output": 24908,
+        "cacheRead": 212344,
+        "cacheWrite": 0,
+        "totalTokens": 264448
+      },
+      "provider_errors": [
+        "terminated"
+      ],
+      "verifier-replay": {
+        "command": [
+          "bash",
+          "verify.sh"
+        ],
+        "returncode": 0,
+        "seconds": 2.09,
+        "timed_out": false,
+        "variant": "as-built"
+      },
+      "verifier-negative-control": {
+        "command": [
+          "bash",
+          "verify.sh"
+        ],
+        "returncode": 1,
+        "seconds": 0.52,
+        "timed_out": false,
+        "variant": "known-bad-repair"
+      }
+    },
+    {
+      "run_id": "repair-superspeckit-1-9821e37b",
+      "case": "repair",
+      "repeat": 1,
+      "valid": true,
+      "seconds": 231.16,
+      "tool_calls": 27,
+      "behavior": {
+        "passed": 10,
+        "total": 10,
+        "checks": [
+          {
+            "id": "existing-add-list",
+            "passed": true,
+            "detail": "add/list and existing duplicate rejection preserved"
+          },
+          {
+            "id": "retry-and-identity",
+            "passed": true,
+            "detail": "trimmed identity, first occurrence, existing IDs and retries observed"
+          },
+          {
+            "id": "dry-existing-bytes",
+            "passed": true,
+            "detail": "counts correct and existing bytes unchanged"
+          },
+          {
+            "id": "dry-missing-parent",
+            "passed": true,
+            "detail": "missing parent and store stayed absent"
+          },
+          {
+            "id": "invalid-row-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-id-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-duplicate-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "missing-column-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-missing-store",
+            "passed": true,
+            "detail": "invalid import did not create parent/store"
+          },
+          {
+            "id": "quoted-unicode-text",
+            "passed": true,
+            "detail": "public list returns literal multiline Unicode text"
+          }
+        ]
+      },
+      "profile": "pi-small-task-superspeckit",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "thinking": "medium",
+      "pi_version": "0.84.1",
+      "skill_sha256": "300903580047674e5514b474717ad6a5ea5bbad85f8541781fda67aefe2f09dc",
+      "subject_runner_sha256": "0734de00ec3468922a629204638c83e16dd32a61219c186bd2820f59dc50c816",
+      "evidence": "/Users/poom-work/super-speckit/.skill-sandbox/runs/repair-superspeckit-1-9821e37b",
+      "reported_usage": {
+        "input": 26065,
+        "output": 19007,
+        "cacheRead": 335862,
+        "cacheWrite": 0,
+        "totalTokens": 380934
+      },
+      "provider_errors": [
+        "terminated"
+      ],
+      "verifier-replay": {
+        "command": [
+          "bash",
+          "check.sh"
+        ],
+        "returncode": 0,
+        "seconds": 1.62,
+        "timed_out": false,
+        "variant": "as-built"
+      },
+      "verifier-negative-control": {
+        "command": [
+          "bash",
+          "check.sh"
+        ],
+        "returncode": 19,
+        "seconds": 1.62,
+        "timed_out": false,
+        "variant": "known-bad-repair"
+      }
+    },
+    {
+      "run_id": "repair-candidate-1-5d0f398b",
+      "case": "repair",
+      "repeat": 1,
+      "valid": true,
+      "seconds": 301.55,
+      "tool_calls": 31,
+      "behavior": {
+        "passed": 10,
+        "total": 10,
+        "checks": [
+          {
+            "id": "existing-add-list",
+            "passed": true,
+            "detail": "add/list and existing duplicate rejection preserved"
+          },
+          {
+            "id": "retry-and-identity",
+            "passed": true,
+            "detail": "trimmed identity, first occurrence, existing IDs and retries observed"
+          },
+          {
+            "id": "dry-existing-bytes",
+            "passed": true,
+            "detail": "counts correct and existing bytes unchanged"
+          },
+          {
+            "id": "dry-missing-parent",
+            "passed": true,
+            "detail": "missing parent and store stayed absent"
+          },
+          {
+            "id": "invalid-row-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-id-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-duplicate-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "missing-column-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-missing-store",
+            "passed": true,
+            "detail": "invalid import did not create parent/store"
+          },
+          {
+            "id": "quoted-unicode-text",
+            "passed": true,
+            "detail": "public list returns literal multiline Unicode text"
+          }
+        ]
+      },
+      "profile": "pi-small-task-superspeckit-v2",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "thinking": "medium",
+      "pi_version": "0.84.1",
+      "skill_sha256": "ed920a2fa16cbd354f45be8ab282ea9fedafef50ba6890dbe0c13f67b7f74a3b",
+      "subject_runner_sha256": "0734de00ec3468922a629204638c83e16dd32a61219c186bd2820f59dc50c816",
+      "evidence": "/Users/poom-work/super-speckit/.skill-sandbox/runs/repair-candidate-1-5d0f398b",
+      "reported_usage": {
+        "input": 24380,
+        "output": 20743,
+        "cacheRead": 451161,
+        "cacheWrite": 0,
+        "totalTokens": 496284
+      },
+      "provider_errors": [
+        "terminated"
+      ],
+      "verifier-replay": {
+        "command": [
+          "bash",
+          ".experiment/verify.sh"
+        ],
+        "returncode": 0,
+        "seconds": 1.88,
+        "timed_out": false,
+        "variant": "as-built"
+      },
+      "verifier-negative-control": {
+        "command": [
+          "bash",
+          ".experiment/verify.sh"
+        ],
+        "returncode": 1,
+        "seconds": 0.26,
+        "timed_out": false,
+        "variant": "known-bad-repair"
+      }
+    },
+    {
+      "run_id": "repair-pstack-2-e1a8cdd8",
+      "case": "repair",
+      "repeat": 2,
+      "valid": true,
+      "seconds": 203.2,
+      "tool_calls": 15,
+      "behavior": {
+        "passed": 10,
+        "total": 10,
+        "checks": [
+          {
+            "id": "existing-add-list",
+            "passed": true,
+            "detail": "add/list and existing duplicate rejection preserved"
+          },
+          {
+            "id": "retry-and-identity",
+            "passed": true,
+            "detail": "trimmed identity, first occurrence, existing IDs and retries observed"
+          },
+          {
+            "id": "dry-existing-bytes",
+            "passed": true,
+            "detail": "counts correct and existing bytes unchanged"
+          },
+          {
+            "id": "dry-missing-parent",
+            "passed": true,
+            "detail": "missing parent and store stayed absent"
+          },
+          {
+            "id": "invalid-row-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-id-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-duplicate-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "missing-column-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-missing-store",
+            "passed": true,
+            "detail": "invalid import did not create parent/store"
+          },
+          {
+            "id": "quoted-unicode-text",
+            "passed": true,
+            "detail": "public list returns literal multiline Unicode text"
+          }
+        ]
+      },
+      "profile": "pi-small-task-pstack",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "thinking": "medium",
+      "pi_version": "0.84.1",
+      "skill_sha256": "e3810d964b299c6ef770036caf731f0a0db0bceac7702d78dee4ecc646ea680d",
+      "subject_runner_sha256": "dd690a30680faea8eb9dbf5512a8ec11c83c1649c53213b0e88245d280605db5",
+      "evidence": "/Users/poom-work/super-speckit/.skill-sandbox/runs/repair-pstack-2-e1a8cdd8",
+      "reported_usage": {
+        "input": 24219,
+        "output": 18892,
+        "cacheRead": 174780,
+        "cacheWrite": 0,
+        "totalTokens": 217891
+      },
+      "provider_errors": [],
+      "verifier-replay": {
+        "command": [
+          "bash",
+          ".tmp/run_checks.sh"
+        ],
+        "returncode": 0,
+        "seconds": 1.75,
+        "timed_out": false,
+        "variant": "as-built"
+      },
+      "verifier-negative-control": {
+        "command": [
+          "bash",
+          ".tmp/run_checks.sh"
+        ],
+        "returncode": 1,
+        "seconds": 1.75,
+        "timed_out": false,
+        "variant": "known-bad-repair"
+      }
+    },
+    {
+      "run_id": "repair-candidate-2-031bb46f",
+      "case": "repair",
+      "repeat": 2,
+      "valid": true,
+      "seconds": 129.88,
+      "tool_calls": 15,
+      "behavior": {
+        "passed": 10,
+        "total": 10,
+        "checks": [
+          {
+            "id": "existing-add-list",
+            "passed": true,
+            "detail": "add/list and existing duplicate rejection preserved"
+          },
+          {
+            "id": "retry-and-identity",
+            "passed": true,
+            "detail": "trimmed identity, first occurrence, existing IDs and retries observed"
+          },
+          {
+            "id": "dry-existing-bytes",
+            "passed": true,
+            "detail": "counts correct and existing bytes unchanged"
+          },
+          {
+            "id": "dry-missing-parent",
+            "passed": true,
+            "detail": "missing parent and store stayed absent"
+          },
+          {
+            "id": "invalid-row-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-id-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-duplicate-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "missing-column-atomic",
+            "passed": true,
+            "detail": "nonzero exit and original bytes preserved"
+          },
+          {
+            "id": "invalid-missing-store",
+            "passed": true,
+            "detail": "invalid import did not create parent/store"
+          },
+          {
+            "id": "quoted-unicode-text",
+            "passed": true,
+            "detail": "public list returns literal multiline Unicode text"
+          }
+        ]
+      },
+      "profile": "pi-small-task-pstack-v2",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "thinking": "medium",
+      "pi_version": "0.84.1",
+      "skill_sha256": "5408a09fc066d26a8e390c0e045f408f57dab994f7faa7d8182d6088f184708e",
+      "subject_runner_sha256": "dd690a30680faea8eb9dbf5512a8ec11c83c1649c53213b0e88245d280605db5",
+      "evidence": "/Users/poom-work/super-speckit/.skill-sandbox/runs/repair-candidate-2-031bb46f",
+      "reported_usage": {
+        "input": 17381,
+        "output": 11973,
+        "cacheRead": 133671,
+        "cacheWrite": 0,
+        "totalTokens": 163025
+      },
+      "provider_errors": [],
+      "verifier-replay": {
+        "command": [
+          "python3",
+          ".tmp/verify.py"
+        ],
+        "returncode": 0,
+        "seconds": 1.24,
+        "timed_out": false,
+        "variant": "as-built"
+      },
+      "verifier-negative-control": {
+        "command": [
+          "python3",
+          ".tmp/verify.py"
+        ],
+        "returncode": 1,
+        "seconds": 1.22,
+        "timed_out": false,
+        "variant": "known-bad-repair"
+      }
+    }
+  ]
+}

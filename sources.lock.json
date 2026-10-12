@@ -113,5 +113,15 @@
       "role": "maker, bug-fix, and refactor minimal-solution ladder",
       "license_note": "MIT; upstream SKILL.md is vendored verbatim with its license."
     }
-  ]
+  ],
+  "optional_integrations": {
+    "archify": {
+      "repository": "https://github.com/tt-a1i/archify",
+      "commit": "58ab0b98d2d0def8e49dced705c7b566936723ec",
+      "path": "archify",
+      "role": "Atlas, Change Story and Bug Story renderer",
+      "distribution": "separate host skill; not vendored",
+      "fallback": "explicit Mermaid limitation"
+    }
+  }
 }

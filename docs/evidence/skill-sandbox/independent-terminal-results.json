@@ -1,0 +1,33 @@
+{
+  "runner_sha256": "1e52a2cecaf6c7d1ecf49f9225e0041989909cc9cbb676b57f02a35edda4d3dd",
+  "recovered": {
+    "valid": true,
+    "skill_read": true,
+    "terminal_stop_reason": "stop",
+    "provider_errors": [
+      "terminated"
+    ],
+    "recovered_provider_errors": [
+      "terminated"
+    ]
+  },
+  "terminal": {
+    "valid": false,
+    "skill_read": true,
+    "terminal_stop_reason": "error",
+    "provider_errors": [
+      "terminated",
+      "terminated"
+    ],
+    "recovered_provider_errors": []
+  },
+  "unexpected-terminal": {
+    "valid": false,
+    "skill_read": true,
+    "terminal_stop_reason": "toolUse",
+    "provider_errors": [
+      "terminated"
+    ],
+    "recovered_provider_errors": []
+  }
+}

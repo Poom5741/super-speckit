@@ -62,9 +62,10 @@ def prerequisites(repo,data):
   file(repo,data.get('atlas',{}).get('path')); file(repo,data.get('change_story',{}).get('path'))
   for name in (['spec.md'] if route=='micro' else ['spec.md','plan.md','tasks.md']): file(repo,str((directory/name).relative_to(repo)))
  requirements(repo,data)
+ if data.get('delivery_contract')=='knowledge-v2': knowledge_prework(repo,data)
 
 def playbook_led(repo,data):
- return data.get('delivery_contract')=='playbook-v1' or (data.get('route',{}).get('kind')=='micro' and (file(repo,data['matrix']).parent/'playbook.md').is_file())
+ return data.get('delivery_contract') in {'playbook-v1','knowledge-v2'} or (data.get('route',{}).get('kind')=='micro' and (file(repo,data['matrix']).parent/'playbook.md').is_file())
 
 def prework_kinds(repo,data):
  return ['baseline-feedback','phase-contract']+(['research','architecture'] if playbook_led(repo,data) else [])
@@ -151,6 +152,7 @@ def release(repo,data, archived=False):
   review=json.loads(prerequisite_receipt(repo,data,'engineering-review').read_text())
   if review.get('candidate_sha')!=data['candidate_sha'] or review.get('checker')!=data.get('checker') or review.get('checker')==data.get('maker'): raise ValueError('engineering review must match exact candidate and independent checker')
   if review.get('status')!='passed' or review.get('blocking_findings')!=[]: raise ValueError('passing engineering review with no blocking findings required')
+ if data.get('delivery_contract')=='knowledge-v2': knowledge_release(repo,data)
  receipt=data.get('proof')
  if not receipt: raise ValueError('independent proof receipt required')
  proof(repo,data,receipt,archived=archived)
@@ -200,6 +202,9 @@ def next_stage(repo,data):
  if data['state']=='blocked': return 'recovery'
  if any(b.get('status')!='resolved' for b in data.get('bugs',[])): return 'bug-fixing'
  if data.get('purpose',{}).get('status')!='confirmed': return 'purpose-gate'
+ if data.get('delivery_contract')=='knowledge-v2':
+  try: knowledge_investigation(repo,data)
+  except (ValueError,KeyError,TypeError): return 'investigation'
  if data.get('route',{}).get('kind') not in {'micro','normal','milestone'}: return 'route'
  if data.get('route',{}).get('kind')!='micro' and data.get('grill',{}).get('status')!='complete': return 'spec-grill'
  try: prerequisites(repo,data)
@@ -211,3 +216,105 @@ def next_stage(repo,data):
     if receipt.get('digest')!=digest(file(repo,receipt.get('artifact'))): return kind
    except ValueError: return kind
  return {'planned':'maker','maker_running':'maker','candidate_ready':'independent-qa','qa_running':'independent-qa','retest_running':'independent-qa','qa_failed':'bug-fixing','bug_fixing':'bug-fixing','ready_for_merge':'merge-readiness'}[data['state']]
+
+
+# These receipts bind accountable observations; they do not prove unseen agent reasoning.
+def knowledge_json(repo,data,kind):
+ try:
+  value=json.loads(prerequisite_receipt(repo,data,kind).read_text())
+ except (json.JSONDecodeError,TypeError) as exc: raise ValueError('invalid '+kind+' receipt') from exc
+ if not isinstance(value,dict): raise ValueError(kind+' must be an object')
+ return value
+
+def knowledge_evidence(repo,rows):
+ if not isinstance(rows,list) or not rows: raise ValueError('nonempty evidence rows required')
+ for row in rows:
+  if not isinstance(row,dict): raise ValueError('evidence row must be an object')
+  artifact=file(repo,row.get('path'))
+  if row.get('digest')!=digest(artifact): raise ValueError('knowledge evidence changed')
+
+def knowledge_investigation(repo,data):
+ r=knowledge_json(repo,data,'investigation')
+ commit(repo,r.get('base_sha'))
+ if not all(isinstance(r.get(k),str) and r[k].strip() for k in ['playbook','intent','flow','scope_rationale']): raise ValueError('investigation context incomplete')
+ if not isinstance(r.get('unknowns'),list) or not isinstance(r.get('conventions'),list): raise ValueError('unknowns and conventions must be explicit lists')
+ if r.get('unresolved_blockers')!=[]: raise ValueError('investigation blockers remain')
+ knowledge_evidence(repo,r.get('evidence'))
+ if len({x.get('id') for x in r['conventions']})!=len(r['conventions']): raise ValueError('unique convention IDs required')
+ for rule in r['conventions']:
+  if not all(rule.get(k) for k in ['id','rule','scope','source','plan_application']): raise ValueError('convention needs provenance and plan application')
+  file(repo,rule['source'])
+  if rule['source'] not in {x['path'] for x in r['evidence']}: raise ValueError('convention source must be digest-bound investigation evidence')
+ kit=Path(__file__).resolve().parents[1]
+ catalog=json.loads((kit/'adapters/pstack/routes.json').read_text())
+ selected=next((x for x in catalog['playbooks'] if x['id']==r['playbook']),None)
+ if not selected: raise ValueError('unknown pinned PStack playbook')
+ source=kit/'vendor/pstack'/selected['source']
+ source_steps=re.findall(r'^(\d+)\. ',source.read_text(),re.MULTILINE)
+ if r.get('playbook_digest')!=digest(source): raise ValueError('pinned playbook digest mismatch')
+ steps=r.get('steps')
+ if not isinstance(steps,list) or not steps or len({x.get('id') for x in steps})!=len(steps): raise ValueError('unique playbook steps required')
+ if source_steps and [x.get('source_step') for x in steps]!=source_steps: raise ValueError('ordered pinned playbook step coverage required')
+ for step in steps:
+  if not step.get('id') or not step.get('source_step'): raise ValueError('playbook source step required')
+  if step.get('status') not in {'pending','completed','skipped'}: raise ValueError('invalid playbook step status')
+  if step['status']=='completed': knowledge_evidence(repo,step.get('evidence'))
+  if step['status']=='skipped' and not step.get('reason'): raise ValueError('skip reason required')
+ return r
+
+def knowledge_view(repo,view):
+ if not isinstance(view,dict) or view.get('renderer') not in {'archify','mermaid'}: raise ValueError('shared view renderer required')
+ for key in ['source','artifact']:
+  if view.get(key+'_digest')!=digest(file(repo,view.get(key))): raise ValueError('shared view changed: '+key)
+ if view['renderer']=='archify':
+  validation=file(repo,view.get('validation_receipt'))
+  if view.get('validation_digest')!=digest(validation): raise ValueError('diagram validation receipt changed')
+  receipt=json.loads(validation.read_text())
+  if not isinstance(receipt,dict) or receipt.get('status')!='passed' or receipt.get('exit_code')!=0: raise ValueError('passing Archify command receipt required')
+  if not isinstance(receipt.get('command'),list) or 'finalize' not in receipt['command']: raise ValueError('Archify finalize command required')
+  if receipt.get('source_digest')!=view['source_digest'] or receipt.get('artifact_digest')!=view['artifact_digest']: raise ValueError('Archify receipt must bind view bytes')
+  raw=file(repo,receipt.get('raw_receipt'))
+  if receipt.get('raw_digest')!=digest(raw) or not isinstance(json.loads(raw.read_text()),dict): raise ValueError('Archify machine receipt required')
+ elif not view.get('limitation'): raise ValueError('fallback limitation required')
+
+def knowledge_prework(repo,data):
+ r=knowledge_investigation(repo,data)
+ design=knowledge_json(repo,data,'shared-design')
+ if design.get('investigation_digest')!=digest(prerequisite_receipt(repo,data,'investigation')): raise ValueError('design must reflect current investigation')
+ if not all(design.get(k) for k in ['observed','proposed','invariants','verification_plan']): raise ValueError('shared design incomplete')
+ knowledge_view(repo,design.get('view'))
+ return r
+
+def knowledge_release(repo,data):
+ r=knowledge_prework(repo,data)
+ if any(x['status']=='pending' for x in r['steps']): raise ValueError('unfinished PStack playbook steps')
+ result=knowledge_json(repo,data,'shared-result')
+ if result.get('candidate_sha')!=data.get('candidate_sha') or result.get('checker')!=data.get('checker'): raise ValueError('shared result must match candidate and checker')
+ if result.get('design_digest')!=digest(prerequisite_receipt(repo,data,'shared-design')): raise ValueError('result must reflect current design')
+ if result.get('status')!='passed' or not result.get('summary') or not isinstance(result.get('deviations'),list): raise ValueError('verified reconciliation required')
+ knowledge_evidence(repo,result.get('evidence')); knowledge_view(repo,result.get('view'))
+ conventions=result.get('conventions')
+ if not isinstance(conventions,list) or len(conventions)!=len(r['conventions']) or {x.get('id') for x in conventions}!={x['id'] for x in r['conventions']}: raise ValueError('all conventions require reconciliation')
+ for rule in conventions:
+  if rule.get('status') not in {'preserved','changed'} or not rule.get('reason'): raise ValueError('convention disposition required')
+  knowledge_evidence(repo,rule.get('evidence'))
+ for bug in data.get('bugs',[]):
+  if bug.get('status')!='resolved': raise ValueError('open bugs block release')
+  for previous in bug.get('resolution_history',[]):
+   if previous.get('digest')!=digest(file(repo,previous.get('artifact'))): raise ValueError('historical bug resolution changed')
+  artifact=file(repo,bug.get('resolution'))
+  if bug.get('resolution_digest')!=digest(artifact): raise ValueError('bug resolution changed')
+  knowledge_bug(repo,data,bug,json.loads(artifact.read_text()))
+
+def knowledge_bug(repo,data,bug,r):
+ if not isinstance(r,dict): raise ValueError('bug resolution must be an object')
+ if r.get('bug_id')!=bug['id'] or r.get('candidate_sha')!=data.get('candidate_sha') or r.get('checker')!=data.get('checker') or r.get('checker')==data.get('maker'): raise ValueError('bug retest must match exact candidate and independent checker')
+ if r.get('status')!='passed' or not all(r.get(k) for k in ['expected','actual','trigger','root_cause','fix','retest']): raise ValueError('verified Bug Story required')
+ knowledge_evidence(repo,r.get('evidence')); knowledge_view(repo,r.get('view'))
+ regression=r.get('regression',{})
+ if regression.get('status')=='covered': knowledge_evidence(repo,regression.get('evidence'))
+ elif regression.get('status')!='exception' or not regression.get('reason') or not regression.get('alternative'): raise ValueError('regression coverage or justified alternative required')
+ prevention=r.get('prevention',{})
+ if prevention.get('status') not in {'encoded','scoped-follow-up','no-broader-lesson'} or not prevention.get('reason') or not prevention.get('scope'): raise ValueError('scoped prevention decision required')
+ if prevention['status']=='encoded': knowledge_evidence(repo,prevention.get('evidence'))
+ if prevention['status']=='scoped-follow-up': file(repo,prevention.get('artifact'))
