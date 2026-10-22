@@ -112,6 +112,22 @@
       "installed_to": "skills/upstream/ponytail",
       "role": "maker, bug-fix, and refactor minimal-solution ladder",
       "license_note": "MIT; upstream SKILL.md is vendored verbatim with its license."
+    },
+    {
+      "name": "lude-kit",
+      "repository": "https://github.com/iamdemetris/lude-kit",
+      "commit": "b41c7a6a40c4960d687779227137b25be585ef55",
+      "installed_to": "vendor/lude-kit",
+      "role": "progressive specialist lens",
+      "license_note": "Apache-2.0; retain notices"
+    },
+    {
+      "name": "spec-kit",
+      "repository": "https://github.com/github/spec-kit",
+      "commit": "27d14e20c187c1f2916540ea201ecbdc9f8ed588",
+      "installed_to": "vendor/spec-kit",
+      "role": "native SDD reference; installed Spec Kit remains execution owner",
+      "license_note": "MIT; retain notices"
     }
   ],
   "optional_integrations": {

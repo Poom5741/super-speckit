@@ -1,6 +1,12 @@
 # super-speckit
 
-`super-speckit` combines PStack-led execution, selective Spec Kit planning, Dune-inspired architecture constraints, and independent product and engineering acceptance. One code-writing owner uses the current checkout; independent QA runs the exact committed candidate in a disposable standalone clone. Worktrees remain optional compatibility tools.
+## Unified delivery pipeline
+
+Super-SpecKit combines **native Spec Kit planning and convergence**, **feature-specific Lude developer personas and specialists**, and **PStack investigation/engineering methods** in one pipeline. Give `ask-super-speckit` a feature; it selects the appropriate maker persona from the pinned Lude catalog, applies relevant stack/domain expertise, implements the native tasks, runs independent candidate QA, reconciles distinct PStack and Lude review lenses, and repeats implement/converge until the specified scope is complete **before merge**. Compact micro work uses explicitly labeled playbook/matrix completion.
+
+The complete 64-skill pinned Lude catalog is available progressively, not globally installed or loaded for every feature. Its orchestration commands remain dormant. Native Spec Kit stays installed separately; pinned command references document the reviewed interface and do not fork its CLI. Super-SpecKit retains one coordinator, one canonical task/state authority, and exact-candidate independent proof. See the [unified pipeline and receipt examples](skills/ask-super-speckit/references/unified-pipeline.md) and [Lude adapter](adapters/lude-kit/override-contract.md). New feature records enable the unified gates by default; existing records retain their original evidence requirements.
+
+`super-speckit` combines native Spec Kit intent and convergence, Lude feature-specific implementation expertise, PStack engineering methods, Dune-inspired architecture constraints, and independent product and engineering acceptance. One code-writing owner uses the current checkout; independent QA runs the exact committed candidate in a disposable standalone clone. Worktrees remain optional compatibility tools.
 
 After PStack investigation, bounded micro features and fixes use a persisted playbook and requirement matrix. Normal and milestone work retains Spec Kit's spec.md, plan.md and tasks.md. Relevant research and executable architecture rules precede code. Running-app journeys and independent engineering review precede release. See [delivery contract](skills/ask-super-speckit/references/playbook-delivery.md) and [implementation plan](docs/playbook-delivery-plan.md).
 
@@ -80,7 +86,9 @@ research + architecture constraints + baseline → single-owner implementation
   ↓
 committed candidate → independent QA clone → user journeys + engineering review
   ├─ failure → diagnosis → fix → new candidate → independent retest
-  └─ pass → configured release → evidence handback
+  └─ pass → reconcile PStack/Lude lenses → converge
+       ├─ remaining tasks → implement → new candidate → fresh independent QA
+       └─ converged → configured release → evidence handback
 ```
 
 

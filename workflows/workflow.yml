@@ -2,9 +2,9 @@ schema_version: "1.0"
 workflow:
   id: "super-speckit"
   name: "Super-SpecKit evidence-first delivery"
-  version: "0.1.0"
+  version: "0.2.0"
   author: "super-speckit"
-  description: "Runs autonomous Spec Kit SDD with feedback loops, independent QA, and evidence-gated merge"
+  description: "One pipeline: native Spec Kit planning/convergence, feature-specific Lude personas, PStack methods, independent QA and evidence-gated merge"
 requires:
   speckit_version: ">=0.8.5"
 inputs:
@@ -17,6 +17,9 @@ inputs:
     default: false
     prompt: "Does this change alter a user-facing interface?"
 steps:
+  - id: unified-contract
+    type: prompt
+    message: "Read skills/ask-super-speckit/references/unified-pipeline.md and adapters/lude-kit/override-contract.md. Use one Super-SpecKit coordinator: native Spec Kit intent/convergence, feature-specific Lude maker persona and specialists, PStack engineering methods, independent exact-candidate QA, separate reconciled PStack/Lude lenses. New feature records default to unified-v1. Run and record convergence before release/merge; remaining tasks return to implement and require a new candidate with fresh independent QA, both lenses and convergence. Compact completion is labeled separately. Do not activate upstream coordinators or global installers."
   - id: playbook-delivery
     type: prompt
     message: "Run ask-super-speckit for '{{ inputs.feature }}'. Read the playbook-delivery contract. Select PStack first and investigate actual flow, conventions and applicable lessons before selecting planning depth; micro features/fixes use a persisted playbook, matrix and shared views, normal/milestone uses native Spec Kit. Record purpose-gate from actual user confirmation; run spec-grill for normal/milestone scope. Preserve confirmed purpose, research actual structure and primary guidance, record executable architecture constraints, use one code-writing checkout, and verify the exact candidate independently in a QA clone. Require real user journeys and engineering review. Persist long-run predicate, steps, authority, budget and checkpoints; observe a supported runner before promising unattended resume. Continue through diagnosis/fix/retest until complete or truthfully blocked. Use Archify for Atlas, Change Story and evolving Bug Story, with explicit fallback limitations. Require knowledge-v2 investigation, convention reconciliation, completed source steps, exact-candidate shared result, independently verified bug resolution and scoped prevention receipts. Release only within configured authority and retain evidence."

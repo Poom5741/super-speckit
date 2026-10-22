@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/github/spec-kit",
+  "revision": "27d14e20c187c1f2916540ea201ecbdc9f8ed588",
+  "root": "vendor/spec-kit",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "2510b446bc1f0cf9702453075d20cd88631e20e5642658edb7325d9c1eb534f7"
+    },
+    {
+      "path": "README.md",
+      "sha256": "3baa99368443f26244b3a021b40eaf6f167ee591f5759c91315ad50d0a204592"
+    },
+    {
+      "path": "templates/commands/analyze.md",
+      "sha256": "ffe0640ebe778795737937f2d4ec6f0149d7d55b72692e25369a668f985d1dfe"
+    },
+    {
+      "path": "templates/commands/checklist.md",
+      "sha256": "1192784f378fb977b408b72ca1bfb8fc55e129519f3f44bc5d0a7e152c480654"
+    },
+    {
+      "path": "templates/commands/clarify.md",
+      "sha256": "5260d798c5671deb9ac7e59d6ffdb69b30c26fb28878d3cc25e30fb71cacc734"
+    },
+    {
+      "path": "templates/commands/constitution.md",
+      "sha256": "a915ba6ae5fdbd499c143204eab3888b95a0ff0656e2c16b40282375acb5902c"
+    },
+    {
+      "path": "templates/commands/converge.md",
+      "sha256": "4fb017b2869ad02d58aafe272a90077187ce4231f08effee6f340b0f3a07fc16"
+    },
+    {
+      "path": "templates/commands/implement.md",
+      "sha256": "feab334232940cfd4ecbcdae41cf63ccb7d581a60380230837385f296f7b49bd"
+    },
+    {
+      "path": "templates/commands/plan.md",
+      "sha256": "206a0386d20b3eed4c087a4d9de247a3e7b2b59348bf3c801fc74f63ca2726a5"
+    },
+    {
+      "path": "templates/commands/specify.md",
+      "sha256": "7d5a88e6afa504f1d16503df6bf8664f30e3df812b83f9a456a2eaccaeb638ee"
+    },
+    {
+      "path": "templates/commands/tasks.md",
+      "sha256": "2f9176c6e7c23d2a83d2bd018ffa1e67aee977389a57f2a3fe35fe987b425944"
+    },
+    {
+      "path": "templates/commands/taskstoissues.md",
+      "sha256": "eb6de5058aab2e6c88b9934ec58b2d7428b3bbe1728aa799c77b0c725971d02e"
+    },
+    {
+      "path": "templates/plan-template.md",
+      "sha256": "dfba43da2b2a207ff8c177a0fba03af074fd45e261696b4b64172041fad2e992"
+    },
+    {
+      "path": "templates/spec-template.md",
+      "sha256": "3945437fc35cd30a5b2bf7beea680337c3516826d3efa5a6b92c4a7eca1ba28e"
+    },
+    {
+      "path": "templates/tasks-template.md",
+      "sha256": "1e448e9153462e8c5b5a55231a54c756d870a82950d4dd9425a2bf5b7008a0d9"
+    }
+  ]
+}

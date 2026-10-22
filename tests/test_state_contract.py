@@ -20,7 +20,9 @@ class StateTests(unittest.TestCase):
   self.qa=Path(self.tmp.name)/'qa'
  def tearDown(self): self.tmp.cleanup()
  def run_git(self,*args):return subprocess.check_output(['git','-C',str(self.repo),*args],stderr=subprocess.DEVNULL,text=True).strip()
- def invoke(self,*args):return subprocess.run([sys.executable,str(SCRIPT),*args,'--repo',str(self.repo)],capture_output=True,text=True)
+ def invoke(self,*args):
+  if args and args[0]=='create-feature': args=(*args,'--pipeline','legacy')
+  return subprocess.run([sys.executable,str(SCRIPT),*args,'--repo',str(self.repo)],capture_output=True,text=True)
  def ok(self,*args):
   result=self.invoke(*args);self.assertEqual(result.returncode,0,result.stderr);return result
  def candidate(self):self.ok('transition','F','maker_running');self.ok('transition','F','candidate_ready','--sha',self.sha)

@@ -68,7 +68,7 @@ def playbook_led(repo,data):
  return data.get('delivery_contract') in {'playbook-v1','knowledge-v2'} or (data.get('route',{}).get('kind')=='micro' and (file(repo,data['matrix']).parent/'playbook.md').is_file())
 
 def prework_kinds(repo,data):
- return ['baseline-feedback','phase-contract']+(['research','architecture'] if playbook_led(repo,data) else [])
+ return ['baseline-feedback','phase-contract']+(['research','architecture'] if playbook_led(repo,data) else [])+(['personas'] if data.get('pipeline_contract')=='unified-v1' else [])
 
 def prerequisite_receipt(repo,data,kind):
  receipt=data.get('prerequisite_receipts',{}).get(kind,{})
@@ -146,6 +146,9 @@ def proof(repo,data,receipt, archived=False):
 
 def release(repo,data, archived=False):
  prerequisites(repo,data)
+ if data.get('pipeline_contract')=='unified-v1':
+  import pipeline_contract
+  pipeline_contract.release(repo,data)
  candidates=data.get('candidates',[])
  if not candidates or candidates[-1]['sha']!=data['candidate_sha'] or candidates[-1]['matrix_digest']!=digest(file(repo,data['matrix'])): raise ValueError('candidate matrix is immutable')
  if playbook_led(repo,data):
@@ -177,6 +180,9 @@ def transition(repo,data,target,sha=None,worktree=None,attempt=None):
    receipt=data.get('prerequisite_receipts',{}).get(kind,{})
    artifact=file(repo,receipt.get('artifact'))
    if receipt.get('digest')!=digest(artifact): raise ValueError('stale prerequisite '+kind)
+  if data.get('pipeline_contract')=='unified-v1':
+   import pipeline_contract
+   pipeline_contract.personas(repo,data)
  if sha:
   if target!='candidate_ready': raise ValueError('only candidate_ready registers a candidate')
   resolved=commit(repo,sha)
@@ -185,6 +191,9 @@ def transition(repo,data,target,sha=None,worktree=None,attempt=None):
   relative=str(matrix.relative_to(repo))
   result=subprocess.run(['git','-C',str(repo),'show',resolved+':'+relative],capture_output=True)
   if result.returncode or result.stdout!=matrix.read_bytes(): raise ValueError('matrix must be frozen byte-for-byte in candidate commit')
+  if data.get('pipeline_contract')=='unified-v1':
+   import pipeline_contract
+   pipeline_contract.candidate_intent(repo,data,resolved)
   data.setdefault('candidates',[]).append({'sha':resolved,'maker':data['maker'],'matrix_digest':digest(matrix)})
   data['candidate_sha']=resolved; data.pop('proof',None); data.pop('qa_attempt',None)
  if target in {'candidate_ready','qa_running','retest_running','ready_for_merge','merged'}:
@@ -215,6 +224,16 @@ def next_stage(repo,data):
    try:
     if receipt.get('digest')!=digest(file(repo,receipt.get('artifact'))): return kind
    except ValueError: return kind
+  if data.get('pipeline_contract')=='unified-v1':
+   import pipeline_contract
+   try: pipeline_contract.personas(repo,data)
+   except (ValueError,KeyError,TypeError): return 'personas'
+ if data.get('pipeline_contract')=='unified-v1' and data.get('proof'):
+  import pipeline_contract
+  for stage,check in [('lens-review',pipeline_contract.lens_review),('convergence',pipeline_contract.convergence)]:
+   try: check(repo,data)
+   except (ValueError,KeyError,TypeError): return stage
+  return 'release'
  return {'planned':'maker','maker_running':'maker','candidate_ready':'independent-qa','qa_running':'independent-qa','retest_running':'independent-qa','qa_failed':'bug-fixing','bug_fixing':'bug-fixing','ready_for_merge':'merge-readiness'}[data['state']]
 
 

@@ -32,6 +32,17 @@ def tree_digest(path: Path) -> str:
     return digest.hexdigest()
 
 def verify_bundle(source: Path) -> None:
+    # Every newly bundled specialist and native reference is pinned byte-for-byte.
+    for name in ('lude-kit', 'spec-kit'):
+        manifest=json.loads((source / f'vendor/{name}-manifest.json').read_text())
+        vendor=source / manifest['root']
+        expected={row['path']:row['sha256'] for row in manifest['files']}
+        actual={p.relative_to(vendor).as_posix() for p in vendor.rglob('*') if p.is_file()}
+        if actual!=set(expected): raise ValueError(f'incomplete or unexpected {name} source')
+        for name_,checksum in expected.items():
+            path=vendor/name_
+            if path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest()!=checksum:
+                raise ValueError(f'{name} source integrity failed: {name_}')
     manifest = json.loads((source / "vendor/pstack-manifest.json").read_text())
     vendor = source / manifest["root"]
     modes = {row["path"]: row.get("mode", "100644") for row in manifest["files"]}

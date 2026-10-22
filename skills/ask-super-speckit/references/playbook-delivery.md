@@ -1,5 +1,7 @@
 # Playbook-led delivery contract
 
+For new deliveries, apply [unified pipeline](unified-pipeline.md) alongside this contract. Native Spec Kit owns normal/milestone planning and pre-merge convergence; Lude supplies the feature-specific maker persona and specialist lens; PStack supplies methods and its separate lens. Super-SpecKit reconciles all three in one state machine. New create-feature defaults enable unified-v1 and knowledge-v2; existing records retain their gates.
+
 ## One coordinator and one plan
 
 `ask-super-speckit` selects and executes a pinned PStack playbook through the adapter. Keep its ordered steps, evidence, and explicit skip reasons in a single persisted playbook. Spec Kit is a planning tool selected by scope, not a second coordinator. Canonical feature state remains the only candidate/proof authority.
