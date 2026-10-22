@@ -1,6 +1,6 @@
 ---
 name: super-speckit
-description: Deliver with PStack playbooks, selective Spec Kit planning, Dune-inspired architecture checks, and independent runtime and usability evidence.
+description: Deliver through one Super-SpecKit pipeline with native Spec Kit planning and convergence, feature-specific Lude personas, PStack methods, and independent verification.
 ---
 
 # super-speckit
@@ -8,6 +8,8 @@ description: Deliver with PStack playbooks, selective Spec Kit planning, Dune-in
 Resolve instruction/reference paths from this skill directory (the kit root), not the target project. Run bundled scripts by absolute kit path with `--repo <target-project>`; project evidence/state paths resolve inside that target.
 
 Use `ask-super-speckit` as the single coordinator. Read `skills/ask-super-speckit/references/playbook-delivery.md` for routing, architecture, verification, and unattended-run contracts. Read `docs/orchestration.md` and `schemas/README.md` before changing tracked delivery artifacts.
+
+Read `skills/ask-super-speckit/references/unified-pipeline.md` for the current pipeline. Select a feature-specific Lude developer persona and relevant stack/domain specialists through the pinned adapter. PStack and Lude are distinct lenses reconciled by Super-SpecKit, never competing coordinators. Normal/milestone work repeats native implement/converge until converged before merge; micro uses explicitly labeled compact completion. New candidates require fresh independent QA, both review lenses and convergence.
 
 PStack playbooks drive execution. Select native Spec Kit for normal/milestone requirements, plans, and tasks; bounded micro features/fixes use one persisted playbook and verification matrix. Read-only teaching and investigation create no delivery state. Preserve the user's confirmed purpose and record actual provenance rather than asking again.
 

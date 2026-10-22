@@ -1,5 +1,7 @@
 # State machine
 
+New unified-v1 records require a feature-specific Lude persona selection before maker work, then independent PStack/Lude lens reconciliation and convergence before ready_for_merge. Native tasks_appended convergence reopens maker_running, retains history and invalidates current acceptance; it requires a new commit and fresh independent QA. See [unified pipeline](../skills/ask-super-speckit/references/unified-pipeline.md). Older records retain their original gates.
+
 ```text
 planned → Purpose Gate (human-confirmed) → Spec Grill (evidence-labeled) → Route + Atlas + Change Story → maker_running → candidate_ready → qa_running ──pass──> ready_for_merge → merged
                                       │              │

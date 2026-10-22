@@ -1,0 +1,389 @@
+{
+  "source_revision": "b41c7a6a40c4960d687779227137b25be585ef55",
+  "skills": [
+    {
+      "id": "api-contract-designer",
+      "category": "capabilities",
+      "source": "skills/capabilities/api-contract-designer/SKILL.md",
+      "sha256": "5db11f549c27cc0366b7f8ce7230b4aed12d2370d13bd395216dc5368ecccca6"
+    },
+    {
+      "id": "data-modeler",
+      "category": "capabilities",
+      "source": "skills/capabilities/data-modeler/SKILL.md",
+      "sha256": "7a4501cca172aa89d2c3f67cfe0c85c34676a0d1552d28cac84e34afea82749e"
+    },
+    {
+      "id": "dependency-auditor",
+      "category": "capabilities",
+      "source": "skills/capabilities/dependency-auditor/SKILL.md",
+      "sha256": "b088bcc8082c6640ed287288b4604269ed2cb7030dead6df1c2e7fd92c1d26dc"
+    },
+    {
+      "id": "incident-commander",
+      "category": "capabilities",
+      "source": "skills/capabilities/incident-commander/SKILL.md",
+      "sha256": "949ed3f6180238997e0ad300aad25f00cccc73ca14fa45c94a6272c103ffafa5"
+    },
+    {
+      "id": "migration-planner",
+      "category": "capabilities",
+      "source": "skills/capabilities/migration-planner/SKILL.md",
+      "sha256": "1787fc4920ebb189bf6d3d9c5c58409d23eab365bd278a43ef6d9d9b28e7a188"
+    },
+    {
+      "id": "postmortem-author",
+      "category": "capabilities",
+      "source": "skills/capabilities/postmortem-author/SKILL.md",
+      "sha256": "b400907d22cfe13660b581a2ed54c2b14725b0ac25dab625be69ef76fb9f285f"
+    },
+    {
+      "id": "senior-code-reviewer",
+      "category": "capabilities",
+      "source": "skills/capabilities/senior-code-reviewer/SKILL.md",
+      "sha256": "6e3616ef6795d22aa4539dab13a9ca4c5c0909bb35dc8a718d6daeb213217814"
+    },
+    {
+      "id": "senior-debugger",
+      "category": "capabilities",
+      "source": "skills/capabilities/senior-debugger/SKILL.md",
+      "sha256": "0a4ab5762673d5d5a52e7852971b97a8855fe440f3528ab1fc588a6d5eeed9ee"
+    },
+    {
+      "id": "senior-performance-engineer",
+      "category": "capabilities",
+      "source": "skills/capabilities/senior-performance-engineer/SKILL.md",
+      "sha256": "fc81a95e49ba2bd0f089085ffd6bbbbda4b70683f77b75c56c87cc0d2222f145"
+    },
+    {
+      "id": "senior-refactorer",
+      "category": "capabilities",
+      "source": "skills/capabilities/senior-refactorer/SKILL.md",
+      "sha256": "52b1aaa056af9471eff3c2a095f7021645f265dea29808fa771e060849e48e28"
+    },
+    {
+      "id": "compliance-engineer",
+      "category": "personas",
+      "source": "skills/personas/compliance-engineer/SKILL.md",
+      "sha256": "39bf3515cc3b59ffa55238bd9bd318253f7393710c40b303fb2fae918cc8922c"
+    },
+    {
+      "id": "ecommerce-engineer",
+      "category": "personas",
+      "source": "skills/personas/ecommerce-engineer/SKILL.md",
+      "sha256": "a649decdb6263cf1c2180a7c5958447bb46144a5fa3aabf884d502d96ab62363"
+    },
+    {
+      "id": "edtech-engineer",
+      "category": "personas",
+      "source": "skills/personas/edtech-engineer/SKILL.md",
+      "sha256": "51731f971431470a8c194f559c29ff6ac88cd1a0b484a01bb3292e4b9d5e332e"
+    },
+    {
+      "id": "engineering-team-lead",
+      "category": "personas",
+      "source": "skills/personas/engineering-team-lead/SKILL.md",
+      "sha256": "480b4070b54ef258fc4822c268683f51ef091b21e80cf00323d21e0a60379856"
+    },
+    {
+      "id": "fintech-engineer",
+      "category": "personas",
+      "source": "skills/personas/fintech-engineer/SKILL.md",
+      "sha256": "cde81d85bd713d49cc2f4ad4a0b61e6b109b7ddddc1461b3783df0a250fe3dc9"
+    },
+    {
+      "id": "healthcare-engineer",
+      "category": "personas",
+      "source": "skills/personas/healthcare-engineer/SKILL.md",
+      "sha256": "61083753f23ce3d85a66ae30132fd526bb31b4f5670d65247b5020108b16e146"
+    },
+    {
+      "id": "principal-security-engineer",
+      "category": "personas",
+      "source": "skills/personas/principal-security-engineer/SKILL.md",
+      "sha256": "96ba372d57a39e79bb1171cb82ff02d93e6e36535424c9cf3b68c8f32521a605"
+    },
+    {
+      "id": "senior-ai-agent-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-ai-agent-engineer/SKILL.md",
+      "sha256": "220fcb6b96cf84d6ba6da2d8ac9afac873444a27d3844fd633ec28f2ecac7916"
+    },
+    {
+      "id": "senior-ai-safety-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-ai-safety-engineer/SKILL.md",
+      "sha256": "f31c0c0ebe33f1221e736679301d671aedae9a48b962b9a229821f36e350ecb3"
+    },
+    {
+      "id": "senior-backend-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-backend-engineer/SKILL.md",
+      "sha256": "156e9b61d874ebdc701f6c9442446ac78bb5f0082bb21a3f5230564b037152a0"
+    },
+    {
+      "id": "senior-cv-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-cv-engineer/SKILL.md",
+      "sha256": "06c6a0fb88dd274be60c300c5aa83461db8b7b40489e940b99b77fd86d739766"
+    },
+    {
+      "id": "senior-data-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-data-engineer/SKILL.md",
+      "sha256": "34e85dfad60fdd930fd72101746ead7964cdf5574264eb83122cb9eb6ebbbc6c"
+    },
+    {
+      "id": "senior-data-scientist",
+      "category": "personas",
+      "source": "skills/personas/senior-data-scientist/SKILL.md",
+      "sha256": "c88e66bd43be7bb70b509611dc61c62aa71abac1e1cde19ff111d9335d0af469"
+    },
+    {
+      "id": "senior-developer-advocate",
+      "category": "personas",
+      "source": "skills/personas/senior-developer-advocate/SKILL.md",
+      "sha256": "2acf99f94724b39177e88580dc3e4c0819ab31c21f65afc0ad23098b15fcd477"
+    },
+    {
+      "id": "senior-devops-sre",
+      "category": "personas",
+      "source": "skills/personas/senior-devops-sre/SKILL.md",
+      "sha256": "830a1c46cf836bb82aa2fe5c02b14c96611ee2c3662c05dfc117bfa7a714d47c"
+    },
+    {
+      "id": "senior-embedded-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-embedded-engineer/SKILL.md",
+      "sha256": "7a2087a73c83d25b4af0a072227ab919d2c7f1e5414106617d0847a1f3a52ce3"
+    },
+    {
+      "id": "senior-eval-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-eval-engineer/SKILL.md",
+      "sha256": "fe3de1e7692b601cffd89bd52cf87d58db87e65fc7689c4df6954d99ed27fb1d"
+    },
+    {
+      "id": "senior-fine-tuning-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-fine-tuning-engineer/SKILL.md",
+      "sha256": "4bb033804f555c8921227ba8afc1df1f278756e3d449450a656b847456388c01"
+    },
+    {
+      "id": "senior-frontend-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-frontend-engineer/SKILL.md",
+      "sha256": "ab5fa03a5569f6cbcd6c0c11473aee09fa7d1613521ca0f1152d25e74f1ad3e0"
+    },
+    {
+      "id": "senior-game-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-game-engineer/SKILL.md",
+      "sha256": "70ee5fabeac676cc3b896f5943521f138ecb6e8c5cc85da2e0fd4cb943513371"
+    },
+    {
+      "id": "senior-llm-app-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-llm-app-engineer/SKILL.md",
+      "sha256": "a42ae0930e211f613175d3f05f62dfad2614b087b8385b9334b4bfe152f4c143"
+    },
+    {
+      "id": "senior-ml-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-ml-engineer/SKILL.md",
+      "sha256": "48bea615eba9843d003584b80ad0282e3fe4d903c97399832acd8237eb9101ee"
+    },
+    {
+      "id": "senior-mlops-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-mlops-engineer/SKILL.md",
+      "sha256": "1529f8b93541f7ec64aa8240e0c67338c2be104755028a00d9c80e9fe87ae473"
+    },
+    {
+      "id": "senior-mobile-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-mobile-engineer/SKILL.md",
+      "sha256": "acdeabc1069668948857887d4558fb7543de84747bdf19694d4c93691bd67ac4"
+    },
+    {
+      "id": "senior-model-router-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-model-router-engineer/SKILL.md",
+      "sha256": "fa1ec553e4de1750d6bf5256dc6ffeffe834e52a5e04bb648255a4fe382bf2a0"
+    },
+    {
+      "id": "senior-platform-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-platform-engineer/SKILL.md",
+      "sha256": "4568907012ab160fa6c0910ab6075b5e780103230f8827a5573f6280fb24aa75"
+    },
+    {
+      "id": "senior-product-manager",
+      "category": "personas",
+      "source": "skills/personas/senior-product-manager/SKILL.md",
+      "sha256": "96c647e63ab87f9b60ff845d72ee3af9d07822195db8c424661e9fc7d8156248"
+    },
+    {
+      "id": "senior-qa-test-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-qa-test-engineer/SKILL.md",
+      "sha256": "bc1fe88d399ce83c71f8571ddc1702ee670524c1bf579851ebdd7c82d3f0b45c"
+    },
+    {
+      "id": "senior-rag-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-rag-engineer/SKILL.md",
+      "sha256": "e7bbc47614ac1beb5003728c70a64b206887fd072285aeb5572cdc6afa7ef48f"
+    },
+    {
+      "id": "senior-recommender-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-recommender-engineer/SKILL.md",
+      "sha256": "1ec30f74abc6764ff80e8bd66426e3f5d0fe52c596e595d6a75d64e1d48923b8"
+    },
+    {
+      "id": "senior-technical-writer",
+      "category": "personas",
+      "source": "skills/personas/senior-technical-writer/SKILL.md",
+      "sha256": "f8c558821ea2156bdb23dff3b34da674451587b5f6382229fbce4d271fd77852"
+    },
+    {
+      "id": "senior-ux-designer",
+      "category": "personas",
+      "source": "skills/personas/senior-ux-designer/SKILL.md",
+      "sha256": "1c5f170d9af95dbe4e6a9aecd670935a821c620261e9ce12ec41f7cf265086a3"
+    },
+    {
+      "id": "senior-voice-ai-engineer",
+      "category": "personas",
+      "source": "skills/personas/senior-voice-ai-engineer/SKILL.md",
+      "sha256": "b41428974f53ff654427a44bef7c28789f96f12c67575dda6a6acd9baba50256"
+    },
+    {
+      "id": "staff-software-architect",
+      "category": "personas",
+      "source": "skills/personas/staff-software-architect/SKILL.md",
+      "sha256": "ad75a65c9d534bc9e5a9621bcc759628fca8d9a5f7ea7c733c4eaf3d8754a8f1"
+    },
+    {
+      "id": "aws-expert",
+      "category": "stacks",
+      "source": "skills/stacks/aws-expert/SKILL.md",
+      "sha256": "ad33876be0e30d838a168056dc062c4271d6f40e261792c66a87563a430e8002"
+    },
+    {
+      "id": "csharp-dotnet-expert",
+      "category": "stacks",
+      "source": "skills/stacks/csharp-dotnet-expert/SKILL.md",
+      "sha256": "7cf473c4e2b428f1ee98e9eba0f14325c533ab8acd02944ed55311dffda4943b"
+    },
+    {
+      "id": "django-expert",
+      "category": "stacks",
+      "source": "skills/stacks/django-expert/SKILL.md",
+      "sha256": "e12ef71b7c60c1a0a300f893f6dc8427f276f39ac459bdac2263851fd2ac9059"
+    },
+    {
+      "id": "flutter-expert",
+      "category": "stacks",
+      "source": "skills/stacks/flutter-expert/SKILL.md",
+      "sha256": "38b8d07dca2a3ea09e79da727fe631e96c48bd55428342a1abb6f5b9e59a3a49"
+    },
+    {
+      "id": "gcp-expert",
+      "category": "stacks",
+      "source": "skills/stacks/gcp-expert/SKILL.md",
+      "sha256": "cc9d1600a5c56887e771de57b80be3cfe4082a836ae43cc64c95598fc58739dc"
+    },
+    {
+      "id": "golang-expert",
+      "category": "stacks",
+      "source": "skills/stacks/golang-expert/SKILL.md",
+      "sha256": "dfb55b0c481de2cefc31860b7170d8e7a8a41c80564815fcf7e35f3bd7a9061a"
+    },
+    {
+      "id": "java-expert",
+      "category": "stacks",
+      "source": "skills/stacks/java-expert/SKILL.md",
+      "sha256": "8c8cf1c1d6cd9e96b87cc719ff8f8cf2266d1c02f6955e3693f7336552bba074"
+    },
+    {
+      "id": "kubernetes-expert",
+      "category": "stacks",
+      "source": "skills/stacks/kubernetes-expert/SKILL.md",
+      "sha256": "1add604aa5a626b368f533736acc85a60b52a075687a0884c333720629c666fb"
+    },
+    {
+      "id": "nextjs-expert",
+      "category": "stacks",
+      "source": "skills/stacks/nextjs-expert/SKILL.md",
+      "sha256": "c8b23f118c561b018c53954476d05d23dd3a6a3afb9c9db2ec0b32168eee5d83"
+    },
+    {
+      "id": "playwright-expert",
+      "category": "stacks",
+      "source": "skills/stacks/playwright-expert/SKILL.md",
+      "sha256": "09906af8102713348da58254876be66a746c071f6916f37e983833cff63dc52e"
+    },
+    {
+      "id": "postgres-expert",
+      "category": "stacks",
+      "source": "skills/stacks/postgres-expert/SKILL.md",
+      "sha256": "29f65b9baedafd96298195f0474610bd459ab2332a56c6619e72abfa629a2cd3"
+    },
+    {
+      "id": "python-expert",
+      "category": "stacks",
+      "source": "skills/stacks/python-expert/SKILL.md",
+      "sha256": "25c8e4d50d70bbbcade216547f4245618e81d065718db2ae5e488da22c55ca2d"
+    },
+    {
+      "id": "rails-expert",
+      "category": "stacks",
+      "source": "skills/stacks/rails-expert/SKILL.md",
+      "sha256": "85f43a3b59d4cc5f7479820199d908ec53ceb29f80ebb98da799ee09fd7ea2c3"
+    },
+    {
+      "id": "react-native-expert",
+      "category": "stacks",
+      "source": "skills/stacks/react-native-expert/SKILL.md",
+      "sha256": "ec74dca939d7fbdcb731fc764c468913abe2762474f8a5e7bba2d60533fa8d39"
+    },
+    {
+      "id": "redis-expert",
+      "category": "stacks",
+      "source": "skills/stacks/redis-expert/SKILL.md",
+      "sha256": "4e502596b13b9ba7bf219180a180ebb573a7f85d840f43795bf74e7cabddbe88"
+    },
+    {
+      "id": "rust-expert",
+      "category": "stacks",
+      "source": "skills/stacks/rust-expert/SKILL.md",
+      "sha256": "f93860a0d8cfb0f8d0067edcec5c33534dd7807180056032b684326df2b8e6d4"
+    },
+    {
+      "id": "swift-ios-expert",
+      "category": "stacks",
+      "source": "skills/stacks/swift-ios-expert/SKILL.md",
+      "sha256": "3113df9fec1feb59878b2fb90b03b9a079306a20193bb8bb8831a50d42191a55"
+    },
+    {
+      "id": "tailwind-expert",
+      "category": "stacks",
+      "source": "skills/stacks/tailwind-expert/SKILL.md",
+      "sha256": "f9db14127e4912a9449f4e1d4c718d8d88cbc3129b3a4aa07d0c5ca9f32ecb9f"
+    },
+    {
+      "id": "terraform-expert",
+      "category": "stacks",
+      "source": "skills/stacks/terraform-expert/SKILL.md",
+      "sha256": "11b4d4e192145faed04e2a9e541d83decf3671fadc8f912416f3460355eb55c0"
+    },
+    {
+      "id": "typescript-expert",
+      "category": "stacks",
+      "source": "skills/stacks/typescript-expert/SKILL.md",
+      "sha256": "e5cc0cba7fcaf7b3b454e79faef1ac1427a18b075b423ba21d3bd1e3992b0e15"
+    }
+  ]
+}

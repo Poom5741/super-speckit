@@ -1,5 +1,7 @@
 # Artifact schemas
 
+New `create-feature` records default to `pipeline_contract=unified-v1` plus knowledge-v2. See [unified pipeline](../skills/ask-super-speckit/references/unified-pipeline.md) for persona selection, separate PStack/Lude lens and convergence receipt fields. The executable gates bind current feature intent and pinned specialists before maker work, and independent exact-candidate lens/convergence acceptance before merge. Native convergence appends remaining tasks and reopens maker work with old acceptance invalidated. Existing records keep their previous contract; `--pipeline legacy` is an explicit compatibility option, not automatic fallback for missing evidence.
+
 Artifacts are human-readable Markdown plus JSON for orchestration. IDs are stable and references are relative to the repository root.
 
 | Artifact | Location | Required invariant |

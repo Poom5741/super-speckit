@@ -1,9 +1,11 @@
 ---
 name: ask-super-speckit
-description: Autonomously deliver a feature, bug fix, or technical idea through PStack playbooks, selective Spec Kit planning, architecture checks, and independent verification.
+description: Autonomously deliver a feature, bug fix, or idea through native Spec Kit, feature-specific Lude developer personas, PStack methods, convergence, and independent verification.
 ---
 
 # ask-super-speckit
+
+Read [unified pipeline](references/unified-pipeline.md) before delivery. One Super-SpecKit coordinator combines native Spec Kit intent/convergence, feature-specific Lude maker and specialist expertise, PStack engineering methods, and independent exact-candidate QA. Read selected Lude sources through `scripts/lude_adapter.py` and its override contract; record the feature-specific persona selection before code. Keep PStack and Lude lens results distinct, reconcile them, then converge before authorized merge. Remaining native convergence tasks return to implement; changed candidates require fresh QA and both lenses. Micro completion is explicitly compact. Changed pipeline skills require independent fixture evaluation, not only source inventory checks.
 
 When the user enables TikTok during independent work, load [tiktok-work-break](../tiktok-work-break/SKILL.md). Keep its owned tab open while working and close it before requesting human judgment or input; resume it after the response. This mode is opt-in and does not change delivery gates.
 

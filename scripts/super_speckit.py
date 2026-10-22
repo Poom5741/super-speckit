@@ -3,6 +3,7 @@
 from __future__ import annotations
 import argparse, html, json, re, subprocess, sys, fcntl
 import state_contract as contract
+import pipeline_contract as pipeline
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -108,6 +109,9 @@ def cmd_create(args):
     if args.maker == args.checker: raise ValueError("maker and checker must be distinct")
     data = {"id": args.feature, "state": "planned", "candidate_sha": None, "maker": args.maker, "checker": args.checker, "matrix": args.matrix, "ui_change": args.ui_change, "journey_ux": {"status": "not_required", "report": None, "candidate_sha": None}, "purpose": {"status": "not_started", "map": None, "decision": None}, "grill": {"status": "not_started", "artifact": None}, "route": {"kind": "unclassified", "rationale": None}, "atlas": {"path": None}, "change_story": {"path": None}, "handoff": {"path": None}, "decision_trail": {"path": None}, "verification_harness": {"path": None}, "static_review": {"artifact": None}, "corrective_enforcement": {"artifact": None}, "runs": [], "bugs": []}
     if args.playbook_led: data['delivery_contract']='knowledge-v2'
+    if args.pipeline=='unified-v1':
+        data['pipeline_contract']='unified-v1'
+        data['delivery_contract']='knowledge-v2'
     save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
@@ -119,6 +123,41 @@ def cmd_record_prerequisite(args):
     repo=root(args.repo); data=load(repo,args.feature); artifact=contract.file(repo,args.artifact)
     data.setdefault('prerequisite_receipts',{})[args.kind]={'artifact':args.artifact,'digest':contract.digest(artifact)}
     save(repo,args.feature,data); write_work_state_manifest(repo)
+
+def cmd_select_personas(args):
+    repo=root(args.repo); data=load(repo,args.feature)
+    if not pipeline.active(data): raise ValueError('persona selection requires unified-v1 feature')
+    receipt=pipeline.select(repo,data,args.persona,args.specialist,args.rationale)
+    # Receipt files live outside the feature-record glob.
+    path=repo/'.super-speckit/pipeline'/args.feature/'personas.json'
+    contract.atomic(path,receipt)
+    data.setdefault('prerequisite_receipts',{})['personas']={'artifact':path.relative_to(repo).as_posix(),'digest':contract.digest(path)}
+    save(repo,args.feature,data); write_work_state_manifest(repo)
+    print(json.dumps(receipt,indent=2))
+
+def cmd_record_convergence(args):
+    repo=root(args.repo); data=load(repo,args.feature)
+    if not pipeline.active(data): raise ValueError('convergence receipt requires unified-v1 feature')
+    if data['state'] not in {'qa_running','retest_running','ready_for_merge'} or not data.get('proof'):
+        raise ValueError('converge only after independent candidate proof')
+    contract.proof(repo,data,data['proof'])
+    pipeline.lens_review(repo,data)
+    artifact=contract.file(repo,args.receipt); receipt=json.loads(artifact.read_text())
+    if any(row['artifact']==args.receipt for row in data.get('convergence_history',[])):
+        raise ValueError('use a new immutable artifact path for each convergence run')
+    pipeline.convergence_result(repo,data,receipt,allow_remaining=True)
+    row={'artifact':args.receipt,'digest':contract.digest(artifact)}
+    data.setdefault('convergence_history',[]).append(row)
+    if receipt['outcome']=='tasks_appended':
+        data['state']='maker_running'
+        data.pop('proof',None); data.pop('qa_attempt',None)
+        for kind in ['convergence','lens-review','engineering-review','shared-result']:
+            data.setdefault('prerequisite_receipts',{}).pop(kind,None)
+    else:
+        pipeline.candidate_intent(repo,data,data['candidate_sha'])
+        data.setdefault('prerequisite_receipts',{})['convergence']=row
+    save(repo,args.feature,data); write_work_state_manifest(repo)
+    print(json.dumps({'outcome':receipt['outcome'],'state':data['state']}))
 
 def cmd_record_proof(args):
     repo=root(args.repo); data=load(repo,args.feature)
@@ -321,7 +360,9 @@ def main():
     for name, fn in [("init",cmd_init),("validate",cmd_validate)]:
         x=sub.add_parser(name); x.add_argument("--repo",default="."); x.set_defaults(fn=fn)
     x=sub.add_parser("status"); x.add_argument("--repo",default="."); x.add_argument("--feature"); x.add_argument("--strict",action="store_true"); x.set_defaults(fn=cmd_status)
-    x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.add_argument("--ui-change",action="store_true"); x.add_argument("--playbook-led",action="store_true"); x.set_defaults(fn=cmd_create)
+    x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.add_argument("--ui-change",action="store_true"); x.add_argument("--playbook-led",action="store_true"); x.add_argument('--pipeline',choices=['unified-v1','legacy'],default='unified-v1'); x.set_defaults(fn=cmd_create)
+    x=sub.add_parser('select-personas'); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.add_argument('--persona',required=True); x.add_argument('--specialist',action='append',default=[]); x.add_argument('--rationale',required=True); x.set_defaults(fn=cmd_select_personas)
+    x=sub.add_parser('record-convergence'); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.add_argument('--receipt',required=True); x.set_defaults(fn=cmd_record_convergence)
     x=sub.add_parser("transition"); x.add_argument("feature"); x.add_argument("state"); x.add_argument("--repo",default="."); x.add_argument("--sha"); x.add_argument("--checkout", "--worktree", dest="worktree"); x.add_argument("--attempt-id"); x.set_defaults(fn=cmd_transition)
     x=sub.add_parser("qa-clone"); x.add_argument("--repo",default="."); x.add_argument("--path",required=True); x.add_argument("--ref",required=True); x.set_defaults(fn=cmd_qa_clone)
     x=sub.add_parser("worktree"); x.add_argument("--repo",default="."); x.add_argument("--path",required=True); x.add_argument("--branch",required=True); x.add_argument("--ref",default="HEAD"); x.set_defaults(fn=cmd_worktree)
@@ -337,7 +378,7 @@ def main():
     x=sub.add_parser("record-artifact"); x.add_argument("feature"); x.add_argument("kind",choices=["decision-trail","verification-harness","static-review","corrective-enforcement"]); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.set_defaults(fn=cmd_record_artifact)
     x=sub.add_parser("harness-init"); x.add_argument("--repo",default="."); x.add_argument("--replace",action="store_true"); x.set_defaults(fn=cmd_harness_init)
     x=sub.add_parser("continuation"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--stage",required=True); x.add_argument("--next-action",required=True); x.add_argument("--candidate-sha"); x.add_argument("--worktree",required=True); x.add_argument("--evidence",action="append",default=[]); x.add_argument("--unknowns",default=""); x.add_argument("--history-limit",type=int,default=20); x.set_defaults(fn=cmd_continuation)
-    x=sub.add_parser('record-prerequisite'); x.add_argument('feature'); x.add_argument('kind',choices=['baseline-feedback','phase-contract','research','architecture','engineering-review','investigation','shared-design','shared-result']); x.add_argument('--repo',default='.'); x.add_argument('--artifact',required=True); x.set_defaults(fn=cmd_record_prerequisite)
+    x=sub.add_parser('record-prerequisite'); x.add_argument('feature'); x.add_argument('kind',choices=['baseline-feedback','phase-contract','research','architecture','engineering-review','investigation','shared-design','shared-result','lens-review']); x.add_argument('--repo',default='.'); x.add_argument('--artifact',required=True); x.set_defaults(fn=cmd_record_prerequisite)
     for name,fn in [('record-proof',cmd_record_proof),('record-merge',cmd_merge_receipt)]:
         x=sub.add_parser(name); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.add_argument('--receipt',required=True); x.set_defaults(fn=fn)
     for name in ['record-bug','resolve-bug']:

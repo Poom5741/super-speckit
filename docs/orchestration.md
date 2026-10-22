@@ -1,5 +1,9 @@
 # Orchestration rules
 
+## Unified pipeline authority
+
+Read [unified pipeline](../skills/ask-super-speckit/references/unified-pipeline.md) for the active delivery contract. Native Spec Kit owns normal/milestone intent and append-only convergence. Lude supplies feature-specific developer personas and stack/domain expertise. PStack supplies investigation and engineering methods. Super-SpecKit owns the single coordinator, canonical state, one code-writing owner, independent runtime QA, separate PStack/Lude lens evidence and reconciliation. Native convergence repeats with implementation before merge; compact micro completion is labeled separately. New records default to unified-v1; old records retain their gates.
+
 ## 1. Playbooks lead execution; Spec Kit plans selected scopes
 
 Read `skills/ask-super-speckit/references/playbook-delivery.md` for the current delivery contract. Select and persist a PStack playbook first. After evidence-backed PStack investigation, micro features, fixes and mechanical refactors use playbook.md plus a requirements matrix; normal and milestone work retain native spec.md, plan.md, tasks.md, Spec Grill, Atlas and Change Story. Escalate micro scope when uncertain product or cross-boundary design appears. Read-only requests have no delivery ceremony. Preserve explicit user purpose confirmation and provenance; technical choices remain autonomous.

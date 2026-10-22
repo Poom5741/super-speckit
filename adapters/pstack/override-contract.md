@@ -1,5 +1,7 @@
 # Active PStack adapter contract
 
+The unified pipeline adds a feature-specific Lude developer/specialist lens alongside PStack. Read `skills/ask-super-speckit/references/unified-pipeline.md`. PStack supplies methods, not final authority over Lude's domain findings. Super-SpecKit reconciles both against native Spec Kit intent and observed evidence. Both static lenses remain separate from runtime QA; native convergence happens before merge and returns remaining tasks to implementation. Only the existing Super-SpecKit state owns acceptance.
+
 Load this contract with the selected raw pinned source. The vendor tree is provenance, outside discovery, never an independently installed coordinator. `ask-super-speckit` owns routing and the selected PStack playbook drives execution; native Spec Kit owns requirements, plans, tasks and convergence when the normal/milestone route selects it. Canonical Super-SpecKit state owns candidates, workers, proof and authority; upstream `orch` is not another ledger. Read `skills/ask-super-speckit/references/playbook-delivery.md` for compact routing, architecture, two acceptance gates and unattended execution. Use one writer in the current checkout; exact-candidate QA uses a separate clone by default. Upstream mandatory worktree steps become optional compatibility steps. No concurrent writers share a directory, even on different branches.
 
 ## Source fidelity and authority
