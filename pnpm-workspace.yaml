@@ -1,0 +1,12 @@
+packages:
+  - "v2/packages/*"
+minimumReleaseAgeExclude:
+  - "@opencode/ai@2.2.2"
+  - "@opencode/client@2.2.2"
+  - "@opencode/plugin@2.2.2"
+  - "@opencode/protocol@2.2.2"
+  - "@opencode/schema@2.2.2"
+  - "@opencode/util@2.2.2"
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true

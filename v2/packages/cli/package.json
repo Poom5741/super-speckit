@@ -1,0 +1,18 @@
+{
+  "name": "@super-speckit/cli",
+  "version": "0.1.0-alpha.0",
+  "type": "module",
+  "bin": {
+    "ssk2": "./src/main.ts"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@super-speckit/architecture": "workspace:*",
+    "@super-speckit/client": "workspace:*",
+    "@super-speckit/coordinator": "workspace:*",
+    "@super-speckit/daemon": "workspace:*",
+    "@super-speckit/github": "workspace:*",
+    "@super-speckit/protocol": "workspace:*",
+    "commander": "^14.0.2"
+  }
+}

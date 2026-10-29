@@ -1,0 +1,44 @@
+{
+  "base_sha": "9b7ccfa4148c1b5fe97a8e17de9a1822066151c7",
+  "playbook": "feature",
+  "playbook_digest": "3a62cc4a8cbcf144bb9dd05f05420a15be0d38b784d3b141bb730a5852f50a62",
+  "intent": "Implement the owner-approved Super-SpecKit V2 full-ecosystem alpha while preserving V1 behavior and existing dirty work.",
+  "flow": "GitHub card intent enters one owned coordinator, which fences attempts in SQLite, delegates through typed providers and runners, projects redacted evidence to Git, and exposes the same state through CLI and OpenCode Mission Control.",
+  "scope_rationale": "This is a milestone because it crosses durable state, GitHub ownership, provider execution, platform runners, installation, TUI experience, migration, and real-environment certification.",
+  "unknowns": [
+    "Live Herdr, ADE, Cloudflare Browser Run, and clean Windows 11/WSL behavior require external environments.",
+    "Three whitelabels-cex card journeys and exact-candidate independent review remain release work."
+  ],
+  "unresolved_blockers": [],
+  "conventions": [
+    {
+      "id": "C-OWNERSHIP",
+      "rule": "One coordinator owns runtime transitions; GitHub owns card intent; Git owns technical truth.",
+      "scope": "V2 coordinator, GitHub adapter, providers, and projections",
+      "source": "docs/v2/system-architecture.draft.md",
+      "plan_application": "All mutations pass through execute/query/watch and provider adapters never write canonical card state."
+    },
+    {
+      "id": "C-COMPATIBILITY",
+      "rule": "V1 and ordinary GitHub contribution remain first-class during progressive adoption.",
+      "scope": "Installer, migration, and repository guidance",
+      "source": "design/features/super-speckit-v2/SPEC.draft.md",
+      "plan_application": "V1 history is immutable, adoption is previewed and reversible, and the plugin degrades rather than inventing support."
+    }
+  ],
+  "evidence": [
+    { "path": "design/features/super-speckit-v2/SPEC.draft.md", "digest": "b8f9197cc42d39a6ccabf2c33eb45c618438815d7e6218c9a3a27a1f4c13b0b3" },
+    { "path": "docs/research/opencode-runtime-and-portfolio-layer.md", "digest": "9cc814646f4edd2f7dd07084e50c574a33eb65afca02b4eac04d5d154278ef70" },
+    { "path": "docs/v2/system-architecture.draft.md", "digest": "cfab3083db8ed792fb7a176c8bec23ada652c1e9e0b2cba500fb377119c8b756" }
+  ],
+  "steps": [
+    { "id": "understand", "source_step": "1", "status": "completed", "evidence": [{ "path": "design/features/super-speckit-v2/SPEC.draft.md", "digest": "b8f9197cc42d39a6ccabf2c33eb45c618438815d7e6218c9a3a27a1f4c13b0b3" }] },
+    { "id": "architecture", "source_step": "2", "status": "completed", "evidence": [{ "path": "design/features/super-speckit-v2/architecture-rationale.md", "digest": "3124cc7e0d852931fea62d94bcf245a8369156f611c75442fc61a2223ecbeaac" }] },
+    { "id": "throughput", "source_step": "3", "status": "completed", "evidence": [{ "path": "specs/SSK-V2/tasks.md", "digest": "c92ea99136ab63e108d5a6fa16d2c271a27e8f30288c80bd336e40efe2eef984" }] },
+    { "id": "implementation", "source_step": "4", "status": "completed", "evidence": [{ "path": "package.json", "digest": "d2cf400d1d4bfbc9183949b88a64fc60704714346bbc529d798418310d7c7976" }] },
+    { "id": "surface-verification", "source_step": "5", "status": "pending" },
+    { "id": "ordered-candidate", "source_step": "6", "status": "pending" },
+    { "id": "interrogation", "source_step": "7", "status": "completed", "evidence": [{ "path": "design/features/super-speckit-v2/architecture-rationale.md", "digest": "3124cc7e0d852931fea62d94bcf245a8369156f611c75442fc61a2223ecbeaac" }] },
+    { "id": "pull-request", "source_step": "8", "status": "pending" }
+  ]
+}

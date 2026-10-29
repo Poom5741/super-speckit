@@ -1,0 +1,11 @@
+{
+  "name": "@super-speckit/github",
+  "version": "0.1.0-alpha.0",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@super-speckit/protocol": "workspace:*",
+    "yaml": "^2.8.1"
+  }
+}

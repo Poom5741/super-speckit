@@ -6,6 +6,23 @@ After PStack investigation, bounded micro features and fixes use a persisted pla
 
 Long runs retain a completion predicate, steps, checkpoints, budget and recovery rules. Unattended resume requires a configured and observed host runner; copied prompts do not provide one.
 
+## V2 runtime alpha under development
+
+The repository now also contains the Super-SpecKit V2 provider-neutral runtime under `v2/`. It adds an owned SQLite coordinator, `ssk2` CLI, GitHub card contracts and reversible V1 adoption, provider and runner protocols, a persistent WSL bridge, repository-safe evidence retention, Architecture/Foundation generation, and a prebuilt OpenCode 2.2.2 server/TUI/RPC plugin. The installer registers that plugin under `.opencode/plugins/super-speckit/` in addition to the four portable skills.
+
+This is an implementation alpha, not a certified public alpha. Local fixtures pass, but Windows 11/WSL, installed Herdr, installed ADE, live Cloudflare Browser Run, three real `whitelabels-cex` cards, and independent review of an immutable release candidate are still required. Feature Delivery Ready and Production Release Ready remain separate.
+
+For repository development:
+
+```bash
+corepack pnpm install
+pnpm build:v2
+pnpm test:v2
+pnpm ssk2 doctor --opencode-commit 1eea2d4d606b3688d243033446d6ab83113431c8
+pnpm ssk2 daemon install
+pnpm ssk2 daemon start
+```
+
 ## What this first version includes
 
 - one code-writing owner in the current checkout, with explicitly isolated parallel writers when needed;
@@ -41,9 +58,11 @@ Install the public bootstrap skill with:
 npx skills add https://github.com/Poom5741/super-speckit/tree/main/installable/super-speckit
 ```
 
-Then invoke `$super-speckit-installer` in the target repository. It installs the complete kit to `.super-speckit/`, creates a project `super-speckit.yml` if absent, initializes the YAML work-state manifest, and registers the four intended project skills in `.agents/skills/`: `$super-speckit`, `$ask-super-speckit`, `$super-speckit-design-first`, and `$super-speckit-final-manual-review`. The direct folder URL avoids exposing internal and vendored skills as unrelated installation choices. Pin an exact commit or tag URL for reproducible installations. Identical reinstalls preserve project configuration and evidence. Use `--upgrade` for deliberate bundle updates; changed installed files are reported rather than silently replaced, and prior bundle files are backed up.
+Then invoke `$super-speckit-installer` in the target repository. It installs the complete kit to `.super-speckit/`, creates a project `super-speckit.yml` if absent, initializes the YAML work-state manifest, and registers the four intended skills—`$super-speckit`, `$ask-super-speckit`, `$super-speckit-design-first`, and `$super-speckit-final-manual-review`—for both project and user discovery in Agent Skills, Codex, Claude Code, Cursor, OpenCode, Pi, and ZCode. This fixes the bootstrap-only state where a harness can see `$super-speckit-installer` but none of the installed workflow skills. User-level wrappers locate `.super-speckit/` from the active project; they do not contain a second copy of the workflow. Existing unrelated user skills are skipped instead of overwritten. The direct folder URL avoids exposing internal and vendored skills as unrelated installation choices. Pin an exact commit or tag URL for reproducible installations. Identical reinstalls preserve project configuration and evidence. Use `--upgrade` for deliberate bundle updates; changed installed files are reported rather than silently replaced, and prior bundle files are backed up.
 
-If you installed an older version that exposes only `$super-speckit-installer`, run its `scripts/install_project.py --target . --register-only` command once to repair the project entry points.
+On OpenCode, the installer also adds the prebuilt V2 plugin target. Mission Control connects to the owned local coordinator through a user-state socket; its token is read from user state and is never written to the repository. Until the daemon is installed and running, the TUI shows an explicit offline/degraded explanation while the portable skills continue to work.
+
+If you installed an older version that exposes only `$super-speckit-installer`, or a harness cannot see the installed skills, run its `scripts/install_project.py --target . --register-only` command once. The default `--entrypoint-scope both` repairs every supported project and user entry point. Use `--entrypoint-scope project` only when you intentionally do not want user-level discovery.
 
 ## Install into a Spec Kit repository
 
@@ -102,7 +121,7 @@ The complete pinned [PStack 0.15.13](https://github.com/cursor/plugins/tree/e5a8
 
 Use `python3 scripts/pstack_adapter.py inventory` to check bundle coverage and hashes. `route <playbook>` selects the native adapter contract; `read <playbook>` supplies the pinned source with fidelity overrides. Relevant leaves load progressively under adaptive rigor. Copied source and route coverage do not imply live provider certification.
 
-ZCode is the primary host. Project `.agents/skills` entry points are supported; host discovery checks user-level shadowing. Codex and Pi use reviewed CLI adapters, and ordinary host switches use shared continuation and command-validated state. OMP and Cursor are optional detected hosts. No global skills/configuration or external automation are enabled by installation.
+ZCode is the primary host. Project and user-level skill entry points are supported; host discovery checks shadowing. Codex and Pi use reviewed CLI adapters, and ordinary host switches use shared continuation and command-validated state. OMP and Cursor are optional detected hosts. Installation does not change global harness configuration or enable external automation.
 
 Read [integration methods](docs/pstack-integration.md) and [certification evidence](docs/pstack-certification.md) for executable runtime controls, complete route coverage, intentional differences, and observed limitations. Benny and make-bot-ui remain dormant until configured and authorized.
 

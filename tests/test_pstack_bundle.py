@@ -13,7 +13,7 @@ INSTALL=ROOT/'installable/super-speckit/scripts/install_project.py'
 
 class BundleTests(unittest.TestCase):
     def install(self,target,*extra):
-        return subprocess.run(['python3',str(INSTALL),'--source',str(ROOT),'--target',str(target),*extra],capture_output=True,text=True)
+        return subprocess.run(['python3',str(INSTALL),'--source',str(ROOT),'--target',str(target),'--entrypoint-scope','project',*extra],capture_output=True,text=True)
 
     def test_whole_inventory_and_dormant_source(self):
         self.assertEqual(ADAPTER.inventory()['status'],'pass')
@@ -77,7 +77,7 @@ class BundleTests(unittest.TestCase):
             kept=target/'.super-speckit/qa/retained.log'; kept.parent.mkdir(exist_ok=True); kept.write_text('proof')
             config=target/'super-speckit.yml'; config.write_text('user-owned: true\n')
             prior=(source/'SKILL.md').read_text(); (source/'SKILL.md').write_text(prior+'\nupgrade fixture\n')
-            update=subprocess.run(['python3',str(INSTALL),'--source',str(source),'--target',str(target),'--upgrade'],capture_output=True,text=True)
+            update=subprocess.run(['python3',str(INSTALL),'--source',str(source),'--target',str(target),'--entrypoint-scope','project','--upgrade'],capture_output=True,text=True)
             self.assertEqual(update.returncode,0,update.stderr)
             self.assertIn('upgrade fixture',(target/'.super-speckit/SKILL.md').read_text())
             self.assertTrue((target/'.super-speckit-upgrade-backup/SKILL.md').is_file())

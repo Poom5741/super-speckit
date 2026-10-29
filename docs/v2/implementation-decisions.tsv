@@ -1,0 +1,4 @@
+ts	phase	decision	why	evidence	result
+2026-10-30T00:00:00+07:00	baseline	kept existing V1 and installer changes intact	the approved plan requires backward compatibility and preservation of dirty work	python3 -m unittest discover -s tests	80 tests passed
+2026-10-30T00:01:00+07:00	architecture	selected one transactional coordinator with execute, query, and watch	one owner and a small client API reduce split authority and reader load	design/features/super-speckit-v2/architecture-rationale.md	architecture selected
+2026-10-30T00:02:00+07:00	compatibility	introduced the alpha CLI as ssk2	the existing Python commands retain their V1 semantics	design/features/super-speckit-v2/architecture-rationale.md	V1 boundary preserved

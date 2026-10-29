@@ -1,0 +1,14 @@
+flowchart LR
+  GH[GitHub card intent] --> C[Owned coordinator]
+  C --> DB[(SQLite WAL ledger)]
+  C --> OC[OpenCode Mission Control]
+  C --> R[Native or persistent WSL runner]
+  C --> P[Provider adapters]
+  P --> H[Herdr]
+  P --> A[ADE]
+  P --> B[Cloudflare Browser Run]
+  DB --> E[Redacted repository evidence]
+  E --> GH
+  C --> X{Writer handoff approved?}
+  X -->|No| F[Fence destination writes]
+  X -->|Yes plus source quiescence| D[Destination attempt]

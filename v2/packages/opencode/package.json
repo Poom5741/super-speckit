@@ -1,0 +1,18 @@
+{
+  "name": "@super-speckit/opencode",
+  "version": "0.1.0-alpha.0",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./tui": "./dist/tui.js",
+    "./rpc": "./dist/rpc.js"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@opencode/plugin": "2.2.2",
+    "@opentui/solid": "0.7.0",
+    "@super-speckit/client": "workspace:*",
+    "@super-speckit/protocol": "workspace:*",
+    "solid-js": "1.9.12"
+  }
+}

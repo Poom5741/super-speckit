@@ -1,0 +1,11 @@
+{
+  "name": "@super-speckit/client",
+  "version": "0.1.0-alpha.0",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@super-speckit/coordinator": "workspace:*",
+    "@super-speckit/protocol": "workspace:*"
+  }
+}

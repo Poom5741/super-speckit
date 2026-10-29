@@ -186,10 +186,12 @@ def cmd_status(args):
         if path.exists():
             data=json.loads(path.read_text())
             feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists(),"ui_change":data.get("ui_change",False),"journey_ux":data.get("journey_ux"),"purpose":data.get("purpose"),"grill":data.get("grill"),"route":data.get("route"),"atlas":data.get("atlas"),"change_story":data.get("change_story"),"handoff":data.get("handoff")})
+    git_head=git_value(repo,"rev-parse","HEAD")
+    git_available=git_head is not None
     status={
         "schema_version":1,
         "repository":str(repo),
-        "git":{"head":git_value(repo,"rev-parse","HEAD"),"branch":git_value(repo,"branch","--show-current"),"dirty":bool(git_value(repo,"status","--porcelain")),"worktrees":(git_value(repo,"worktree","list","--porcelain") or "").count("worktree ")},
+        "git":{"available":git_available,"head":git_head,"branch":git_value(repo,"branch","--show-current") if git_available else None,"dirty":bool(git_value(repo,"status","--porcelain")) if git_available else None,"worktrees":(git_value(repo,"worktree","list","--porcelain") or "").count("worktree ") if git_available else None},
         "feature":feature,
         "state_validation":{"status":"pass" if not failures else "fail","failures":failures},
         "artifacts":{"config_exists":(repo/"super-speckit.yml").exists() or (repo/"config/super-speckit.yml").exists(),"native_specify_exists":(repo/".specify").exists(),"qa_root_exists":(repo/".super-speckit/qa").exists(),"work_state_manifest":str(manifest_path(repo).relative_to(repo)),"work_state_manifest_exists":manifest_path(repo).exists(),"continuation":str(continuation_path(repo).relative_to(repo)),"continuation_exists":continuation_path(repo).exists()},
@@ -348,7 +350,7 @@ def main():
     a=p.parse_args()
     try:
         repo=root(a.repo)
-        if hasattr(a,'feature'): state_path(repo,a.feature)
+        if getattr(a,'feature',None) is not None: state_path(repo,a.feature)
         lock=repo/'.super-speckit/state/.lock'; lock.parent.mkdir(parents=True,exist_ok=True)
         with lock.open('a') as handle:
             fcntl.flock(handle,fcntl.LOCK_EX)

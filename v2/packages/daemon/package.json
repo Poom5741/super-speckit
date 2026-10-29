@@ -1,0 +1,12 @@
+{
+  "name": "@super-speckit/daemon",
+  "version": "0.1.0-alpha.0",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@super-speckit/client": "workspace:*",
+    "@super-speckit/coordinator": "workspace:*",
+    "@super-speckit/protocol": "workspace:*"
+  }
+}
