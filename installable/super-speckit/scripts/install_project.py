@@ -9,22 +9,46 @@ import os
 import stat
 import shutil
 import subprocess
+import sys
 import tempfile
 import urllib.request
 import zipfile
 from pathlib import Path
 
-BUNDLE_PATHS = ("SKILL.md", "commands", "config", "docs", "schemas", "scripts", "templates", "workflows", "skills", "sources.lock.json", "vendor", "adapters")
+BUNDLE_PATHS = ("SKILL.md", "commands", "config", "docs", "schemas", "scripts", "templates", "workflows", "skills", "sources.lock.json", "vendor", "adapters", "package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml", "v2")
 ENTRYPOINTS = {
     "super-speckit": (".super-speckit/SKILL.md", "Run the complete evidence-first Super-SpecKit workflow."),
     "ask-super-speckit": (".super-speckit/skills/ask-super-speckit/SKILL.md", "Autonomously route a feature, bug, or idea through Super-SpecKit."),
     "super-speckit-design-first": (".super-speckit/skills/design-first/SKILL.md", "Create and review an HTML design decision before UI implementation."),
     "super-speckit-final-manual-review": (".super-speckit/skills/final-manual-review/SKILL.md", "Guide independent human final review and route defects safely."),
 }
+PROJECT_SKILL_ROOTS = (
+    ".agents/skills",
+    ".codex/skills",
+    ".claude/skills",
+    ".cursor/skills",
+    ".opencode/skills",
+    ".pi/skills",
+    ".zcode/skills",
+)
+
+def user_skill_roots() -> tuple[Path, ...]:
+    """Return native user-level skill roots without requiring a harness CLI."""
+    home=Path.home()
+    xdg_config=Path(os.environ.get("XDG_CONFIG_HOME", home / ".config"))
+    return (
+        home / ".agents/skills",
+        home / ".codex/skills",
+        home / ".claude/skills",
+        home / ".cursor/skills",
+        xdg_config / "opencode/skills",
+        home / ".pi/agent/skills",
+        home / ".zcode/skills",
+    )
 
 def tree_digest(path: Path) -> str:
     digest = hashlib.sha256()
-    files = [path] if path.is_file() else sorted(p for p in path.rglob("*") if p.is_file() and "__pycache__" not in p.parts)
+    files = [path] if path.is_file() else sorted(p for p in path.rglob("*") if p.is_file() and "__pycache__" not in p.parts and "node_modules" not in p.parts)
     for file in files:
         digest.update((file.name if path.is_file() else file.relative_to(path).as_posix()).encode())
         digest.update(str(bool(file.stat().st_mode & stat.S_IXUSR)).encode())
@@ -56,11 +80,15 @@ def verify_bundle(source: Path) -> None:
         if bool(file.stat().st_mode & stat.S_IXUSR) != (modes[name] == "100755"):
             raise ValueError(f"PStack source mode drift: {name}")
 
-def write_entrypoints(root: Path, entrypoints: dict[str, tuple[str, str]], force: bool) -> None:
+def write_entrypoints(root: Path, entrypoints: dict[str, tuple[str, str]], force: bool, *, skip_conflicts: bool = False) -> list[Path]:
+    skipped=[]
     for name, (canonical, description) in entrypoints.items():
         directory=root / name; skill=directory / "SKILL.md"
         if directory.exists() and not force:
             if skill.exists() and canonical in skill.read_text():
+                continue
+            if skip_conflicts:
+                skipped.append(directory)
                 continue
             raise ValueError(f"refusing to overwrite existing skill entry point: {directory}; use --force only after reviewing it")
         if directory.exists():
@@ -68,12 +96,46 @@ def write_entrypoints(root: Path, entrypoints: dict[str, tuple[str, str]], force
             if backup.exists(): raise ValueError(f"entrypoint backup already exists: {backup}")
             directory.rename(backup)
         directory.mkdir(parents=True, exist_ok=True)
-        skill.write_text(f"""---\nname: {name}\ndescription: {description}\n---\n\n# {name}\n\nThe canonical Super-SpecKit instructions live at `{canonical}` in this project. Read that file completely before acting, then resolve source/adapter paths inside `.super-speckit/` and state/artifact paths from the project root. Invoke bundled tools as `python3 .super-speckit/scripts/<tool>.py --repo .` where supported; the adapter CLI derives its kit path from its installation and uses `--kit .super-speckit` only when overriding it. This wrapper exists only to make the installed entry point discoverable; it is not a second source of workflow truth.\n""")
+        skill.write_text(f"""---\nname: {name}\ndescription: {description}\n---\n\n# {name}\n\nLocate the active project root as the nearest ancestor containing `.super-speckit/`. The canonical Super-SpecKit instructions live at `{canonical}` relative to that root. If no ancestor contains `.super-speckit/`, explain that Super-SpecKit must first be installed into the active project and stop. Read the canonical file completely before acting, then resolve source/adapter paths inside `.super-speckit/` and state/artifact paths from the project root. Invoke bundled tools as `python3 .super-speckit/scripts/<tool>.py --repo .` from the project root where supported; the adapter CLI derives its kit path from its installation and uses `--kit .super-speckit` only when overriding it. This wrapper exists only to make the installed entry point discoverable; it is not a second source of workflow truth.\n""")
+    return skipped
 
-def register_entrypoints(target: Path, force: bool) -> None:
-    """Expose the normal public surface plus OMP's one orchestrator entry point."""
-    write_entrypoints(target / ".agents/skills", ENTRYPOINTS, force)
-    write_entrypoints(target / ".codex/skills", {"ask-super-speckit": ENTRYPOINTS["ask-super-speckit"]}, force)
+def register_entrypoints(target: Path, force: bool, scope: str) -> None:
+    """Expose the public surface at project scope, user scope, or both."""
+    if scope in ("project", "both"):
+        for relative_root in PROJECT_SKILL_ROOTS:
+            write_entrypoints(target / relative_root, ENTRYPOINTS, force)
+    if scope in ("global", "both"):
+        for root in user_skill_roots():
+            for conflict in write_entrypoints(root, ENTRYPOINTS, force, skip_conflicts=not force):
+                print(f"warning: skipped conflicting user skill {conflict}; review it and rerun with --force to replace it with a backup", file=sys.stderr)
+    register_opencode_plugin(target, force)
+
+def register_opencode_plugin(target: Path, force: bool) -> None:
+    """Register the prebuilt V2 plugin without copying credentials into the project."""
+    runtime=target / ".super-speckit/v2/packages/opencode/dist"
+    if not (runtime / "index.js").exists() or not (runtime / "tui.js").exists() or not (runtime / "rpc.js").exists():
+        raise ValueError("installed bundle is missing the prebuilt OpenCode V2 plugin")
+    directory=target / ".opencode/plugins/super-speckit"
+    marker="super-speckit-managed-opencode-plugin"
+    package=directory / "package.json"
+    if directory.exists() and not force:
+        if package.exists() and marker in package.read_text():
+            return
+        raise ValueError(f"refusing to overwrite existing OpenCode plugin: {directory}; use --force only after reviewing it")
+    if directory.exists():
+        backup=directory.with_name(directory.name + ".pre-super-speckit")
+        if backup.exists(): raise ValueError(f"OpenCode plugin backup already exists: {backup}")
+        directory.rename(backup)
+    directory.mkdir(parents=True)
+    package.write_text(json.dumps({
+        "name": marker,
+        "private": True,
+        "type": "module",
+        "exports": {".": "./index.js", "./tui": "./tui.js", "./rpc": "./rpc.js"},
+    }, indent=2)+"\n")
+    (directory / "index.js").write_text('export { default } from "../../../.super-speckit/v2/packages/opencode/dist/index.js";\n')
+    (directory / "tui.js").write_text('export { default } from "../../../.super-speckit/v2/packages/opencode/dist/tui.js";\n')
+    (directory / "rpc.js").write_text('export * from "../../../.super-speckit/v2/packages/opencode/dist/rpc.js";\n')
 
 def bundle_source(args: argparse.Namespace, temp: Path) -> Path:
     if args.source:
@@ -101,9 +163,9 @@ def install(args: argparse.Namespace) -> None:
     if args.register_only:
         if not (destination / "SKILL.md").exists():
             raise ValueError(f"cannot register entry points: missing installed kit at {destination}")
-        register_entrypoints(target, args.force)
+        register_entrypoints(target, args.force, args.entrypoint_scope)
         subprocess.run(["python3", str(destination / "scripts/super_speckit.py"), "validate", "--repo", str(target)], check=True)
-        print(f"registered Super-SpecKit entry points in {target / '.agents/skills'} and OMP-compatible .codex/skills")
+        print(f"registered Super-SpecKit entry points at {args.entrypoint_scope} scope")
         return
     target.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="super-speckit-install-") as directory:
@@ -148,8 +210,8 @@ def install(args: argparse.Namespace) -> None:
         shutil.copy2(destination / "config/super-speckit.yml", project_config)
     subprocess.run(["python3", str(destination / "scripts/super_speckit.py"), "init", "--repo", str(target)], check=True)
     subprocess.run(["python3", str(destination / "scripts/super_speckit.py"), "validate", "--repo", str(target)], check=True)
-    register_entrypoints(target, args.force)
-    print(f"installed Super-SpecKit to {destination}")
+    register_entrypoints(target, args.force, args.entrypoint_scope)
+    print(f"installed Super-SpecKit to {destination}; registered entry points at {args.entrypoint_scope} scope")
 
 def main() -> int:
     parser=argparse.ArgumentParser()
@@ -159,12 +221,13 @@ def main() -> int:
     parser.add_argument("--source", help="local repository path; useful for offline or test installation")
     parser.add_argument("--force", action="store_true", help="preserve backup and replace reviewed bundle/entrypoint drift")
     parser.add_argument("--upgrade", action="store_true", help="deliberately update a clean installed bundle without replacing project config/state")
-    parser.add_argument("--register-only", action="store_true", help="register project skill entry points for an existing kit without downloading it")
+    parser.add_argument("--register-only", action="store_true", help="register skill entry points for an existing project kit without downloading it")
+    parser.add_argument("--entrypoint-scope", choices=("project", "global", "both"), default="both", help="register public skills in the project, user harness roots, or both (default: both)")
     args=parser.parse_args()
     try:
         install(args); return 0
     except Exception as error:
-        print(f"error: {error}", file=__import__("sys").stderr); return 2
+        print(f"error: {error}", file=sys.stderr); return 2
 
 if __name__ == "__main__":
     raise SystemExit(main())

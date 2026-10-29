@@ -1,0 +1,14 @@
+{
+  "name": "@super-speckit/conformance",
+  "version": "0.1.0-alpha.0",
+  "type": "module",
+  "private": true,
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@super-speckit/coordinator": "workspace:*",
+    "@super-speckit/github": "workspace:*",
+    "@super-speckit/provider-sdk": "workspace:*",
+    "@super-speckit/protocol": "workspace:*",
+    "@super-speckit/runner": "workspace:*"
+  }
+}

@@ -1,5 +1,7 @@
 __pycache__/
 *.py[cod]
+node_modules/
+.pnpm-store/
 .skill-sandbox/
 .super-speckit/state/*
 !.super-speckit/state/

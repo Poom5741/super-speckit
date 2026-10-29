@@ -1,4 +1,4 @@
-import json, shutil, subprocess, tempfile, unittest
+import json, os, shutil, subprocess, tempfile, unittest
 from pathlib import Path
 
 SCRIPT = Path(__file__).parents[1] / "scripts/super_speckit.py"
@@ -23,6 +23,17 @@ class SuperSpecKitTests(unittest.TestCase):
             self.assertEqual(state["state_validation"]["status"],"pass")
             self.assertTrue(state["artifacts"]["work_state_manifest_exists"])
             self.assertTrue(state["artifacts"]["continuation_exists"])
+    def test_status_reports_git_unavailable_for_valid_non_git_installation(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(self.invoke("init","--repo",d).returncode,0)
+            result=self.invoke("status","--repo",d,"--strict")
+            self.assertEqual(result.returncode,0,result.stderr)
+            state=json.loads(result.stdout)
+            self.assertEqual(
+                state["git"],
+                {"available":False,"head":None,"branch":None,"dirty":None,"worktrees":None},
+            )
+            self.assertEqual(state["state_validation"]["status"],"pass")
     def test_rolling_continuation_is_created_and_updates_without_handoffs(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); matrix=root/"matrix.md"; matrix.write_text("# matrix")
@@ -35,23 +46,68 @@ class SuperSpecKitTests(unittest.TestCase):
     def test_public_installer_copies_a_complete_kit_from_local_source(self):
         with tempfile.TemporaryDirectory() as d:
             destination=Path(d)/"project"
-            result=subprocess.run(["python3",str(INSTALL_SCRIPT),"--source",str(Path(__file__).parents[1]),"--target",str(destination)],text=True,capture_output=True)
+            result=subprocess.run(["python3",str(INSTALL_SCRIPT),"--source",str(Path(__file__).parents[1]),"--target",str(destination),"--entrypoint-scope","project"],text=True,capture_output=True)
             self.assertEqual(result.returncode,0, result.stderr)
             self.assertTrue((destination/".super-speckit/SKILL.md").exists())
             self.assertTrue((destination/".super-speckit/state/work-state.yml").exists())
             self.assertTrue((destination/"super-speckit.yml").exists())
-            for name in ("super-speckit", "ask-super-speckit", "super-speckit-design-first", "super-speckit-final-manual-review"):
-                self.assertTrue((destination/".agents/skills"/name/"SKILL.md").exists())
-            self.assertTrue((destination/".codex/skills/ask-super-speckit/SKILL.md").exists())
+            self.assertTrue((destination/".super-speckit/v2/packages/opencode/dist/index.js").exists())
+            self.assertTrue((destination/".opencode/plugins/super-speckit/tui.js").exists())
+            names=("super-speckit", "ask-super-speckit", "super-speckit-design-first", "super-speckit-final-manual-review")
+            roots=(".agents", ".codex", ".claude", ".cursor", ".opencode", ".pi", ".zcode")
+            for root in roots:
+                for name in names:
+                    self.assertTrue((destination/root/"skills"/name/"SKILL.md").exists(), f"missing {name} from {root}")
     def test_public_installer_repairs_missing_entrypoints_without_reinstalling_bundle(self):
         with tempfile.TemporaryDirectory() as d:
             destination=Path(d)/"project"
-            installed=subprocess.run(["python3",str(INSTALL_SCRIPT),"--source",str(Path(__file__).parents[1]),"--target",str(destination)],text=True,capture_output=True)
+            installed=subprocess.run(["python3",str(INSTALL_SCRIPT),"--source",str(Path(__file__).parents[1]),"--target",str(destination),"--entrypoint-scope","project"],text=True,capture_output=True)
             self.assertEqual(installed.returncode,0, installed.stderr)
             shutil.rmtree(destination/".agents")
-            repaired=subprocess.run(["python3",str(INSTALL_SCRIPT),"--target",str(destination),"--register-only"],text=True,capture_output=True)
+            shutil.rmtree(destination/".opencode")
+            repaired=subprocess.run(["python3",str(INSTALL_SCRIPT),"--target",str(destination),"--register-only","--entrypoint-scope","project"],text=True,capture_output=True)
             self.assertEqual(repaired.returncode,0, repaired.stderr)
             self.assertTrue((destination/".agents/skills/ask-super-speckit/SKILL.md").exists())
+            self.assertTrue((destination/".opencode/skills/super-speckit/SKILL.md").exists())
+            self.assertTrue((destination/".opencode/plugins/super-speckit/index.js").exists())
+    def test_public_installer_registers_all_entrypoints_in_user_harness_roots(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); destination=root/"project"; user_home=root/"home"
+            env={**os.environ, "HOME":str(user_home), "XDG_CONFIG_HOME":str(user_home/".config")}
+            result=subprocess.run(
+                ["python3",str(INSTALL_SCRIPT),"--source",str(Path(__file__).parents[1]),"--target",str(destination),"--entrypoint-scope","both"],
+                text=True,capture_output=True,env=env,
+            )
+            self.assertEqual(result.returncode,0, result.stderr)
+            names=("super-speckit", "ask-super-speckit", "super-speckit-design-first", "super-speckit-final-manual-review")
+            roots=(
+                user_home/".agents/skills",
+                user_home/".codex/skills",
+                user_home/".claude/skills",
+                user_home/".cursor/skills",
+                user_home/".config/opencode/skills",
+                user_home/".pi/agent/skills",
+                user_home/".zcode/skills",
+            )
+            for skill_root in roots:
+                for name in names:
+                    wrapper=skill_root/name/"SKILL.md"
+                    self.assertTrue(wrapper.exists(), f"missing {name} from {skill_root}")
+                    self.assertIn("nearest ancestor containing `.super-speckit/`", wrapper.read_text())
+    def test_global_entrypoint_registration_preserves_unrelated_conflicting_skill(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); destination=root/"project"; user_home=root/"home"
+            conflict=user_home/".codex/skills/super-speckit/SKILL.md"
+            conflict.parent.mkdir(parents=True)
+            conflict.write_text("---\nname: super-speckit\ndescription: existing\n---\n\nkeep me\n")
+            env={**os.environ, "HOME":str(user_home), "XDG_CONFIG_HOME":str(user_home/".config")}
+            result=subprocess.run(
+                ["python3",str(INSTALL_SCRIPT),"--source",str(Path(__file__).parents[1]),"--target",str(destination),"--entrypoint-scope","both"],
+                text=True,capture_output=True,env=env,
+            )
+            self.assertEqual(result.returncode,0, result.stderr)
+            self.assertEqual(conflict.read_text(), "---\nname: super-speckit\ndescription: existing\n---\n\nkeep me\n")
+            self.assertIn("skipped conflicting user skill", result.stderr)
     def test_same_person_cannot_be_maker_and_checker(self):
         with tempfile.TemporaryDirectory() as d:
             r=self.invoke("create-feature","F-1","--repo",d,"--maker","same","--checker","same","--matrix","x.md")

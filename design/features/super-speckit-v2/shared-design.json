@@ -1,0 +1,15 @@
+{
+  "investigation_digest": "2dc297a8674265b9fa0001e7d7d572ef3e8a5cd7e28a98ab96fc16f37a5199c6",
+  "observed": "V1 is a portable skill and Python evidence workflow. It has no owned long-lived coordinator, provider lifecycle, cross-harness writer fencing, GitHub card revision protocol, or OpenCode Mission Control surface.",
+  "proposed": "Add an Apache-2.0 Node 22 TypeScript workspace around the preserved Python core. One daemon owns SQLite WAL and execute/query/watch. GitHub owns card intent. Providers and runners receive fenced operations. OpenCode consumes the same RPC boundary. Raw evidence and credentials stay in user state.",
+  "invariants": "One writer per card and worktree; lease expiry alone never proves quiescence; writer handoff requires explicit approval for an exact frozen capsule; V1 history is not rewritten; raw evidence and credentials never enter Git; delivery readiness never implies production readiness.",
+  "verification_plan": "Use schema, property, coordinator, migration, provider conformance, runner, installer, and OpenCode compatibility fixtures locally. Keep Windows/WSL, Herdr, ADE, Cloudflare, whitelabels-cex, accessibility, and independent exact-candidate journeys unverified until run live.",
+  "view": {
+    "renderer": "mermaid",
+    "source": "design/features/super-speckit-v2/change-story.mmd",
+    "source_digest": "4b92ace50008560bcba539e031e6a69e5f54aba65d96f2b8ce3e14b73167b0ac",
+    "artifact": "design/features/super-speckit-v2/change-story.md",
+    "artifact_digest": "4918449c25dc0a6653f05876857ebd592daae2a963e6915b0b5aaf3472665c67",
+    "limitation": "Archify is not installed in this environment, so this is a repository-verifiable Mermaid fallback rather than an interactive rendered Atlas."
+  }
+}

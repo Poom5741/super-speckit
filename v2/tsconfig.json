@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@super-speckit/protocol": ["packages/protocol/src/index.ts"],
+      "@super-speckit/coordinator": ["packages/coordinator/src/index.ts"],
+      "@super-speckit/client": ["packages/client/src/index.ts"],
+      "@super-speckit/daemon": ["packages/daemon/src/index.ts"],
+      "@super-speckit/evidence": ["packages/evidence/src/index.ts"],
+      "@super-speckit/provider-sdk": ["packages/provider-sdk/src/index.ts"],
+      "@super-speckit/runner": ["packages/runner/src/index.ts"],
+      "@super-speckit/github": ["packages/github/src/index.ts"],
+      "@super-speckit/providers": ["packages/providers/src/index.ts"],
+      "@super-speckit/architecture": ["packages/architecture/src/index.ts"],
+      "@super-speckit/conformance": ["packages/conformance/src/index.ts"]
+    }
+  },
+  "include": ["packages/**/*.ts", "packages/**/*.tsx"]
+}
