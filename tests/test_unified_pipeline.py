@@ -10,6 +10,7 @@ import unittest
 import test_knowledge_contract as knowledge
 import state_contract as c
 import pipeline_contract as p
+import discipline_contract as d
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -21,15 +22,55 @@ class UnifiedTests(unittest.TestCase):
         self.f = self.k.fixture
         self.repo = self.f.repo
         self.k.data['pipeline_contract'] = 'unified-v1'
+        self.k.data['gates_contract'] = 'discipline-v1'
         self.k.save()
         for kind in ('research', 'architecture'):
             self.f.ok('record-prerequisite', 'F', kind, '--artifact', 'log.txt')
+        self.gates()
 
     def tearDown(self):
         self.k.tearDown()
 
     def data(self):
         return json.loads((self.repo / '.super-speckit/state/features/F.json').read_text())
+
+    def learning(self):
+        purpose = self.data()['purpose']['decision']
+        manifest = json.loads((ROOT / 'vendor/vibe-wise-manifest.json').read_text())
+        return {'status': 'engaged', 'level': 'intermediate',
+                'purpose_digest': c.digest(self.repo / purpose),
+                'vibe': {'skill': 'learn', 'source_revision': manifest['revision'],
+                         'skill_digest': c.digest(ROOT / 'vendor/vibe-wise/skills/learn/SKILL.md')},
+                'checkpoints': [
+                    {'topic': 'approach', 'human': 'user', 'ts': '2026-11-03T00:00:00Z',
+                     'summary': 'Reuse the existing export service boundary', 'agent_role': 'feedback only'},
+                    {'topic': 'design', 'human': 'user', 'ts': '2026-11-03T00:00:00Z',
+                     'summary': 'CSV adapter behind the current CLI', 'agent_role': 'feedback only'}],
+                'authorization': {'human': 'user', 'ts': '2026-11-03T00:00:00Z', 'scope': 'FR-001 export only'},
+                'evidence': self.k.evidence}
+
+    def goldfish(self):
+        route = self.data().get('route', {}).get('kind')
+        artifact = 'playbook.md' if route == 'micro' else 'spec.md'
+        manifest = json.loads((ROOT / 'vendor/elephant-goldfish-manifest.json').read_text())
+        return {'status': 'passed', 'mode': 'goldfish',
+                'reviewed': {'path': artifact, 'digest': c.digest(self.repo / artifact)},
+                'harness_subagents': True,
+                'reviewers': [{'id': 'goldfish-1', 'dispatch': 'subagent', 'fresh_context': True},
+                              {'id': 'goldfish-2', 'dispatch': 'subagent', 'fresh_context': True}],
+                'egm': {'skill': 'egm-review', 'source_revision': manifest['revision'],
+                        'skill_digest': c.digest(ROOT / 'vendor/elephant-goldfish/skills/egm-review/SKILL.md')},
+                'findings': [], 'resolution': 'Fresh reviewers confirmed the export boundary; no findings',
+                'evidence': self.k.evidence}
+
+    def gates(self):
+        (self.repo / 'learning.json').write_text(json.dumps(self.learning()))
+        self.f.ok('record-prerequisite', 'F', 'learning-checkpoint', '--artifact', 'learning.json')
+        self.record_goldfish()
+
+    def record_goldfish(self, value=None):
+        (self.repo / 'goldfish.json').write_text(json.dumps(value or self.goldfish()))
+        self.f.ok('record-prerequisite', 'F', 'goldfish-review', '--artifact', 'goldfish.json')
 
     def select(self):
         return self.f.ok('select-personas', 'F', '--persona', 'senior-backend-engineer',
@@ -80,7 +121,26 @@ class UnifiedTests(unittest.TestCase):
         data = json.loads((self.repo / '.super-speckit/state/features/NEW.json').read_text())
         self.assertEqual(data['pipeline_contract'], 'unified-v1')
         self.assertEqual(data['delivery_contract'], 'knowledge-v2')
+        self.assertEqual(data['gates_contract'], 'discipline-v1')
         self.assertNotIn('pipeline_contract', self.f.invoke('status', '--feature', 'NEW').stderr)
+
+    def test_discipline_gates_precede_maker_and_stale_intent_requires_rereview(self):
+        data = self.data()
+        data['prerequisite_receipts'].pop('learning-checkpoint')
+        data['prerequisite_receipts'].pop('goldfish-review')
+        c.atomic(self.repo / '.super-speckit/state/features/F.json', data)
+        self.f.ok('init')
+        self.assertEqual(json.loads(self.f.ok('next-stage', 'F').stdout)['next_stage'], 'learning-checkpoint')
+        self.assertNotEqual(self.f.invoke('transition', 'F', 'maker_running').returncode, 0)
+        (self.repo / 'learning.json').write_text(json.dumps(self.learning()))
+        self.f.ok('record-prerequisite', 'F', 'learning-checkpoint', '--artifact', 'learning.json')
+        self.assertEqual(json.loads(self.f.ok('next-stage', 'F').stdout)['next_stage'], 'goldfish-review')
+        self.record_goldfish()
+        d.goldfish_review(self.repo, self.data())
+        (self.repo / 'spec.md').write_text('Rewritten after review')
+        with self.assertRaises(ValueError):
+            d.goldfish_review(self.repo, self.data())
+        self.assertEqual(json.loads(self.f.ok('next-stage', 'F').stdout)['next_stage'], 'goldfish-review')
 
     def test_persona_selection_is_real_feature_bound_and_required(self):
         self.assertNotEqual(self.f.invoke('transition', 'F', 'maker_running').returncode, 0)
@@ -193,6 +253,7 @@ class UnifiedTests(unittest.TestCase):
     def test_compact_mode_does_not_claim_native_convergence(self):
         self.f.ok('route', 'F', 'micro', '--rationale', 'Existing bounded export')
         (self.repo / 'playbook.md').write_text('FR-001: use existing export; implement, verify and assess completion')
+        self.record_goldfish()
         self.f.run_git('add', 'playbook.md')
         self.f.run_git('commit', '-m', 'compact intent')
         self.f.sha = self.f.run_git('rev-parse', 'HEAD')

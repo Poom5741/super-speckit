@@ -21,7 +21,7 @@ class StateTests(unittest.TestCase):
  def tearDown(self): self.tmp.cleanup()
  def run_git(self,*args):return subprocess.check_output(['git','-C',str(self.repo),*args],stderr=subprocess.DEVNULL,text=True).strip()
  def invoke(self,*args):
-  if args and args[0]=='create-feature': args=(*args,'--pipeline','legacy')
+  if args and args[0]=='create-feature': args=(*args,'--pipeline','legacy','--gates','legacy')
   return subprocess.run([sys.executable,str(SCRIPT),*args,'--repo',str(self.repo)],capture_output=True,text=True)
  def ok(self,*args):
   result=self.invoke(*args);self.assertEqual(result.returncode,0,result.stderr);return result

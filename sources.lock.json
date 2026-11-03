@@ -128,6 +128,24 @@
       "installed_to": "vendor/spec-kit",
       "role": "native SDD reference; installed Spec Kit remains execution owner",
       "license_note": "MIT; retain notices"
+    },
+    {
+      "name": "elephant-goldfish-model",
+      "repository": "https://github.com/google/elephant-goldfish-model",
+      "commit": "5ba5afa03f62627639fa4f71b7ac3bd4d8d07e24",
+      "installed_to": "vendor/elephant-goldfish",
+      "role": "Elephant/Goldfish fresh-context design-review discipline gate before maker work; pinned method source, never a second coordinator",
+      "license_note": "Apache-2.0; not an officially supported Google product; retain upstream notices",
+      "manifest": "vendor/elephant-goldfish-manifest.json"
+    },
+    {
+      "name": "vibe-wise",
+      "repository": "https://github.com/nykooi1/vibe-wise",
+      "commit": "eefb53df406ab89e31444684ff32c1df205221f8",
+      "installed_to": "vendor/vibe-wise",
+      "role": "learning-first human approach/design checkpoint discipline gate before implementation",
+      "license_note": "MIT, Copyright 2026 Noah Kim; retain upstream notices",
+      "manifest": "vendor/vibe-wise-manifest.json"
     }
   ],
   "optional_integrations": {

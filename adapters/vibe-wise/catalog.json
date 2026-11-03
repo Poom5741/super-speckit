@@ -1,0 +1,17 @@
+{
+  "source_revision": "eefb53df406ab89e31444684ff32c1df205221f8",
+  "skills": [
+    {
+      "id": "learn",
+      "category": "skills",
+      "source": "skills/learn/SKILL.md",
+      "sha256": "b65405a8874d588a16b59b57cd29aa0d02298993ef4d586c2a39bce315e9d0df"
+    },
+    {
+      "id": "reset",
+      "category": "skills",
+      "source": "skills/reset/SKILL.md",
+      "sha256": "665de67b5248b31b1e922cf110370d5f8eed077cfd6215414ed7433fe64021d6"
+    }
+  ]
+}

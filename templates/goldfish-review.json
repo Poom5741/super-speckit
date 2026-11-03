@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "mode": "goldfish",
+  "reviewed": {"path": "spec.md", "digest": "<SHA-256 of the current spec.md (playbook.md on the micro route)>"},
+  "harness_subagents": true,
+  "reviewers": [
+    {"id": "goldfish-1", "dispatch": "subagent", "fresh_context": true, "persona": "vendor/elephant-goldfish/agents/<persona>.md"},
+    {"id": "goldfish-2", "dispatch": "subagent", "fresh_context": true, "persona": "vendor/elephant-goldfish/agents/<persona>.md"}
+  ],
+  "egm": {"skill": "egm-review", "source_revision": "<vendor/elephant-goldfish-manifest.json revision>", "skill_digest": "<SHA-256 of vendor/elephant-goldfish/skills/egm-review/SKILL.md>"},
+  "capability_absence": [],
+  "findings": [
+    {"summary": "<what is missing, unclear or risky>", "disposition": "fixed", "reason": "<already reflected in the bound artifact, with evidence>", "evidence": [{"path": ".super-speckit/qa/<run>/goldfish-1.md", "digest": "<SHA-256>"}]}
+  ],
+  "resolution": "<how every finding was fixed, accepted as a risk, or dismissed, and why the bound artifact is the post-resolution bytes>",
+  "evidence": [{"path": ".super-speckit/qa/<run>/goldfish-report.md", "digest": "<SHA-256>"}]
+}

@@ -63,12 +63,18 @@ def prerequisites(repo,data):
   for name in (['spec.md'] if route=='micro' else ['spec.md','plan.md','tasks.md']): file(repo,str((directory/name).relative_to(repo)))
  requirements(repo,data)
  if data.get('delivery_contract')=='knowledge-v2': knowledge_prework(repo,data)
+ if data.get('gates_contract')=='discipline-v1':
+  import discipline_contract
+  discipline_contract.learning_checkpoint(repo,data)
+  discipline_contract.goldfish_review(repo,data)
 
 def playbook_led(repo,data):
  return data.get('delivery_contract') in {'playbook-v1','knowledge-v2'} or (data.get('route',{}).get('kind')=='micro' and (file(repo,data['matrix']).parent/'playbook.md').is_file())
 
 def prework_kinds(repo,data):
- return ['baseline-feedback','phase-contract']+(['research','architecture'] if playbook_led(repo,data) else [])+(['personas'] if data.get('pipeline_contract')=='unified-v1' else [])
+ kinds=['baseline-feedback','phase-contract']+(['research','architecture'] if playbook_led(repo,data) else [])
+ if data.get('gates_contract')=='discipline-v1': kinds+=['learning-checkpoint','goldfish-review']
+ return kinds+(['personas'] if data.get('pipeline_contract')=='unified-v1' else [])
 
 def prerequisite_receipt(repo,data,kind):
  receipt=data.get('prerequisite_receipts',{}).get(kind,{})
@@ -90,15 +96,10 @@ def qa_checkout(repo,data,path):
  if not data.get('checker') or data.get('checker')==data.get('maker'): raise ValueError('independent checker required')
  return str(p)
 
-def configured_gates(repo):
- path=repo/'super-speckit.yml'
- if not path.exists(): return {}
- text=path.read_text()
- try: gates=json.loads(text).get('gates',{})
- except json.JSONDecodeError:
-  gates={}; active=False
-  for line in text.splitlines():
-   if line=='gates:': active=True; continue
+def _scalar_section(text,name):
+ section={}; active=False
+ for line in text.splitlines():
+   if line==name+':': active=True; continue
    if active and line and not line.startswith((' ','#')): break
    if not active: continue
    match=re.match(r'^  ([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$',line)
@@ -106,10 +107,21 @@ def configured_gates(repo):
    value=match.group(2).strip()
    if value.startswith('"'):
     try: value=json.JSONDecoder().raw_decode(value)[0]
-    except json.JSONDecodeError: raise ValueError('unsupported gates YAML quoting; use JSON-compatible quoted commands')
+    except json.JSONDecodeError: raise ValueError('unsupported '+name+' YAML quoting; use JSON-compatible quoted values')
    elif value.startswith("'"): value=value[1:value.rfind("'")].replace("''","'")
    else: value=value.split(' #',1)[0].strip()
-   gates[match.group(1)]=value
+   section[match.group(1)]=value
+ return section
+
+def config_section(repo,name):
+ path=repo/'super-speckit.yml'
+ if not path.exists(): return {}
+ section=_scalar_section(path.read_text(),name)
+ if not isinstance(section,dict): raise ValueError(name+' configuration must be a mapping')
+ return section
+
+def configured_gates(repo):
+ gates=config_section(repo,'gates')
  if not isinstance(gates,dict): raise ValueError('gates configuration must be a mapping')
  return {k:v for k,v in gates.items() if k not in {'app_start','app_url','ocr_review'} and v}
 
@@ -216,6 +228,11 @@ def next_stage(repo,data):
   except (ValueError,KeyError,TypeError): return 'investigation'
  if data.get('route',{}).get('kind') not in {'micro','normal','milestone'}: return 'route'
  if data.get('route',{}).get('kind')!='micro' and data.get('grill',{}).get('status')!='complete': return 'spec-grill'
+ if data.get('gates_contract')=='discipline-v1':
+  import discipline_contract
+  for stage,check in [('learning-checkpoint',discipline_contract.learning_checkpoint),('goldfish-review',discipline_contract.goldfish_review)]:
+   try: check(repo,data)
+   except (ValueError,KeyError,TypeError): return stage
  try: prerequisites(repo,data)
  except ValueError: return 'native-prerequisites'
  if data['state'] in {'planned','maker_running'}:
