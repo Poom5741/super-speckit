@@ -6,7 +6,9 @@ These are portable Markdown command prompts. Map their filenames to an integrati
 | --- | --- |
 | `ask-super-speckit` | Main orchestrator: inspect state, recommend the next safe stage, and coordinate only the chosen stage. |
 | `super-speckit.purpose-gate` | Draft a visual purpose map and record the human’s one purpose-level confirmation. |
+| `super-speckit.learning-gate` | Required VibeWise checkpoint: the human reasons through approach/design and authorizes implementation (code-enforced). |
 | `super-speckit.spec-grill` | Challenge a confirmed spec with independent roles and evidence classifications. |
+| `super-speckit.goldfish-review` | Required fresh zero-context Elephant/Goldfish design review before maker work (code-enforced, subagent dispatch mandatory when available). |
 | `super-speckit.route` | Select a micro, normal, or milestone route without weakening proof requirements. |
 | `super-speckit.atlas` | Build an evidence-linked Project Atlas and visual Change Story. |
 | `super-speckit.evaluate-atlas` | Measure Atlas value with blinded, independent-QA-backed A/B runs. |

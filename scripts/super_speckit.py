@@ -112,6 +112,7 @@ def cmd_create(args):
     if args.pipeline=='unified-v1':
         data['pipeline_contract']='unified-v1'
         data['delivery_contract']='knowledge-v2'
+    if args.gates=='discipline-v1': data['gates_contract']='discipline-v1'
     save(repo, args.feature, data); write_work_state_manifest(repo); print(state_path(repo,args.feature))
 
 def cmd_transition(args):
@@ -224,7 +225,7 @@ def cmd_status(args):
         feature={"id":args.feature,"state_file":str(path.relative_to(repo)),"exists":path.exists()}
         if path.exists():
             data=json.loads(path.read_text())
-            feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists(),"ui_change":data.get("ui_change",False),"journey_ux":data.get("journey_ux"),"purpose":data.get("purpose"),"grill":data.get("grill"),"route":data.get("route"),"atlas":data.get("atlas"),"change_story":data.get("change_story"),"handoff":data.get("handoff")})
+            feature.update({"state":data.get("state"),"candidate_sha":data.get("candidate_sha"),"maker":data.get("maker"),"checker":data.get("checker"),"matrix":data.get("matrix"),"matrix_exists":(repo / data.get("matrix","")).exists(),"ui_change":data.get("ui_change",False),"gates_contract":data.get("gates_contract"),"journey_ux":data.get("journey_ux"),"purpose":data.get("purpose"),"grill":data.get("grill"),"route":data.get("route"),"atlas":data.get("atlas"),"change_story":data.get("change_story"),"handoff":data.get("handoff")})
     git_head=git_value(repo,"rev-parse","HEAD")
     git_available=git_head is not None
     status={
@@ -362,7 +363,7 @@ def main():
     for name, fn in [("init",cmd_init),("validate",cmd_validate)]:
         x=sub.add_parser(name); x.add_argument("--repo",default="."); x.set_defaults(fn=fn)
     x=sub.add_parser("status"); x.add_argument("--repo",default="."); x.add_argument("--feature"); x.add_argument("--strict",action="store_true"); x.set_defaults(fn=cmd_status)
-    x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.add_argument("--ui-change",action="store_true"); x.add_argument("--playbook-led",action="store_true"); x.add_argument('--pipeline',choices=['unified-v1','legacy'],default='unified-v1'); x.set_defaults(fn=cmd_create)
+    x=sub.add_parser("create-feature"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--maker",required=True); x.add_argument("--checker",required=True); x.add_argument("--matrix",required=True); x.add_argument("--ui-change",action="store_true"); x.add_argument("--playbook-led",action="store_true"); x.add_argument('--pipeline',choices=['unified-v1','legacy'],default='unified-v1'); x.add_argument('--gates',choices=['discipline-v1','legacy'],default='discipline-v1'); x.set_defaults(fn=cmd_create)
     x=sub.add_parser('select-personas'); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.add_argument('--persona',required=True); x.add_argument('--specialist',action='append',default=[]); x.add_argument('--rationale',required=True); x.set_defaults(fn=cmd_select_personas)
     x=sub.add_parser('record-convergence'); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.add_argument('--receipt',required=True); x.set_defaults(fn=cmd_record_convergence)
     x=sub.add_parser("transition"); x.add_argument("feature"); x.add_argument("state"); x.add_argument("--repo",default="."); x.add_argument("--sha"); x.add_argument("--checkout", "--worktree", dest="worktree"); x.add_argument("--attempt-id"); x.set_defaults(fn=cmd_transition)
@@ -380,7 +381,7 @@ def main():
     x=sub.add_parser("record-artifact"); x.add_argument("feature"); x.add_argument("kind",choices=["decision-trail","verification-harness","static-review","corrective-enforcement"]); x.add_argument("--repo",default="."); x.add_argument("--artifact",required=True); x.set_defaults(fn=cmd_record_artifact)
     x=sub.add_parser("harness-init"); x.add_argument("--repo",default="."); x.add_argument("--replace",action="store_true"); x.set_defaults(fn=cmd_harness_init)
     x=sub.add_parser("continuation"); x.add_argument("feature"); x.add_argument("--repo",default="."); x.add_argument("--stage",required=True); x.add_argument("--next-action",required=True); x.add_argument("--candidate-sha"); x.add_argument("--worktree",required=True); x.add_argument("--evidence",action="append",default=[]); x.add_argument("--unknowns",default=""); x.add_argument("--history-limit",type=int,default=20); x.set_defaults(fn=cmd_continuation)
-    x=sub.add_parser('record-prerequisite'); x.add_argument('feature'); x.add_argument('kind',choices=['baseline-feedback','phase-contract','research','architecture','engineering-review','investigation','shared-design','shared-result','lens-review']); x.add_argument('--repo',default='.'); x.add_argument('--artifact',required=True); x.set_defaults(fn=cmd_record_prerequisite)
+    x=sub.add_parser('record-prerequisite'); x.add_argument('feature'); x.add_argument('kind',choices=['baseline-feedback','phase-contract','research','architecture','engineering-review','investigation','shared-design','shared-result','lens-review','learning-checkpoint','goldfish-review']); x.add_argument('--repo',default='.'); x.add_argument('--artifact',required=True); x.set_defaults(fn=cmd_record_prerequisite)
     for name,fn in [('record-proof',cmd_record_proof),('record-merge',cmd_merge_receipt)]:
         x=sub.add_parser(name); x.add_argument('feature'); x.add_argument('--repo',default='.'); x.add_argument('--receipt',required=True); x.set_defaults(fn=fn)
     for name in ['record-bug','resolve-bug']:

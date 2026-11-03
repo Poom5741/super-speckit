@@ -17,6 +17,9 @@ inputs:
     default: false
     prompt: "Does this change alter a user-facing interface?"
 steps:
+  - id: discipline-gates
+    type: prompt
+    message: "New feature records default to gates_contract=discipline-v1. Two gates are enforced by scripts/discipline_contract.py in every harness before maker work, new candidates and release: (1) learning-checkpoint — pinned VibeWise method; the human reasons through approach and design and explicitly authorizes implementation (or the purpose-confirming human records an explicit decline with reason); (2) goldfish-review — pinned Elephant/Goldfish egm-review protocol; at least the configured minimum of fresh zero-context reviewers examine only the current spec.md (normal/milestone) or playbook.md (micro) with digest-bound findings and resolution. When the harness can spawn subagents every goldfish reviewer must dispatch as a fresh subagent; a same-context review is rejected. Load sources through scripts/vibe_wise_adapter.py and scripts/egm_adapter.py with their adapter contracts; never install their plugins or run them as a second coordinator. Record receipts via record-prerequisite learning-checkpoint / goldfish-review."
   - id: unified-contract
     type: prompt
     message: "Read skills/ask-super-speckit/references/unified-pipeline.md and adapters/lude-kit/override-contract.md. Use one Super-SpecKit coordinator: native Spec Kit intent/convergence, feature-specific Lude maker persona and specialists, PStack engineering methods, independent exact-candidate QA, separate reconciled PStack/Lude lenses. New feature records default to unified-v1. Run and record convergence before release/merge; remaining tasks return to implement and require a new candidate with fresh independent QA, both lenses and convergence. Compact completion is labeled separately. Do not activate upstream coordinators or global installers."

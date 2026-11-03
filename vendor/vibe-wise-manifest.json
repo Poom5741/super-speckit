@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/nykooi1/vibe-wise",
+  "revision": "eefb53df406ab89e31444684ff32c1df205221f8",
+  "root": "vendor/vibe-wise",
+  "files": [
+    {
+      "path": ".agents/plugins/marketplace.json",
+      "sha256": "d464337f7640172a01fc721c7aadcfff7cb369a8129d332ffd141f1c360edd9f"
+    },
+    {
+      "path": ".claude-plugin/icon.svg",
+      "sha256": "4f2bea4471e0d3ba5e2d66bf658bdd365694305e06b68919f6c26d9af6dd7068"
+    },
+    {
+      "path": ".claude-plugin/marketplace.json",
+      "sha256": "b9a6756ca9c04b9828edc9432f72788eb362358923cefe717810d85d4b069438"
+    },
+    {
+      "path": ".claude-plugin/plugin.json",
+      "sha256": "ca1be395b8620813e5bc60f1e8b3fb418f1b1e45df856c04977eb70eebd3c4c0"
+    },
+    {
+      "path": ".codex-plugin/plugin.json",
+      "sha256": "38ce49dbfba6fa669ad5e40a9e4ad73b01f6e97c1b36467948ae510fae4f0efc"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "4e3c1fac5a2c10f515eea6a3e77a33630283a2cb36bb700d40fc962470d33244"
+    },
+    {
+      "path": "README.md",
+      "sha256": "f2add0d5b2dc91c70ec9f1e54a14c9d5f8ca57ff378b6c0fcecd470372d66c17"
+    },
+    {
+      "path": "assets/vibewise-icon.png",
+      "sha256": "5f7d7c04384ebdd8da04a4ef3bce3035f19c3d09749907daad4ec875ac2d53eb"
+    },
+    {
+      "path": "docs/demos/notion-dupe.md",
+      "sha256": "c35a2b1e48f964224b76a64d6678da9d403c01617c029619dbd17cb5756d97f7"
+    },
+    {
+      "path": "docs/development.md",
+      "sha256": "1328ef37af9046f7400c62107bdce956bb894fc8ac1de003d600656ab805234a"
+    },
+    {
+      "path": "hooks/hooks.json",
+      "sha256": "50abb5dff968c51a33b57ad2b9851d7e6dc92f37ccc714274372df10e4b7cb75"
+    },
+    {
+      "path": "hooks/session_start.py",
+      "sha256": "2582545384887cbcb22aacccb609939d9d82c043f73068d62e9ecd7e55628fc9"
+    },
+    {
+      "path": "skills/learn/SKILL.md",
+      "sha256": "b65405a8874d588a16b59b57cd29aa0d02298993ef4d586c2a39bce315e9d0df"
+    },
+    {
+      "path": "skills/learn/agents/openai.yaml",
+      "sha256": "0880a0f9b7d5da473efc1cfba1f0bdcf171deff0bd1018fd8ca6dbb93057b78b"
+    },
+    {
+      "path": "skills/learn/behavior.md",
+      "sha256": "910e0f780373613f0ca18c2475e8b497adec222ba24a44672eeda6bb0f1a51f7"
+    },
+    {
+      "path": "skills/learn/codex.md",
+      "sha256": "55908f71130247f1548e44e1b68696706ca3780bed9de8ae4a84937f2eb4eaf2"
+    },
+    {
+      "path": "skills/learn/onboarding.md",
+      "sha256": "76cbb9c15dde7aa37f2feec17d000c2495b3a90533f991c30d2bdedb0caffd48"
+    },
+    {
+      "path": "skills/learn/state-templates.md",
+      "sha256": "bd80876d40d88ef4fe5a47f7e68dbeebebb84d68990f62d7529b721e2c1a6e97"
+    },
+    {
+      "path": "skills/reset/SKILL.md",
+      "sha256": "665de67b5248b31b1e922cf110370d5f8eed077cfd6215414ed7433fe64021d6"
+    },
+    {
+      "path": "skills/reset/agents/openai.yaml",
+      "sha256": "714cabe47a342566af22b456be0cb1fce0bde70efa9ba3de820d8b1e4dd2aadb"
+    },
+    {
+      "path": "skills/reset/codex.md",
+      "sha256": "ba7c5079f19f03eca09a452977ddc96020e2f66c68bde6cf4e8f9aa2745ef4e9"
+    },
+    {
+      "path": "skills/reset/reset.py",
+      "sha256": "5664e0a7253e1c71dc3de287b8bc13ae988bf0f272b16f481756822aa35d39d1"
+    },
+    {
+      "path": "tests/test_reset.py",
+      "sha256": "fffd47122ce86a871b5a557a7b441030c73b5ff0cda83198a4731b11bcb381fb"
+    },
+    {
+      "path": "tests/test_session_start.py",
+      "sha256": "a3fb732dad4dc4378bcbb9d80d08d2116eca6ff2d090c68b8703722398fdf2eb"
+    }
+  ]
+}
