@@ -1,0 +1,47 @@
+{
+  "source_revision": "5ba5afa03f62627639fa4f71b7ac3bd4d8d07e24",
+  "skills": [
+    {
+      "id": "egm-bootstrap",
+      "category": "skills",
+      "source": "skills/egm-bootstrap/SKILL.md",
+      "sha256": "4a63ecf9db2a512f10da122b3767fdd1d501ae28d2d1db9865534557fe0f961b"
+    },
+    {
+      "id": "egm-brainstorm",
+      "category": "skills",
+      "source": "skills/egm-brainstorm/SKILL.md",
+      "sha256": "fc2adacee9d7f34cd1dac6f641bf779b06f7cc77830e5149e2b57089deed9e2f"
+    },
+    {
+      "id": "egm-draft",
+      "category": "skills",
+      "source": "skills/egm-draft/SKILL.md",
+      "sha256": "2c107ecd3751635df1eedef261c7e14a79e7bb9429d20753c3f0df5834e1dbec"
+    },
+    {
+      "id": "egm-drift-report",
+      "category": "skills",
+      "source": "skills/egm-drift-report/SKILL.md",
+      "sha256": "c000ffe2e77a9fe74ee6915b314e1547337c95c79a19014c44fd976dc6511476"
+    },
+    {
+      "id": "egm-resolve",
+      "category": "skills",
+      "source": "skills/egm-resolve/SKILL.md",
+      "sha256": "fe12b8712f88b51780d817e6c8f0ac5e7a29961ee111d0fd19bfc2f738d2f531"
+    },
+    {
+      "id": "egm-review-loop",
+      "category": "skills",
+      "source": "skills/egm-review-loop/SKILL.md",
+      "sha256": "9767b7d7f5c4723549dece84514e570f1cc448b62c13b5b2341bc6db85a40c51"
+    },
+    {
+      "id": "egm-review",
+      "category": "skills",
+      "source": "skills/egm-review/SKILL.md",
+      "sha256": "ae5f33afa170dfcf0b5365377df6064fd6c4490a2e8a618b8d5c8df8c1b27f21"
+    }
+  ]
+}

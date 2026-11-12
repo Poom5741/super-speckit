@@ -57,7 +57,10 @@ def tree_digest(path: Path) -> str:
 
 def verify_bundle(source: Path) -> None:
     # Every newly bundled specialist and native reference is pinned byte-for-byte.
-    for name in ('lude-kit', 'spec-kit'):
+    pinned_sources = ['lude-kit', 'spec-kit']
+    if (source / 'scripts/discipline_contract.py').is_file():
+        pinned_sources.extend(['elephant-goldfish', 'vibe-wise'])
+    for name in pinned_sources:
         manifest=json.loads((source / f'vendor/{name}-manifest.json').read_text())
         vendor=source / manifest['root']
         expected={row['path']:row['sha256'] for row in manifest['files']}

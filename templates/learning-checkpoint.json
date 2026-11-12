@@ -1,0 +1,12 @@
+{
+  "status": "engaged",
+  "level": "intermediate",
+  "purpose_digest": "<SHA-256 of the confirmed purpose decision.json>",
+  "vibe": {"skill": "learn", "source_revision": "<vendor/vibe-wise-manifest.json revision>", "skill_digest": "<SHA-256 of vendor/vibe-wise/skills/learn/SKILL.md>"},
+  "checkpoints": [
+    {"topic": "approach", "human": "<human identity>", "ts": "<RFC3339>", "summary": "<the human's own approach reasoning>", "agent_role": "feedback and concept explanations only"},
+    {"topic": "design", "human": "<human identity>", "ts": "<RFC3339>", "summary": "<the human's design decisions and tradeoffs>", "agent_role": "feedback and concept explanations only"}
+  ],
+  "authorization": {"human": "<human identity>", "ts": "<RFC3339>", "scope": "<what implementation this authorizes>"},
+  "evidence": [{"path": ".super-speckit/qa/<run>/learning-checkpoint.md", "digest": "<SHA-256>"}]
+}

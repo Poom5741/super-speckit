@@ -42,6 +42,16 @@ orchestration:
   decision_trail_required_for_long_runs: true
   purpose_gate_human_scope: [outcome, affected_people, success_signal, non_goals]
   purpose_gate_human_technical_decisions: false
+# The two discipline gates below are enforced by scripts/discipline_contract.py for
+# every feature record created with gates_contract=discipline-v1 (the create-feature
+# default). These keys tune parameters only; they cannot disable the gates, and
+# subagent dispatch for goldfish reviewers is mandatory whenever the harness has
+# that capability (not configurable). Set gates=legacy only for explicit
+# compatibility fixtures/imports, never to bypass a missing goldfish review or
+# learning checkpoint.
+discipline_gates:
+  goldfish_min_reviewers: 2
+  allow_sequential_fresh_fallback: true # disclosed fresh sequential reviewers when the harness truly has no subagents
 ponytail:
   enabled: true
   default_intensity: full

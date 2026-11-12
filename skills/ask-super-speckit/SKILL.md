@@ -7,6 +7,8 @@ description: Autonomously deliver a feature, bug fix, or idea through native Spe
 
 Read [unified pipeline](references/unified-pipeline.md) before delivery. One Super-SpecKit coordinator combines native Spec Kit intent/convergence, feature-specific Lude maker and specialist expertise, PStack engineering methods, and independent exact-candidate QA. Read selected Lude sources through `scripts/lude_adapter.py` and its override contract; record the feature-specific persona selection before code. Keep PStack and Lude lens results distinct, reconcile them, then converge before authorized merge. Remaining native convergence tasks return to implement; changed candidates require fresh QA and both lenses. Micro completion is explicitly compact. Changed pipeline skills require independent fixture evaluation, not only source inventory checks.
 
+For `discipline-v1`, run [learning-gate](../../commands/super-speckit.learning-gate.md) and [goldfish-review](../../commands/super-speckit.goldfish-review.md) after planning and before persona selection. Use fresh reviewer contexts and record both receipts. Resolve findings before implementation.
+
 When the user enables TikTok during independent work, load [tiktok-work-break](../tiktok-work-break/SKILL.md). Keep its owned tab open while working and close it before requesting human judgment or input; resume it after the response. This mode is opt-in and does not change delivery gates.
 
 For Rakazo manual QA and exploratory stress testing, load [rakazo-manual-qa](../rakazo-manual-qa/SKILL.md). Ask for the instance on first testing use, reuse the project's QA session on later runs, prepare isolated data, and communicate through the observed browser UI when no reviewed command adapter is configured.

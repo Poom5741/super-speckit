@@ -1,14 +1,17 @@
 # One Super-SpecKit pipeline
 
-For every new delivery, `create-feature` defaults to `pipeline_contract=unified-v1`
-and the existing knowledge-v2 delivery contract. Old records retain their original
-gates. `--pipeline legacy` exists for explicit compatibility fixtures/imports; do
-not select it to bypass missing personas, convergence or verification.
+For every new delivery, `create-feature` defaults to `pipeline_contract=unified-v1`,
+`delivery_contract=knowledge-v2` and `gates_contract=discipline-v1`. Old records
+retain their original gates. `--pipeline legacy` and `--gates legacy` exist for
+explicit compatibility fixtures/imports; do not select them to bypass missing
+personas, convergence, verification, the goldfish review or the learning
+checkpoint.
 
 ```text
-purpose → investigate (PStack methods + feature expertise) → scope
+purpose → learning-checkpoint (VibeWise) → investigate (PStack methods + feature expertise) → scope
   ├─ micro: playbook + matrix
   └─ normal/milestone: native specify/clarify → plan → tasks
+→ goldfish-review (fresh zero-context reviewers of the frozen design intent)
 → select feature-specific Lude maker persona + relevant specialists
 → design/architecture + public-seam baseline → implement selected tasks
 → committed candidate → independent runtime QA + engineering acceptance
@@ -17,6 +20,82 @@ purpose → investigate (PStack methods + feature expertise) → scope
   ├─ remaining work: append tasks → implement → NEW candidate → fresh QA/lenses
   └─ converged: exact-candidate release checks → authorized merge → handback
 ```
+
+## Discipline gates (code-enforced in every harness)
+
+`scripts/discipline_contract.py` blocks `maker_running`, new candidates and
+release for `discipline-v1` records until both receipts exist and stay
+digest-fresh. This is true for a scripted harness that only runs the Python
+CLI: the checks live in the state contract, not in skill prose.
+
+**Learning checkpoint (pinned vibe-wise `learn` method).** The human reasons
+through `approach` and `design`, and explicitly authorizes implementation;
+guidance is feedback and concept explanations, not agent-led design. Receipt:
+
+```json
+{
+  "status": "engaged", "level": "intermediate",
+  "purpose_digest": "<SHA-256 of the confirmed purpose decision.json>",
+  "vibe": {"skill": "learn", "source_revision": "<pinned>", "skill_digest": "<SHA-256>"},
+  "checkpoints": [
+    {"topic": "approach", "human": "<human identity>", "ts": "<RFC3339>",
+     "summary": "<the human's own reasoning>", "agent_role": "feedback and concept explanations only"},
+    {"topic": "design", "human": "<human identity>", "ts": "<RFC3339>",
+     "summary": "<the human's design decisions>", "agent_role": "feedback and concept explanations only"}
+  ],
+  "authorization": {"human": "<human identity>", "ts": "<RFC3339>", "scope": "<authorized implementation>"},
+  "evidence": [{"path": "...", "digest": "<SHA-256>"}]
+}
+```
+
+`status: "human-declined"` is valid only when `declined_by` equals the
+purpose-gate confirmer and a reason is recorded; maker/checker agent identities
+are never accepted as the human.
+
+**Goldfish review (pinned `egm-review` protocol).** At least
+`discipline_gates.goldfish_min_reviewers` (default 2) fresh reviewers see only
+the design beside the matrix plus source references in fresh contexts. Use
+`spec.md` for normal/milestone and `playbook.md` for micro. Older micro
+layouts may use `spec.md`. The receipt uses the repository-relative path.
+
+```json
+{
+  "status": "passed", "mode": "goldfish",
+  "reviewed": {"path": "specs/001-export/spec.md", "digest": "<SHA-256 of reviewed design>"},
+  "harness_subagents": true,
+  "reviewers": [
+    {"id": "goldfish-1", "dispatch": "subagent", "fresh_context": true},
+    {"id": "goldfish-2", "dispatch": "subagent", "fresh_context": true}
+  ],
+  "egm": {"skill": "egm-review", "source_revision": "<pinned>", "skill_digest": "<SHA-256>"},
+  "findings": [{"summary": "...", "disposition": "fixed", "reason": "...",
+                "evidence": [{"path": "...", "digest": "<SHA-256>"}]}],
+  "resolution": "<how findings were settled>",
+  "evidence": [{"path": "...", "digest": "<SHA-256>"}]
+}
+```
+
+**Subagent enforcement.** `harness_subagents: true` requires every reviewer to
+declare `dispatch: "subagent"` and `fresh_context: true`. The validator checks
+these declarations. Use fresh contexts for actual dispatch and retain the
+reports as evidence. Without subagent capability, a disclosed `sequential-fresh`
+fallback is mode `goldfish-equivalent` with digest-bound `capability_absence`
+evidence, accepted only while `discipline_gates.allow_sequential_fresh_fallback`
+is true (set it false to make subagents a hard requirement). Findings use the
+lens-finding discipline (`fixed`/`accepted-risk`/`dismissed` with reasons).
+Intent changed after review stales the digest and requires a fresh review;
+resolve findings before persona selection or re-select personas afterward.
+
+```bash
+python3 scripts/egm_adapter.py inventory && python3 scripts/egm_adapter.py read egm-review
+python3 scripts/vibe_wise_adapter.py inventory && python3 scripts/vibe_wise_adapter.py read learn
+python3 scripts/super_speckit.py record-prerequisite F learning-checkpoint --artifact evidence/learn-1.json
+python3 scripts/super_speckit.py record-prerequisite F goldfish-review --artifact evidence/goldfish-1.json
+```
+
+`next-stage` exposes `learning-checkpoint` and `goldfish-review` as stages.
+Both sources are pinned in `sources.lock.json` and the vendor manifests with
+SHA-256 inventories; the adapter catalogs cross-check them on every load.
 
 `ask-super-speckit` is the only coordinator. Native Spec Kit owns normal/milestone
 intent and convergence, Lude supplies feature-specific developer expertise, PStack
