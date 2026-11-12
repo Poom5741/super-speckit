@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "mode": "goldfish",
-  "reviewed": {"path": "spec.md", "digest": "<SHA-256 of the current spec.md (playbook.md on the micro route)>"},
+  "reviewed": {"path": "<repository-relative path to the design beside the matrix>", "digest": "<SHA-256 of the reviewed design>"},
   "harness_subagents": true,
   "reviewers": [
     {"id": "goldfish-1", "dispatch": "subagent", "fresh_context": true, "persona": "vendor/elephant-goldfish/agents/<persona>.md"},

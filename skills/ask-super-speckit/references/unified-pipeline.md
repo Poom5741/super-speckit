@@ -54,13 +54,14 @@ are never accepted as the human.
 
 **Goldfish review (pinned `egm-review` protocol).** At least
 `discipline_gates.goldfish_min_reviewers` (default 2) fresh reviewers see only
-the current `spec.md` (normal/milestone) or `playbook.md` (micro) plus source
-references — no conversation history. Receipt:
+the design beside the matrix plus source references in fresh contexts. Use
+`spec.md` for normal/milestone and `playbook.md` for micro. Older micro
+layouts may use `spec.md`. The receipt uses the repository-relative path.
 
 ```json
 {
   "status": "passed", "mode": "goldfish",
-  "reviewed": {"path": "spec.md", "digest": "<current bytes>"},
+  "reviewed": {"path": "specs/001-export/spec.md", "digest": "<SHA-256 of reviewed design>"},
   "harness_subagents": true,
   "reviewers": [
     {"id": "goldfish-1", "dispatch": "subagent", "fresh_context": true},
@@ -75,9 +76,9 @@ references — no conversation history. Receipt:
 ```
 
 **Subagent enforcement.** `harness_subagents: true` requires every reviewer to
-be `dispatch: "subagent"` with `fresh_context: true`; upstream is explicit that
-a review in the same context is not a Goldfish review, and the validator
-rejects it. Without subagent capability, a disclosed `sequential-fresh`
+declare `dispatch: "subagent"` and `fresh_context: true`. The validator checks
+these declarations. Use fresh contexts for actual dispatch and retain the
+reports as evidence. Without subagent capability, a disclosed `sequential-fresh`
 fallback is mode `goldfish-equivalent` with digest-bound `capability_absence`
 evidence, accepted only while `discipline_gates.allow_sequential_fresh_fallback`
 is true (set it false to make subagents a hard requirement). Findings use the
@@ -88,7 +89,7 @@ resolve findings before persona selection or re-select personas afterward.
 ```bash
 python3 scripts/egm_adapter.py inventory && python3 scripts/egm_adapter.py read egm-review
 python3 scripts/vibe_wise_adapter.py inventory && python3 scripts/vibe_wise_adapter.py read learn
-python3 scripts/super_speckit.py record-prerequisite F learning-checkpoint --receipt evidence/learn-1.json
+python3 scripts/super_speckit.py record-prerequisite F learning-checkpoint --artifact evidence/learn-1.json
 python3 scripts/super_speckit.py record-prerequisite F goldfish-review --artifact evidence/goldfish-1.json
 ```
 

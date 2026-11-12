@@ -46,7 +46,7 @@ def requirements(repo,data):
  if not ids or not all(isinstance(x,str) and x for x in ids): raise ValueError('matrix requires explicit nonempty requirement IDs')
  return ids
 
-def prerequisites(repo,data):
+def planning_prerequisites(repo,data):
  purpose=data.get('purpose',{})
  if purpose.get('status')!='confirmed': raise ValueError('human purpose confirmation required')
  file(repo,purpose.get('map')); decision=json.loads(file(repo,purpose.get('decision')).read_text())
@@ -63,6 +63,9 @@ def prerequisites(repo,data):
   for name in (['spec.md'] if route=='micro' else ['spec.md','plan.md','tasks.md']): file(repo,str((directory/name).relative_to(repo)))
  requirements(repo,data)
  if data.get('delivery_contract')=='knowledge-v2': knowledge_prework(repo,data)
+
+def prerequisites(repo,data):
+ planning_prerequisites(repo,data)
  if data.get('gates_contract')=='discipline-v1':
   import discipline_contract
   discipline_contract.learning_checkpoint(repo,data)
@@ -97,13 +100,28 @@ def qa_checkout(repo,data,path):
  return str(p)
 
 def _scalar_section(text,name):
- section={}; active=False
+ section={}
+ active=False
+ seen=False
+ strict=name=='discipline_gates'
  for line in text.splitlines():
-   if line==name+':': active=True; continue
-   if active and line and not line.startswith((' ','#')): break
+   header=re.fullmatch(re.escape(name)+r'\s*:\s*(?:#.*)?',line)
+   if header:
+    if seen and strict: raise ValueError('duplicate '+name+' configuration')
+    seen=True
+    active=True
+    continue
+   if strict and re.match(re.escape(name)+r'\s*:',line):
+    raise ValueError('use an indented key: value block for '+name)
+   if active and line and not line.startswith((' ','\t','#')):
+    if not strict: break
+    active=False
    if not active: continue
    match=re.match(r'^  ([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$',line)
-   if not match: continue
+   if not match:
+    if strict and line.strip() and not line.lstrip().startswith('#'):
+     raise ValueError('invalid '+name+' configuration line: '+line.strip())
+    continue
    value=match.group(2).strip()
    if value.startswith('"'):
     try: value=json.JSONDecoder().raw_decode(value)[0]
@@ -116,7 +134,12 @@ def _scalar_section(text,name):
 def config_section(repo,name):
  path=repo/'super-speckit.yml'
  if not path.exists(): return {}
- section=_scalar_section(path.read_text(),name)
+ text=path.read_text()
+ try: document=json.loads(text)
+ except json.JSONDecodeError: section=_scalar_section(text,name)
+ else:
+  if not isinstance(document,dict): raise ValueError('project configuration must be a mapping')
+  section=document.get(name,{})
  if not isinstance(section,dict): raise ValueError(name+' configuration must be a mapping')
  return section
 
@@ -228,13 +251,13 @@ def next_stage(repo,data):
   except (ValueError,KeyError,TypeError): return 'investigation'
  if data.get('route',{}).get('kind') not in {'micro','normal','milestone'}: return 'route'
  if data.get('route',{}).get('kind')!='micro' and data.get('grill',{}).get('status')!='complete': return 'spec-grill'
+ try: planning_prerequisites(repo,data)
+ except ValueError: return 'native-prerequisites'
  if data.get('gates_contract')=='discipline-v1':
   import discipline_contract
   for stage,check in [('learning-checkpoint',discipline_contract.learning_checkpoint),('goldfish-review',discipline_contract.goldfish_review)]:
    try: check(repo,data)
    except (ValueError,KeyError,TypeError): return stage
- try: prerequisites(repo,data)
- except ValueError: return 'native-prerequisites'
  if data['state'] in {'planned','maker_running'}:
   for kind in prework_kinds(repo,data):
    receipt=data.get('prerequisite_receipts',{}).get(kind,{})

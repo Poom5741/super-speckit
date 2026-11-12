@@ -15,17 +15,17 @@ prerequisite receipt before `maker_running`, before any new candidate, and at
 release. `scripts/discipline_contract.py` validates it; a scripted harness that
 only runs the Python CLI is blocked until it exists.
 
-- The receipt binds the current route's primary design artifact — `spec.md`
-  (normal/milestone) or `playbook.md` (micro) — byte-for-byte. Changed intent
-  after review stales the receipt and requires a fresh review.
+- The receipt binds the repository-relative path and bytes of the design beside
+  the matrix. Use `spec.md` for normal/milestone and `playbook.md` for micro,
+  with `spec.md` supported for older micro layouts. Changes to the reviewed
+  file require a fresh review.
 - The receipt binds the pinned `egm-review` skill revision and SHA-256 from
-  `vendor/elephant-goldfish`; the review ran the pinned protocol, not an
-  invented one.
+  `vendor/elephant-goldfish`. Follow that protocol when dispatching.
 - `harness_subagents` must be declared explicitly. When the harness can spawn
   subagents, **every reviewer must be dispatched as a fresh subagent**
-  (`dispatch: "subagent"`, `fresh_context: true`); a same-context review is
-  rejected. This mirrors upstream: "a review in the same context is not a
-  Goldfish review."
+  (`dispatch: "subagent"`, `fresh_context: true`). The validator checks these
+  declarations and the integrity of the supplied evidence. Keep the reports
+  and actual dispatch records as evidence of the review.
 - When the harness truly has no subagents, a disclosed
   `dispatch: "sequential-fresh"` fallback is accepted only as mode
   `goldfish-equivalent`, with digest-bound `capability_absence` evidence, and

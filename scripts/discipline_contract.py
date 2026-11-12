@@ -14,6 +14,19 @@ LEARN = 'learning-checkpoint'
 EGM_REVIEW = 'skills/egm-review/SKILL.md'
 VIBE_LEARN = 'skills/learn/SKILL.md'
 
+def object_field(receipt, name):
+    value = receipt.get(name)
+    if not isinstance(value, dict):
+        raise ValueError(f'{name} must be an object')
+    return value
+
+
+def object_rows(receipt, name):
+    rows = receipt.get(name)
+    if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+        raise ValueError(f'{name} must be a list of objects')
+    return rows
+
 
 def as_bool(value):
     if isinstance(value, bool):
@@ -111,7 +124,7 @@ def learning_checkpoint(repo, data):
         raise ValueError('learning checkpoint must bind the current confirmed purpose decision')
     decision = json.loads(decision_path.read_text())
     manifest = json.loads((KIT / 'vendor/vibe-wise-manifest.json').read_text())
-    vibe = r.get('vibe', {})
+    vibe = object_field(r, 'vibe')
     if vibe.get('skill') != 'learn' or vibe.get('source_revision') != manifest['revision']:
         raise ValueError('pinned vibe-wise learn skill revision required')
     if vibe.get('skill_digest') != _pinned_digest(KIT, 'vibe-wise', VIBE_LEARN):
@@ -121,17 +134,17 @@ def learning_checkpoint(repo, data):
     if status == 'engaged':
         if r.get('level') not in {'beginner', 'intermediate', 'advanced'}:
             raise ValueError('declared learning level required')
-        checkpoints = r.get('checkpoints', [])
-        topics = {cp.get('topic') for cp in checkpoints}
+        checkpoints = object_rows(r, 'checkpoints')
+        topics = {cp.get('topic') for cp in checkpoints if isinstance(cp.get('topic'), str)}
         if not {'approach', 'design'}.issubset(topics):
             raise ValueError('approach and design checkpoints are both required')
         for cp in checkpoints:
-            if not cp.get('summary') or not cp.get('human'):
+            if not all(isinstance(cp.get(key), str) and cp[key].strip() for key in ('summary', 'human')):
                 raise ValueError('each checkpoint needs the human reasoning and its owner')
             if cp.get('human') in agent_identities:
                 raise ValueError('a checkpoint must record the human, not a maker/checker agent identity')
-        authorization = r.get('authorization', {})
-        if not all(authorization.get(k) for k in ('human', 'ts', 'scope')):
+        authorization = object_field(r, 'authorization')
+        if not all(isinstance(authorization.get(k), str) and authorization[k].strip() for k in ('human', 'ts', 'scope')):
             raise ValueError('explicit human implementation authorization required')
         if authorization.get('human') in agent_identities:
             raise ValueError('implementation authorization must come from the human')
@@ -150,21 +163,23 @@ def goldfish_review(repo, data):
     if r.get('status') != 'passed':
         raise ValueError('a passing goldfish review is required; inconclusive is never a pass')
     route = data.get('route', {}).get('kind')
-    expected = 'playbook.md' if route == 'micro' else 'spec.md'
-    reviewed = r.get('reviewed', {})
+    directory = state.file(repo, data['matrix']).parent
+    name = 'playbook.md' if route == 'micro' and (directory / 'playbook.md').exists() else 'spec.md'
+    expected = (directory / name).relative_to(repo.resolve()).as_posix()
+    reviewed = object_field(r, 'reviewed')
     if reviewed.get('path') != expected or reviewed.get('digest') != state.digest(state.file(repo, expected)):
         raise ValueError('goldfish review must bind the current ' + expected + ' bytes')
     manifest = json.loads((KIT / 'vendor/elephant-goldfish-manifest.json').read_text())
-    egm = r.get('egm', {})
+    egm = object_field(r, 'egm')
     if egm.get('skill') != 'egm-review' or egm.get('source_revision') != manifest['revision']:
         raise ValueError('the pinned egm-review protocol is required')
     if egm.get('skill_digest') != _pinned_digest(KIT, 'elephant-goldfish', EGM_REVIEW):
         raise ValueError('egm-review protocol digest mismatch')
     cfg = config(repo)
-    reviewers = r.get('reviewers', [])
-    if (len(reviewers) < cfg['min_reviewers']
-            or len({x.get('id') for x in reviewers}) != len(reviewers)
-            or any(not x.get('id') for x in reviewers)):
+    reviewers = object_rows(r, 'reviewers')
+    ids = [row.get('id') for row in reviewers]
+    if (any(not isinstance(id_, str) or not id_.strip() for id_ in ids)
+            or len(set(ids)) != len(ids) or len(ids) < cfg['min_reviewers']):
         raise ValueError(f'at least {cfg["min_reviewers"]} unique goldfish reviewers required')
     subagents = r.get('harness_subagents')
     if not isinstance(subagents, bool):
@@ -188,7 +203,7 @@ def goldfish_review(repo, data):
         if r.get('mode') != 'goldfish-equivalent':
             raise ValueError('a sequential fresh-context review is goldfish-equivalent, never goldfish')
         state.knowledge_evidence(repo, r.get('capability_absence'))
-    for finding in r.get('findings', []):
+    for finding in object_rows(r, 'findings'):
         if (finding.get('disposition') not in {'fixed', 'accepted-risk', 'dismissed'}
                 or not finding.get('summary') or not finding.get('reason')):
             raise ValueError('every goldfish finding needs a summary, disposition and reason')

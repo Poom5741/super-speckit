@@ -238,6 +238,46 @@ class GateTests(unittest.TestCase):
                                         'reviewed': {'path': 'playbook.md', 'digest': c.digest(self.repo / 'playbook.md')}})
         d.goldfish_review(self.repo, self.data())
 
+    def test_nested_feature_requires_its_own_design(self):
+        receipt = self.goldfish()
+        data = self.data()
+        folder = self.repo / 'specs' / '001-export'
+        folder.mkdir(parents=True)
+        shutil.copyfile(self.repo / 'matrix.json', folder / 'matrix.json')
+        data['matrix'] = 'specs/001-export/matrix.json'
+        self.assertEqual(c.next_stage(self.repo, data), 'native-prerequisites')
+        for name in ('spec.md', 'plan.md', 'tasks.md'):
+            shutil.copyfile(self.repo / name, folder / name)
+        self.assertEqual(c.next_stage(self.repo, data), 'goldfish-review')
+        with self.assertRaises(ValueError):
+            d.goldfish_review(self.repo, data)
+        receipt['reviewed']['path'] = 'specs/001-export/spec.md'
+        self.record('goldfish-review', receipt)
+        data['prerequisite_receipts'] = self.data()['prerequisite_receipts']
+        d.goldfish_review(self.repo, data)
+        data['route']['kind'] = 'micro'
+        d.goldfish_review(self.repo, data)
+
+    def test_malformed_receipt_rows_route_to_the_gate(self):
+        self.record('goldfish-review', {**self.goldfish(), 'reviewers': [None, 1]})
+        self.assertEqual(c.next_stage(self.repo, self.data()), 'goldfish-review')
+        self.record('learning-checkpoint', {**self.learning(), 'checkpoints': ['approach']})
+        self.assertEqual(c.next_stage(self.repo, self.data()), 'learning-checkpoint')
+
+    def test_discipline_config_respects_comments_and_rejects_unsupported_forms(self):
+        config_path = self.repo / 'super-speckit.yml'
+        config_path.write_text('discipline_gates:  # Local policy\n  allow_sequential_fresh_fallback: false\n')
+        self.assertFalse(d.config(self.repo)['allow_sequential_fresh'])
+        for text in ('discipline_gates: {allow_sequential_fresh_fallback: false}\n',
+                     'discipline_gates:\n    allow_sequential_fresh_fallback: false\n'):
+            config_path.write_text(text)
+            with self.assertRaises(ValueError):
+                d.config(self.repo)
+        config_path.write_text(json.dumps({'gates': {'build': 'make build'},
+                                          'discipline_gates': {'allow_sequential_fresh_fallback': False}}))
+        self.assertEqual(c.configured_gates(self.repo), {'build': 'make build'})
+        self.assertFalse(d.config(self.repo)['allow_sequential_fresh'])
+
 
 if __name__ == '__main__':
     unittest.main()
