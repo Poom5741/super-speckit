@@ -1,5 +1,0 @@
----
-description: Decide whether an independently verified candidate is merge-ready and produce the project QA summary.
----
-
-Input: feature candidate SHA plus its latest QA/OCR/bug artifacts. Read the unified-pipeline contract. Before merge, require current feature-specific personas, independent PStack and Lude lens reconciliation, and a candidate-bound converged receipt, alongside required gates, matrix coverage, OCR triage and no open confirmed bugs. Native Spec Kit convergence applies to normal/milestone; micro completion is explicitly compact. If native convergence appends remaining tasks, record tasks_appended, return to implement and repeat fresh candidate QA/lenses/convergence. Do not merge a partially converged feature. Write summary.md with ready-for-merge or not-ready, listing unverified scope, exceptions and evidence. Only after all required gates pass, use configured merge authority and current forge readiness to merge and record the observed resulting SHA. Existing legacy records retain their original evidence contract.
