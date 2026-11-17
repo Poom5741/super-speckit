@@ -1,11 +1,2 @@
 __pycache__/
-*.py[cod]
-node_modules/
-.pnpm-store/
-.skill-sandbox/
-.super-speckit/state/*
-!.super-speckit/state/
-!.super-speckit/state/work-state.yml
-.super-speckit/qa/
-.super-speckit/bugs/
-.super-speckit/design/
+.pytest_cache/
