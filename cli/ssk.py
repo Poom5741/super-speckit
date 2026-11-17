@@ -19,6 +19,9 @@ RECEIPT_TYPES = ("test-report", "evidence", "diff", "deploy-url", "human-verdict
 RECEIPT_RESULTS = ("pass", "fail", "pending")
 RECEIPT_REQUIRED = ("card_id", "stage", "type", "result", "artifacts", "timestamp")
 
+_CLI_DIR = os.path.dirname(os.path.abspath(__file__))
+_SKILL_ROOT = os.path.dirname(_CLI_DIR)
+
 
 def die(msg, code=1):
     print(msg)
@@ -48,8 +51,7 @@ def cmd_init(root="."):
     os.makedirs(d, exist_ok=True)
     mpath = os.path.join(d, "manifest.yml")
     if not os.path.exists(mpath):
-        example = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               os.pardir, "manifest.example.yml")
+        example = os.path.join(_SKILL_ROOT, "manifest.example.yml")
         shutil.copyfile(example, mpath)
     lpath = os.path.join(d, "ledger.json")
     if not os.path.exists(lpath):
