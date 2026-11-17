@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["version", "stages"],
+  "properties": {
+    "version": { "const": "2.0" },
+    "stages": {
+      "type": "object",
+      "properties": {
+        "plan":     { "$ref": "#/definitions/stage" },
+        "implement":{ "$ref": "#/definitions/stage" },
+        "verify":   { "$ref": "#/definitions/stage" },
+        "deploy":   { "$ref": "#/definitions/stage" },
+        "review":   { "$ref": "#/definitions/stage" }
+      }
+    }
+  },
+  "definitions": {
+    "stage": {
+      "type": "object",
+      "required": ["skills", "receipt"],
+      "properties": {
+        "skills": { "type": "array", "items": { "type": "object",
+          "required": ["name", "source"],
+          "properties": { "name": {"type":"string"}, "source": {"type":"string"}, "notes": {"type":"string"} } } },
+        "receipt": { "type": "string", "description": "ชื่อ receipt schema ที่ stage นี้ต้องคืน" }
+      }
+    }
+  }
+}

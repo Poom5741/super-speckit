@@ -1,0 +1,27 @@
+version: "2.0"
+stages:
+  plan:
+    skills:
+      - name: "mattpocock/skills@tdd"
+        source: "skills.sh"
+    receipt: "plan-receipt"
+  implement:
+    skills:
+      - name: "zcode"
+        source: "harness"
+    receipt: "diff-and-tests"
+  verify:
+    skills:
+      - name: "jeffallan/claude-skills@playwright-expert"
+        source: "skills.sh"
+      - name: "ssk/evidence"          # skill ที่ต้องเขียนเอง — โพรงตลาด
+        source: "builtin"
+    receipt: "test-report-and-evidence"
+  deploy:
+    skills:
+      - name: "wrangler"
+        source: "harness"
+    receipt: "deploy-url"
+  review:
+    skills: []
+    receipt: "human-verdict"

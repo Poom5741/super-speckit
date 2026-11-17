@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["card_id", "stage", "type", "result", "artifacts", "timestamp"],
+  "properties": {
+    "card_id": { "type": "string" },
+    "stage": { "type": "string" },
+    "type": { "enum": ["test-report", "evidence", "diff", "deploy-url", "human-verdict"] },
+    "result": { "enum": ["pass", "fail", "pending"] },
+    "artifacts": { "type": "array", "items": { "type": "string" } },
+    "timestamp": { "type": "string", "format": "date-time" }
+  }
+}
