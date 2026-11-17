@@ -1,3 +1,8 @@
+---
+name: super-speckit
+description: Super-SpecKit v2 kernel (SSK) — evidence-first card pipeline การ์ด → stage → receipt → CLI gate (init / add-card / status / add-receipt / verify) บังคับ receipt result=pass ครบทุก stage (plan → implement → verify → deploy → review) ก่อนปิดการ์ด ใช้เมื่อเริ่มงานเป็น "การ์ด" (ไม่รับ brief ลอย ๆ) หรือเมื่อต้องบังคับ proof ก่อน done
+---
+
 # SKILL: Super-SpecKit v2 (SSK)
 
 ## ปรัชญา
