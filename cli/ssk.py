@@ -51,7 +51,10 @@ def cmd_init(root="."):
     os.makedirs(d, exist_ok=True)
     mpath = os.path.join(d, "manifest.yml")
     if not os.path.exists(mpath):
-        example = os.path.join(_SKILL_ROOT, "manifest.example.yml")
+        base = os.path.realpath(_SKILL_ROOT)
+        example = os.path.realpath(os.path.join(_SKILL_ROOT, "manifest.example.yml"))
+        if not example.startswith(base + os.sep):
+            die("manifest template escapes skill root")
         shutil.copyfile(example, mpath)
     lpath = os.path.join(d, "ledger.json")
     if not os.path.exists(lpath):
@@ -91,6 +94,10 @@ def validate_receipt(root, receipt, card_id):
 
 
 def cmd_add_receipt(root, card_id, receipt_path):
+    base = os.path.realpath(root)
+    real = os.path.realpath(os.path.join(base, receipt_path))
+    if real != base and not real.startswith(base + os.sep):
+        die("receipt path escapes workspace root: %s" % receipt_path)
     with open(receipt_path, "r", encoding="utf-8") as f:
         receipt = json.load(f)
     stage, _manifest = validate_receipt(root, receipt, card_id)
